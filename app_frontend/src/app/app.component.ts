@@ -9,6 +9,8 @@ import salesFactoryContractInterface  from '../assets/SalesFactoryContractHere.j
 const SALES_FACTORY_ADDRESS = "0x"; //move to a Service maybe?
 const SALES_ADDRESS = "0x"; //move to a Service maybe?
 
+const ALCHEMY_API_KEY="MwLDDsXrUc33uY_JtGf7si7uJbd0cyQy";
+const ETHERSCAN_API_KEY="14KQ8F8MHK4JDKYIVAMEJDCWF88MYIHZ8J";
 declare global {
   interface Window {
     ethereum: any
@@ -31,9 +33,17 @@ export class AppComponent {
 
   constructor(
     private salesContractService: SalesContractService
-  ) {}
+  ) {
+    const provider = ethers.getDefaultProvider("goerli", {alchemy: ALCHEMY_API_KEY, etherscan: ETHERSCAN_API_KEY});
+    this.provider = provider; //maybe get a default provider so can get some meta-data initially without user connecting... like read-only info about Contracts
+    this.getLastBlock(); //prove it works without MetaMask Connecting
+  }
 
-  
+  async getLastBlock() {
+    const lastBlock = await this?.provider?.getBlock("latest"); //remove this later, just testing connecting to Goerli
+    console.log('last block on network is: '+ lastBlock?.number);
+    this.lastNetworkBlock = lastBlock?.number;
+  }
   
   async connectWallet(){
     const provider = new ethers.providers.Web3Provider(window.ethereum, "any");
@@ -46,11 +56,13 @@ export class AppComponent {
     const connectedAccountAddr = await signer.getAddress();
     console.log("Account:", connectedAccountAddr);    
     
+
+    //just a test... get most updated block after Connecting
+    this.provider = provider; //ethers.getDefaultProvider("goerli", {alchemy: ALCHEMY_API_KEY, etherscan: ETHERSCAN_API_KEY});
     const lastBlock = await provider.getBlock("latest"); //remove this later, just testing connecting to Goerli
     console.log('last block on network is: '+ lastBlock.number);
-    this.lastNetworkBlock = lastBlock.number; 
+    this.lastNetworkBlock = lastBlock.number;
 
-    this.provider = provider; //ethers.getDefaultProvider("goerli", {alchemy: ALCHEMY_API_KEY, etherscan: ETHERSCAN_API_KEY});
     //this.salesFactoryContractAddress = SALES_FACTORY_ADDRESS;
     //this.salesContractAddress = SALES_ADDRESS;
     //this.salesFactoryContract = new ethers.Contract( SALES_FACTORY_ADDRESS, salesFactoryContractInterface.abi, signer);
