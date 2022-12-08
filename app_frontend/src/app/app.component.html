@@ -13,6 +13,19 @@
   </ul>
 </nav>
 
+<div *ngIf="!signer">
+  <button
+    type="button"
+    class="btn btn-success btn-lg px-4 gap-3"
+    (click)="connectWallet()"
+  >
+    Connect your Wallet
+  </button>
+</div>
+<div *ngIf="signer">
+  {{ walletAddress }} (last block on network is: {{ lastNetworkBlock }})
+</div>
+
 <!--
     <div *ngIf="!(wallet || signer)">
 
