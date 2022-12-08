@@ -24,7 +24,20 @@
   </button>
 </div>
 <div *ngIf="signer">
-  {{ walletAddress }} (last block on network is: {{ lastNetworkBlock }})
+  <div *ngIf="(signer && true) || this.salesFactoryContract">
+    <!-- remove the 'true ||'' later once get Contracts Instances setup -->
+    <button
+      type="button"
+      class="btn btn-success btn-lg px-4 gap-3"
+      (click)="createSale()"
+    >
+      Create Sale (Lottery or Auction)
+    </button>
+  </div>
+  <div>
+    Your Wallet Address is: {{ walletAddress }} <br />
+    Last block on network is: {{ lastNetworkBlock }}.
+  </div>
 </div>
 
 <!--

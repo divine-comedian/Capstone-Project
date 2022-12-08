@@ -72,6 +72,10 @@ export class AppComponent {
     //setInterval( this.updateBlockchainInfo.bind(this), 5000);
   }
 
+  createSale() {
+    console.log('test');
+  }
+
 }
 
 
