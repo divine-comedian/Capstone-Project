@@ -8,7 +8,11 @@ on:
     branches:
       - main
   workflow_dispatch:
-    - feature/*
+    inputs:
+      logLevel:
+        description: "Log level"
+        required: true
+        default: "warning"
 
 jobs:
   build:
