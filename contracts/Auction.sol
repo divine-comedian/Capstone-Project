@@ -66,7 +66,7 @@ contract Auction {
         saleOwner = _saleOwner;
     }
 
-    function start(uint256 closingTime) external {
+    function start(uint256 closingTime) public {
         require(!auctionOpen, "started");
         require(
             closingTime > block.timestamp,
@@ -79,11 +79,13 @@ contract Auction {
         emit Start();
     }
 
-    function bid(uint256 amount) external payable {
+
+    /// @notice the user must approve the amount in bid to the paymentToken from the UI before calling this function
+    /// @param amount the amount to bid on the auction - this amount must be higher than the highestBid
+    function bid(uint256 amount) public {
         require(auctionOpen, "not started");
         require(block.timestamp < auctionClosingTime, "ended");
         require(amount > highestBid, "value < highest");
-        paymentToken.approve(address(this), amount);
         paymentToken.transferFrom(msg.sender, address(this), amount);
         if (highestBidder != address(0)) {
             bids[highestBidder] += highestBid;
@@ -95,7 +97,7 @@ contract Auction {
         emit Bid(msg.sender, amount);
     }
 
-    function withdraw() external {
+    function withdraw() public {
         uint bal = bids[msg.sender];
         bids[msg.sender] = 0;
         paymentToken.transfer(msg.sender, bal);
@@ -103,7 +105,7 @@ contract Auction {
         emit Withdraw(msg.sender, bal);
     }
 
-    function end() external {
+    function end() public {
         require(auctionOpen, "not started");
         require(block.timestamp >= auctionClosingTime, "not ended");
 
