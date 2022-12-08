@@ -1,0 +1,43 @@
+<h1>Main Page - {{ title }}</h1>
+<nav>
+  <ul>
+    <li><a routerLink="/">Home</a></li>
+
+    <li><a routerLink="/profile">Profile</a></li>
+
+    <li><a routerLink="/sales/auction/456abc123">Auction#1</a></li>
+    <li><a routerLink="/sales/auction/456abc124">Auction#2</a></li>
+
+    <li><a routerLink="/sales/lottery/123xyz456">Lottery#1</a></li>
+    <li><a routerLink="/sales/lottery/123xyz457">Lottery#2</a></li>
+  </ul>
+</nav>
+
+<!--
+    <div *ngIf="!(wallet || signer)">
+
+        <button
+          type="button"
+          class="btn btn-success btn-lg px-4 gap-3"
+          (click)="connectWallet()"
+        >
+          Connect a Wallet
+        </button>
+
+    </div>
+
+    <div *ngIf="wallet || signer">
+      <p class="lead mg-4">This is your address: {{ walletAddress }}</p>
+      <p class="lead mg-4">
+        This is the lottery token address:
+        {{ lotteryTokenContractAddress }}
+        <br />
+        This is the lottery address:
+        {{ lotteryContractAddress }}
+
+        SaleFactory.launchLottery
+        SaleFactory.launchAuction
+      -->
+
+<router-outlet></router-outlet>
+<!--<app-messages></app-messages>-->
