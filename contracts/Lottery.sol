@@ -24,6 +24,8 @@ interface IERC721 {
         uint tokenId
     ) external;
 
+    function safeMint(address to, string memory uri) external;
+
     function transferFrom(
         address,
         address,
@@ -38,10 +40,10 @@ interface IERC721 {
 /// @custom:teaching This is a contract meant for teaching only
 contract Lottery is Ownable {
     /// @notice Address of the token used as payment for the bets
-  IERC20 public _token;
+  IERC20 public paymentToken;
       address public recipient;
       IERC721 public nft;
-    uint public nftId;
+    string private nftData;
       /// @notice Amount of tokens given per ETH paid
     uint256 public betPrice;
     /// @notice Amount of tokens required for placing a bet that goes for the owner pool
@@ -61,17 +63,20 @@ contract Lottery is Ownable {
     /// @param _betPrice Amount of tokens required for placing a bet that goes for the prize pool
     constructor(
         uint256 _betPrice,
-        address paymentToken,
+        address _paymentToken,
         address _nft,
-        uint _nftId,
-        address _recipient
+        string memory _uri,
+        address _recipient,
+        address _saleOwner
+
 
     ) {
         betPrice = _betPrice;
-        _token = IERC20(paymentToken);
+        paymentToken = IERC20(_paymentToken);
         nft = IERC721(_nft);
-        nftId = _nftId;
-        _recipient = recipient;
+        nftData = _uri;
+        recipient = _recipient;
+        saleOwner = _saleOwner;
     }
 
     /// @notice Passes when the lottery is at closed state
@@ -96,6 +101,7 @@ contract Lottery is Ownable {
             closingTime > block.timestamp,
             "Closing time must be in the future"
         );
+        require(msg.sender == saleOwner);
         betsClosingTime = closingTime;
         betsOpen = true;
     }
@@ -105,7 +111,7 @@ contract Lottery is Ownable {
     function bet() public whenBetsOpen {
         ownerPool += betPrice;
         _slots.push(msg.sender);
-        _token.transferFrom(msg.sender, address(this), betPrice);
+        paymentToken.transferFrom(msg.sender, address(this), betPrice);
     }
 
     /// @notice Call the bet function `times` times
@@ -124,8 +130,9 @@ contract Lottery is Ownable {
         if (_slots.length > 0) {
             uint256 winnerIndex = getRandomNumber() % _slots.length;
             address winner = _slots[winnerIndex];
-             _token.transfer(recipient, ownerPool);
-            nft.transferFrom(address(this), winner, nftId);
+             paymentToken.transfer(recipient, ownerPool);
+             // need to replace this with mint fuction
+            nft.safeMint(winner, nftData);
             delete (_slots);
             ownerPool = 0;
         }
@@ -140,7 +147,7 @@ contract Lottery is Ownable {
 
     /// @notice Withdraw `amount` from the owner pool
     function ownerWithdraw() public onlyOwner {
-        _token.transfer(msg.sender, ownerPool);
+        paymentToken.transfer(msg.sender, ownerPool);
         ownerPool = 0;
     }
 

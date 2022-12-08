@@ -21,6 +21,8 @@ interface IERC721 {
         uint tokenId
     ) external;
 
+    function safeMint(address to, string memory uri) external;
+
     function transferFrom(
         address,
         address,
@@ -33,46 +35,53 @@ contract Auction {
     event Bid(address indexed sender, uint amount);
     event Withdraw(address indexed bidder, uint amount);
     event End(address winner, uint amount);
+    event EndWithNoBids(string message);
 
+    string private nftData;
     IERC721 public nft;
-    uint public nftId;
     IERC20 public paymentToken;
     address public beneficiary;
-    uint public endAt;
-    bool public started;
-    bool public ended;
     address public saleOwner;
-
     address public highestBidder;
-    uint public highestBid;
+    bool public auctionOpen;
+    uint public auctionClosingTime;
+    uint256 private startingBid;
+    uint256 public highestBid;
     mapping(address => uint) public bids;
 
     constructor(
         uint _startingBid,
         address _paymentToken,
         address _nft,
-        uint _nftId,
-        address _recipient
+        string memory _uri,
+        address _recipient,
+        address _saleOwner
     ) {
         nft = IERC721(_nft);
-        nftId = _nftId;
+        nftData = _uri;
         paymentToken = IERC20(_paymentToken);
         highestBid = _startingBid;
         beneficiary = _recipient;
+        startingBid = _startingBid;
+        saleOwner = _saleOwner;
     }
 
-    function start() external {
-        require(!started, "started");
+    function start(uint256 closingTime) external {
+        require(!auctionOpen, "started");
+        require(
+            closingTime > block.timestamp,
+            "Closing time must be in the future"
+        );
         require(msg.sender == saleOwner, "not saleOwner");
-        started = true;
-        endAt = block.timestamp + 7 days;
+        auctionOpen = true;
+        auctionClosingTime = closingTime;
 
         emit Start();
     }
 
     function bid(uint256 amount) external payable {
-        require(started, "not started");
-        require(block.timestamp < endAt, "ended");
+        require(auctionOpen, "not started");
+        require(block.timestamp < auctionClosingTime, "ended");
         require(amount > highestBid, "value < highest");
         paymentToken.approve(address(this), amount);
         paymentToken.transferFrom(msg.sender, address(this), amount);
@@ -95,18 +104,18 @@ contract Auction {
     }
 
     function end() external {
-        require(started, "not started");
-        require(block.timestamp >= endAt, "not ended");
-        require(!ended, "ended");
+        require(auctionOpen, "not started");
+        require(block.timestamp >= auctionClosingTime, "not ended");
 
-        ended = true;
-        if (highestBidder != address(0)) {
-            nft.safeTransferFrom(address(this), highestBidder, nftId);
+        auctionOpen = false;
+        if (highestBidder != address(0) && highestBid > startingBid) {
+            // replace this with minting nFT directly to highest bidder
+            nft.safeMint(highestBidder, nftData);
             paymentToken.transfer(beneficiary, highestBid);
-        } else {
-            nft.safeTransferFrom(address(this), saleOwner, nftId);
+            emit End(highestBidder, highestBid);
         }
-
-        emit End(highestBidder, highestBid);
+        else {
+            emit EndWithNoBids("no bids, restart the auction!");
+        }
     }
 }
