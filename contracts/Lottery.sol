@@ -34,13 +34,14 @@
     /// @dev This contract implements a relatively weak randomness source
     contract Lottery {
     IERC20 public paymentToken;
+        event Start(uint lotteryClosingTime);
         address public recipient;
         IERC721 public nft;
         string private nftData;
         uint256 public betPrice;
         uint256 public ownerPool;
         bool public betsOpen;
-        uint256 public betsClosingTime;
+        uint256 public lotteryClosingTime;
         uint256 public window;
         address public saleOwner;
         address[] _slots;
@@ -70,7 +71,7 @@
         /// @notice Passes when the lottery is at open state and the current block timestamp is lower than the lottery closing date
         modifier whenBetsOpen() {
             require(
-                betsOpen && block.timestamp < betsClosingTime,
+                betsOpen && block.timestamp < lotteryClosingTime,
                 "Lottery is closed"
             );
             _;
@@ -85,8 +86,9 @@
                 "Closing time must be in the future"
             );
             require(msg.sender == saleOwner);
-            betsClosingTime = closingTime;
+            lotteryClosingTime = closingTime;
             betsOpen = true;
+            emit Start(lotteryClosingTime);
         }
 
 
@@ -113,7 +115,7 @@
         /// @notice this will transfer the funds accrued from bets to the recipient/charity
         /// @notice this will mint the NFT to the winner with the nftData set at contract initilization
         function closeLottery() public {
-            require(block.timestamp >= betsClosingTime, "Too soon to close");
+            require(block.timestamp >= lotteryClosingTime, "Too soon to close");
             if (_slots.length > 0) {
                 uint256 winnerIndex = getRandomNumber() % _slots.length;
                 address winner = _slots[winnerIndex];

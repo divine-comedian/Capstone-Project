@@ -31,7 +31,7 @@ interface IERC721 {
 }
 
 contract Auction {
-    event Start();
+    event Start(uint auctionClosingTime);
     event Bid(address indexed sender, uint amount);
     event Withdraw(address indexed bidder, uint amount);
     event End(address winner, uint amount);
@@ -78,7 +78,7 @@ contract Auction {
         auctionOpen = true;
         auctionClosingTime = closingTime;
 
-        emit Start();
+        emit Start(auctionClosingTime);
     }
 
 
