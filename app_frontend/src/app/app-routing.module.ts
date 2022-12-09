@@ -7,24 +7,29 @@ import {HomeComponent} from './components/home/home.component';
 import {ProfileComponent} from './components/profile/profile.component';
 import {LotteryComponent} from './components/lottery/lottery.component';
 import {AuctionComponent} from './components/auction/auction.component';
+import { CreateSaleComponent } from './components/create-sale/create-sale.component';
 
 const routes: Routes = [
   {
-      path: '',
-      component: HomeComponent
+    path: '',
+    component: HomeComponent
   },
   {
     path: 'profile',
     component: ProfileComponent
   },
   {
-      path: 'sales/lottery/:contract_addr',
+      path: 'sale/lottery/:contract_addr',
       component: LotteryComponent
-    },
-    {
-      path: 'sales/auction/:contract_addr',
-      component: AuctionComponent
-    }
+  },
+  {
+    path: 'sale/auction/:contract_addr',
+    component: AuctionComponent
+  },
+  {
+    path: 'sale/create',
+    component: CreateSaleComponent
+  }
 ];
 
 

@@ -9,6 +9,7 @@ import { HomeComponent } from './components/home/home.component';
 import { ProfileComponent } from './components/profile/profile.component';
 import { LotteryComponent } from './components/lottery/lottery.component';
 import { AuctionComponent } from './components/auction/auction.component';
+import { CreateSaleComponent } from './components/create-sale/create-sale.component';
 
 @NgModule({
   declarations: [
@@ -16,7 +17,8 @@ import { AuctionComponent } from './components/auction/auction.component';
     HomeComponent,
     ProfileComponent,
     LotteryComponent,
-    AuctionComponent
+    AuctionComponent,
+    CreateSaleComponent
   ],
   imports: [
     BrowserModule,

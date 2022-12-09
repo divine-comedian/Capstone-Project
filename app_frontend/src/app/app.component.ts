@@ -3,14 +3,18 @@ import { Component } from '@angular/core';
 import { BigNumber, ethers } from 'ethers';
 import { SalesContractService } from "./services/sales-contract.service";
 
-import salesContractInterface  from '../assets/SalesContractHere.json'; //Lottery/Auction
+import { environment } from 'src/environments/environment'
+
+import saleAuctionContractInterface  from '../assets/SaleAuctionContractHere.json'; //Lottery/Auction
+import saleLotteryContractInterface  from '../assets/SaleLotteryContractHere.json';
 import salesFactoryContractInterface  from '../assets/SalesFactoryContractHere.json'; //Factory
 
 const SALES_FACTORY_ADDRESS = "0x"; //move to a Service maybe?
 const SALES_ADDRESS = "0x"; //move to a Service maybe?
 
-const ALCHEMY_API_KEY="MwLDDsXrUc33uY_JtGf7si7uJbd0cyQy";
-const ETHERSCAN_API_KEY="14KQ8F8MHK4JDKYIVAMEJDCWF88MYIHZ8J";
+const ALCHEMY_API_KEY   = environment.ALCHEMY_API_KEY;
+const ETHERSCAN_API_KEY = environment.ETHERSCAN_API_KEY;
+
 declare global {
   interface Window {
     ethereum: any
