@@ -65,7 +65,9 @@ contract Auction {
         startingBid = _startingBid;
         saleOwner = _saleOwner;
     }
-
+    ///@notice start the auction, auctionOpen must be false 
+    /// this can only be started by the saleOwner
+    ///@param closingTime the UNIX timestamp of when the auction will end - this must be a time ahead of the current timestamp
     function start(uint256 closingTime) public {
         require(!auctionOpen, "started");
         require(
@@ -96,15 +98,18 @@ contract Auction {
 
         emit Bid(msg.sender, amount);
     }
-
+    ///@notice allows bidders to withdraw their bids if they are not the highest bidder
     function withdraw() public {
+        require(msg.sender != highestBidder, "you are the highest bidder!");
         uint bal = bids[msg.sender];
         bids[msg.sender] = 0;
         paymentToken.transfer(msg.sender, bal);
 
         emit Withdraw(msg.sender, bal);
     }
-
+    ///@dev anyone can end the auction in case the owner does not do so
+    /// @notice this will transfer the funds accrued from bets to the recipient/charity
+    /// @notice this will mint the NFT to the winner with the nftData set at contract initilization
     function end() public {
         require(auctionOpen, "not started");
         require(block.timestamp >= auctionClosingTime, "not ended");

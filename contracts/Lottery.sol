@@ -30,35 +30,21 @@
             uint
         ) external;
     }
-
-    /// @title A very simple lottery contract
-    /// @author Matheus Pagani
     /// @notice You can use this contract for running a very simple lottery
     /// @dev This contract implements a relatively weak randomness source
-    /// @custom:teaching This is a contract meant for teaching only
     contract Lottery {
-        /// @notice Address of the token used as payment for the bets
     IERC20 public paymentToken;
         address public recipient;
         IERC721 public nft;
         string private nftData;
-        /// @notice Amount of tokens given per ETH paid
         uint256 public betPrice;
-        /// @notice Amount of tokens required for placing a bet that goes for the owner pool
         uint256 public ownerPool;
-        /// @notice Flag indicating if the lottery is open for bets
         bool public betsOpen;
-        /// @notice Timestamp of the lottery next closing date
         uint256 public betsClosingTime;
-        /// @notice Mapping of prize available for withdraw for each account
         uint256 public window;
         address public saleOwner;
-
-        /// @dev List of bet slots
         address[] _slots;
 
-        /// @notice Constructor function
-        /// @param _betPrice Amount of tokens required for placing a bet that goes for the prize pool
         constructor(
             uint256 _betPrice,
             address _paymentToken,
@@ -66,8 +52,6 @@
             string memory _uri,
             address _recipient,
             address _saleOwner
-
-
         ) {
             betPrice = _betPrice;
             paymentToken = IERC20(_paymentToken);
@@ -94,6 +78,7 @@
 
 
         /// @notice Open the lottery for receiving bets
+        /// @param closingTime the unix timestamp of when the lottery will close
         function openBets(uint256 closingTime) public whenBetsClosed {
             require(
                 closingTime > block.timestamp,
@@ -106,6 +91,7 @@
 
 
         /// @notice Charge the bet price and create a new bet slot with the sender address
+        ///@notice we need to approve the user to spend the betPrice from the paymentToken to this contract
         function bet() public whenBetsOpen {
             ownerPool += betPrice;
             _slots.push(msg.sender);
@@ -113,6 +99,7 @@
         }
 
         /// @notice Call the bet function `times` times
+        ///@notice we need to approve the user to spend the betPrice * @param times from the paymentToken to this contract
         function betMany(uint256 times) public {
             require(times > 0);
             while (times > 0) {
@@ -123,6 +110,8 @@
 
         /// @notice Close the lottery and calculates the prize, if any
         /// @dev Anyone can call this function if the owner fails to do so
+        /// @notice this will transfer the funds accrued from bets to the recipient/charity
+        /// @notice this will mint the NFT to the winner with the nftData set at contract initilization
         function closeLottery() public {
             require(block.timestamp >= betsClosingTime, "Too soon to close");
             if (_slots.length > 0) {

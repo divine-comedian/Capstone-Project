@@ -24,6 +24,11 @@ contract SaleFactory is Ownable {
         nft = IMemeFunderNFT(_nft);
         nftAddress = _nft;
     }
+/// Launch Lottery token
+///@param betPrice this is the price in WEI each user will pay to place a bet 
+///@param paymentToken the address of the ERC20 token you will accept betPrice in
+///@param uri the CID of the nft metadata
+///@param recipient the address of the recipient/charity that will receive the raised sale funds 
  function launchLottery(uint256 betPrice,
         address paymentToken,
         string memory uri,
@@ -36,7 +41,11 @@ contract SaleFactory is Ownable {
           nft.grantRole(keccak256('MINTER_ROLE'), address(lottery));
         }
 
-
+// launch a lottery 
+///@param startingBid the initial bid price in WEI to begin your auction at 
+///@param paymentToken the address of the ERC20 token you will accept betPrice in
+///@param uri the CID of the nft metadata
+///@param recipient the address of the recipient/charity that will receive the raised sale funds 
 function launchAuction(uint startingBid,
         address paymentToken,
         string memory uri,
@@ -48,7 +57,8 @@ function launchAuction(uint startingBid,
             nft.grantRole(keccak256('MINTER_ROLE'), address(auction));
 
         }
-        // how can we set a new base nft address?
+ // set a new base NFT contract to mint your sale nfts from
+ ///@param newAddress the address of the nft contract to mint your nfts from
  function setNFT(address newAddress) external onlyOwner {
      nft = IMemeFunderNFT(newAddress);
      nftAddress = newAddress; 
