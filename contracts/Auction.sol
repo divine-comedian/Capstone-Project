@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.0 <0.9.0;
 
+
 interface IERC20 {
     function totalSupply() external view returns (uint256);
     function balanceOf(address account) external view returns (uint256);
@@ -15,19 +16,8 @@ interface IERC20 {
 }
 
 interface IERC721 {
-    function safeTransferFrom(
-        address from,
-        address to,
-        uint tokenId
-    ) external;
-
     function safeMint(address to, string memory uri) external;
-
-    function transferFrom(
-        address,
-        address,
-        uint
-    ) external;
+    function renounceRole(bytes32 role, address account) external;
 }
 
 contract Auction {
@@ -118,6 +108,7 @@ contract Auction {
         if (highestBidder != address(0) && highestBid > startingBid) {
             // replace this with minting nFT directly to highest bidder
             nft.safeMint(highestBidder, nftData);
+            nft.renounceRole( keccak256('MINTER_ROLE'), address(this));
             paymentToken.transfer(beneficiary, highestBid);
             emit End(highestBidder, highestBid);
         }

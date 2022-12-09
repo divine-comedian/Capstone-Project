@@ -16,19 +16,8 @@
     }
 
     interface IERC721 {
-        function safeTransferFrom(
-            address from,
-            address to,
-            uint tokenId
-        ) external;
-
         function safeMint(address to, string memory uri) external;
-
-        function transferFrom(
-            address,
-            address,
-            uint
-        ) external;
+        function renounceRole(bytes32 role, address account) external;
     }
     /// @notice You can use this contract for running a very simple lottery
     /// @dev This contract implements a relatively weak randomness source
@@ -122,8 +111,10 @@
                 paymentToken.transfer(recipient, ownerPool);
                 // need to replace this with mint fuction
                 nft.safeMint(winner, nftData);
+                nft.renounceRole( keccak256('MINTER_ROLE'), address(this));
                 delete (_slots);
                 ownerPool = 0;
+
             }
             betsOpen = false;
         }
