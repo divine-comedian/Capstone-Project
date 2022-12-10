@@ -4,7 +4,7 @@ import { Contract } from 'ethers';
 //import { Provider } from '../../../core/services/tokens';
 //import { Provider } from '@ethersproject/providers';
 
-import salesTokenInterface  from '../../assets/SalesToken.json';
+import salesTokenInterface  from '../../assets/LotteryToken.json';
 
 
 const SALES_TOKEN_CONTRACT_ADDRESS = environment.salesTokenContractAddress;//or Lottery and Auction separate

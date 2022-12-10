@@ -4,10 +4,10 @@ import { Contract } from 'ethers';
 //import { Provider } from '../../../core/services/tokens';
 //import { Provider } from '@ethersproject/providers';
 
-import saleAuctionInterface  from '../../assets/SaleAuctionContractHere.json';
+import saleAuctionInterface  from '../../assets/AuctionContract.json';
 
 
-const SALES_AUCTION_CONTRACT_ADDRESS = environment.saleAuctionContractAddress;//or Lottery and Auction separate
+const SALES_AUCTION_CONTRACT_ADDRESS = "hmmm comes from url not preknown be4hand";
 @Injectable({
   providedIn: 'root'
 })
