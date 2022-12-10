@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { SalesContractService } from 'src/app/services/sales-contract.service';
 import { environment } from 'src/environments/environment';
 
 /*
@@ -101,6 +102,6 @@ export class CreateSaleComponent {
     console.log('JSON META-DATA which will be uploaded:'+ nft_json_meta_data);
   }
   onSubmit() { //real submit
-
+    //SalesContractService
   }
 }
