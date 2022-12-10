@@ -4,6 +4,10 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { SalesContractService } from 'src/app/services/sales-contract.service';
 import { environment } from 'src/environments/environment';
 
+
+import salesFactoryInterface  from '../../../assets/SalesFactoryContract.json';
+    
+
 /*
 @Component({
   selector: 'app-create-sale',
@@ -19,12 +23,18 @@ export class CreateSaleComponent implements OnInit {
 
 }
 */
+
 @Component({
   selector: 'app-name-editor',
   templateUrl: './create-sale.component.html',
   styleUrls: ['./create-sale.component.scss']
 })
 export class CreateSaleComponent {
+
+  constructor(
+    private salesContractService: SalesContractService
+  ) {}
+
   saleForm = new FormGroup({
     sale_name: new FormControl('', [Validators.required]),
     sale_desc: new FormControl(''),
@@ -102,6 +112,55 @@ export class CreateSaleComponent {
     console.log('JSON META-DATA which will be uploaded:'+ nft_json_meta_data);
   }
   onSubmit() { //real submit
-    //SalesContractService
+    const lottery_type = this.saleForm.controls['sale_type'].value;
+    //1##################
+    //IPFS upload of image
+    //get hash of image
+
+    //2##################
+    //put that image hash along with rest of meta-data on this page in nft-json format
+
+    //3#################
+    //launchLottery or launchAuction
+    if(this.saleForm.controls['sale_type'].value == 'lottery') {
+      
+    }
+    if(this.saleForm.controls['sale_type'].value == 'auction') {
+      
+    }
+    console.log('payment_token: '+ this.saleForm.controls['payment_token'].value);
+    console.log('recipient_addr: '+ this.saleForm.controls['recipient_addr'].value);
+
+    let bet_price;
+    let starting_bid;
+    if(lottery_type=='lottery') {
+      const bet_price_temp = this.saleForm.controls['bet_price'].value;
+      if(bet_price_temp) {
+        bet_price = parseInt( bet_price_temp );
+      }
+    } else if(lottery_type=='lottery') {      
+      const starting_bid_temp = this.saleForm.controls['starting_bid'].value;
+      if(starting_bid_temp) {
+        starting_bid = parseInt( starting_bid_temp );
+      }
+    }
+    const payment_token = this.saleForm.controls['payment_token'].value;
+    const recipient_addr = this.saleForm.controls['recipient_addr'].value;
+    const ipfs_url = "https://ipfs.io/getHashedCIDSoon";
+    if(payment_token && recipient_addr && ipfs_url ) {
+      if(lottery_type=='lottery' && bet_price) {
+        this.salesContractService.launchLottery(bet_price, payment_token, ipfs_url, recipient_addr, true);
+        
+      } else if(lottery_type=='lottery' && starting_bid) {
+        this.salesContractService.launchAuction(starting_bid, payment_token, ipfs_url, recipient_addr, true);
+      }
+    }
+    
+    //4##################
+    //write to MongoDB (once get contract info back)
+
+    //5##################
+    //confirmation page with contract address listed and IPFS image link and IPFS .json link
+
   }
 }
