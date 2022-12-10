@@ -47,6 +47,15 @@ export class CreateSaleComponent {
       this.saleForm.patchValue({
         sale_image_source: file
       });
+
+      //for previewing the image before upload
+      const sale_image_preview: HTMLImageElement = document.getElementById('sale_image_preview') as HTMLImageElement;;
+      if(sale_image_preview) {
+        sale_image_preview.src = URL.createObjectURL(file);
+        sale_image_preview.onload = function() {
+          URL.revokeObjectURL(sale_image_preview.src); // free memory
+        }
+      }
     }
   }
   onRadioChange(event:any){    
