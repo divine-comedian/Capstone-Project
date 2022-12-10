@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 
 import { SalesMongoService} from '../../services/sales-mongo-service';
 
+
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',

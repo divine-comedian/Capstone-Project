@@ -10,7 +10,7 @@ export class SalesMongoService {
   getSalesFromMongoDB() { //change to get from MongoDB (directly or via NestJS BE service)
     return [
       {
-          sale_contract_addr: '0x0000000000000000000000000000000000000001',
+          sale_contract_addr: '0x85bc5257EBCb612bb552B8DF2645F17FE5C80845',
           name_of_sale: 'Sale #1',
           type_of_sale: 'lottery',
           description: 'This is Sale#1 ...',
@@ -19,11 +19,12 @@ export class SalesMongoService {
               recipient_desc: 'This is a great foundation we are donated proceeds to.',
               recipient_addr: '0x0000000000000000000000000000000000000002'
           },
-          lottery_closing_time: new Date('2022-12-20 23:00:00'),
+          lottery_closing_time: new Date('2022-12-12 12:19:41'),
           bet_price: '100',
           ipfs_url: 'https://gateway.pinata.cloud/ipfs/QmeqkRRhHx7z49jRLMKnrTCxrDEk8iHdbwGDuRc1KdDPK9'
   
-      },
+      }
+      /*,
       {
           sale_contract_addr: '0x0000000000000000000000000000000000000003',
           name_of_sale: 'Sale #2',
@@ -41,6 +42,7 @@ export class SalesMongoService {
           highestBid:    100,
           ipfs_url: 'https://gateway.pinata.cloud/ipfs/QmZZxTm4JBtkNp9cVGbYL9LgYARARvRWEekrpQLAgAanPN'
       },
+      */
       
     ];
   }

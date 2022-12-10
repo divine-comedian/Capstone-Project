@@ -5,12 +5,16 @@ import { SalesContractService } from "./services/sales-contract.service";
 
 import { environment } from 'src/environments/environment'
 
-import saleAuctionContractInterface  from '../assets/SaleAuctionContractHere.json'; //Lottery/Auction
-import saleLotteryContractInterface  from '../assets/SaleLotteryContractHere.json';
-import salesFactoryContractInterface  from '../assets/SalesFactoryContractHere.json'; //Factory
+import salesFactoryContractInterface  from '../assets/SalesFactoryContract.json'; //Factory
+import lotteryTokenContractInterface  from '../assets/LotteryToken.json';
 
-const SALES_FACTORY_ADDRESS = "0x"; //move to a Service maybe?
-const SALES_ADDRESS = "0x"; //move to a Service maybe?
+import auctionContractInterface  from '../assets/AuctionContract.json'; //Lottery/Auction
+import lotteryContractInterface  from '../assets/LotteryContract.json';
+
+
+const SALES_FACTORY_ADDRESS = environment.salesFactoryContractAddress; //move to a Service maybe?
+const SALES_TOKEN_ADDRESS = environment.salesTokenContractAddress; //move to a Service maybe?
+//const AUCTION_ADDRESS = environment.; //move to a Service maybe?
 
 const ALCHEMY_API_KEY   = environment.ALCHEMY_API_KEY;
 const ETHERSCAN_API_KEY = environment.ETHERSCAN_API_KEY;

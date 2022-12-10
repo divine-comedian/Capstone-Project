@@ -1,6 +1,8 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
+import { ReactiveFormsModule } from '@angular/forms';
+
 import { AppComponent } from './app.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { HttpClientModule } from '@angular/common/http';
@@ -10,6 +12,8 @@ import { ProfileComponent } from './components/profile/profile.component';
 import { LotteryComponent } from './components/lottery/lottery.component';
 import { AuctionComponent } from './components/auction/auction.component';
 import { CreateSaleComponent } from './components/create-sale/create-sale.component';
+
+
 
 @NgModule({
   declarations: [
@@ -24,7 +28,8 @@ import { CreateSaleComponent } from './components/create-sale/create-sale.compon
     BrowserModule,
     NgbModule,
     HttpClientModule,
-    AppRoutingModule
+    AppRoutingModule,
+    ReactiveFormsModule
   ],
   providers: [],
   bootstrap: [AppComponent]
