@@ -65,4 +65,35 @@ export class SalesContractService {
     return await contract['betPrice']();
   }
 
+  public async launchLottery(bet_price:number, payment_token:string, ipfs_url:string, recipient_addr:string, bySigner:boolean): Promise<number> {
+    console.log('########################## inside launchLottery()');
+    console.log(environment.salesFactoryContractAddress, salesFactoryContractInterface.abi, bySigner);
+    const contract = await SalesContractService.getContract( environment.salesFactoryContractAddress, salesFactoryContractInterface.abi, bySigner );
+ipfs_url
+
+  contract.on("SaleCreated", (new_contract_addr, sale_type, saleOwner, uri) => {
+    console.log('########################## SaleCreated() emitted solidty event')
+    console.log(new_contract_addr, sale_type, saleOwner, uri);
+  });
+
+    return await contract['launchLottery'](bet_price, payment_token, ipfs_url, recipient_addr);
+  }
+  
+  public async launchAuction(starting_bid:number, payment_token:string, ipfs_url:string, recipient_addr:string,bySigner:boolean): Promise<number> {
+    console.log('########################## inside launchAuction()');
+    console.log(environment.salesFactoryContractAddress, salesFactoryContractInterface.abi, bySigner);
+    const contract = await SalesContractService.getContract( environment.salesFactoryContractAddress, salesFactoryContractInterface.abi, bySigner );
+  
+    contract.on("SaleCreated", (new_contract_addr, sale_type, saleOwner, uri) => {
+      console.log('########################## SaleCreated() emitted solidty event')
+      console.log(new_contract_addr, sale_type, saleOwner, uri);
+    });
+
+    return await contract['launchLottery']( starting_bid, payment_token, ipfs_url, recipient_addr );
+
+  }
+  
+
+
+
 }
