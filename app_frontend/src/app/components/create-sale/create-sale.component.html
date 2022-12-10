@@ -1,1 +1,89 @@
 <p>create-sale works!</p>
+
+<form [formGroup]="saleForm" (ngSubmit)="onSubmitTest()">
+  <div>
+    <label for="sale_name">Name of Sale: </label>
+    <input id="sale_name" type="text" formControlName="sale_name" />
+  </div>
+
+  <div>
+    <label for="sale_type">Type of Sale: </label><br />
+    <input
+      type="radio"
+      formControlName="sale_type"
+      value="lottery"
+      (change)="onRadioChange($event)"
+    />
+    Lottery
+    <input
+      type="radio"
+      formControlName="sale_type"
+      value="auction"
+      (change)="onRadioChange($event)"
+    />
+    Auction
+  </div>
+
+  <div
+    style="border: 1px solid black"
+    *ngIf="saleForm.value.sale_type == 'lottery'"
+  >
+    <h6>Dynamic Lottery Section!!!</h6>
+    <div>
+      <label for="bet_price">Bet Price: </label>
+      <input id="bet_price" type="number" formControlName="bet_price" />
+    </div>
+  </div>
+
+  <div
+    style="border: 1px solid black"
+    *ngIf="saleForm.value.sale_type == 'auction'"
+  >
+    <h6>Dynamic Auction Section!!!</h6>
+    <div>
+      <label for="starting_bid">Starting Bid: </label>
+      <input id="starting_bid" type="number" formControlName="starting_bid" />
+    </div>
+  </div>
+
+  <div>
+    <label for="sale_desc">Desc of NFT: </label>
+    <textarea id="sale_desc" type="text" formControlName="sale_desc"></textarea>
+  </div>
+
+  <div>
+    <label for="payment_token">Payment Token: </label>
+    <input id="payment_token" type="text" formControlName="payment_token" />
+  </div>
+
+  <div>
+    <label for="recipient_addr">Recipient Address: </label>
+    <input id="recipient_addr" type="text" formControlName="recipient_addr" />
+  </div>
+
+  <div>
+    <label for="sale_image">Upload the file used for the NFT: </label>
+    <input
+      id="sale_image"
+      type="file"
+      formControlName="sale_image"
+      (change)="onFileChange($event)"
+    />
+  </div>
+
+  <div>
+    <em
+      >Note: MetaData for NFT file will be generated automatically and sent to
+      IPFS so no need to upload here.</em
+    >
+  </div>
+
+  <div *ngIf="saleForm.invalid">
+    <p>Please fill all values</p>
+  </div>
+  <div *ngIf="saleForm.valid">
+    <p>You can submit now!</p>
+  </div>
+
+  <button type="submit" [disabled]="!saleForm.valid">Submit</button>
+</form>

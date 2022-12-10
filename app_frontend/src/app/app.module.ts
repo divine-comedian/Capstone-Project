@@ -29,7 +29,8 @@ import { CreateSaleComponent } from './components/create-sale/create-sale.compon
     NgbModule,
     HttpClientModule,
     AppRoutingModule,
-    ReactiveFormsModule
+    ReactiveFormsModule, //for our forms
+    HttpClientModule //for http-client for uploading to IPFS (use axios if this doesn't work)
   ],
   providers: [],
   bootstrap: [AppComponent]
