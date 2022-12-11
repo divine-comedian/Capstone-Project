@@ -1,7 +1,7 @@
 {
   "resolveJsonModule": true,
 "esModuleInterop": true,
-  "include": ["./scripts", "./test", "./typechain-types"],
+  "include": ["./scripts", "./tests", "./typechain-types"],
   "files": ["./hardhat.config.ts"],
   "compilerOptions": {
     "target": "es2020",
