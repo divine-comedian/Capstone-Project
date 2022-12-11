@@ -3,14 +3,22 @@ import { Component } from '@angular/core';
 import { BigNumber, ethers } from 'ethers';
 import { SalesContractService } from "./services/sales-contract.service";
 
-import salesContractInterface  from '../assets/SalesContractHere.json'; //Lottery/Auction
-import salesFactoryContractInterface  from '../assets/SalesFactoryContractHere.json'; //Factory
+import { environment } from 'src/environments/environment'
 
-const SALES_FACTORY_ADDRESS = "0x"; //move to a Service maybe?
-const SALES_ADDRESS = "0x"; //move to a Service maybe?
+import salesFactoryContractInterface  from '../assets/SalesFactoryContract.json'; //Factory
+import lotteryTokenContractInterface  from '../assets/LotteryToken.json';
 
-const ALCHEMY_API_KEY="MwLDDsXrUc33uY_JtGf7si7uJbd0cyQy";
-const ETHERSCAN_API_KEY="14KQ8F8MHK4JDKYIVAMEJDCWF88MYIHZ8J";
+import auctionContractInterface  from '../assets/AuctionContract.json'; //Lottery/Auction
+import lotteryContractInterface  from '../assets/LotteryContract.json';
+
+
+const SALES_FACTORY_ADDRESS = environment.salesFactoryContractAddress; //move to a Service maybe?
+const SALES_TOKEN_ADDRESS = environment.salesTokenContractAddress; //move to a Service maybe?
+//const AUCTION_ADDRESS = environment.; //move to a Service maybe?
+
+const ALCHEMY_API_KEY   = environment.ALCHEMY_API_KEY;
+const ETHERSCAN_API_KEY = environment.ETHERSCAN_API_KEY;
+
 declare global {
   interface Window {
     ethereum: any
@@ -28,7 +36,9 @@ export class AppComponent {
   signer: ethers.Signer | undefined;
   walletAddress: string | undefined;
   salesFactoryContract: ethers.Contract | undefined;
-  salesContract: ethers.Contract | undefined;
+    lotteryContract: ethers.Contract | undefined; //trying to get these to be under correct child components, but temporary adding here
+    auctionContract: ethers.Contract | undefined;  //trying to get these to be under correct child components, but temporary adding here
+  salesTokenContract: ethers.Contract | undefined;
   lastNetworkBlock: number | undefined; //remove this later, just testing connecting to Goerli
 
   constructor(
@@ -67,6 +77,19 @@ export class AppComponent {
     //this.salesContractAddress = SALES_ADDRESS;
     //this.salesFactoryContract = new ethers.Contract( SALES_FACTORY_ADDRESS, salesFactoryContractInterface.abi, signer);
     //this.salesContract = new ethers.Contract( SALES_ADDRESS , salesFactoryContractInterface.abi, signer); //could be hardcoded vs returning from API
+
+    /*
+    this.lotteryContract = new ethers.Contract( "0x85bc5257EBCb612bb552B8DF2645F17FE5C80845", lotteryContractInterface.abi, signer);
+    const betPrice1 = await this.lotteryContract['betPrice']();
+    console.log('betPrice1:'+ betPrice1 );  
+    const betsOpen1 = await this.lotteryContract['betsOpen']();
+    console.log('betsOpen:'+ betsOpen1 );
+    const window1 = await this.lotteryContract['window']();
+    console.log('window1:'+ window1 );
+    const lotteryClosingTime1 = await this.lotteryContract['lotteryClosingTime']();
+    console.log('lotteryClosingTime1:'+ lotteryClosingTime1 );
+    */
+
 
     //this.updateBlockchainInfo();
     //setInterval( this.updateBlockchainInfo.bind(this), 5000);
