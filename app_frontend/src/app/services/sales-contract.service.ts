@@ -64,6 +64,13 @@ export class SalesContractService {
   
     return await contract['betPrice']();
   }
+  public async getLotteryInfoClosingTime(lottery_addr:string, json_interface:any, bySigner:boolean): Promise<number> {
+    console.log('########################## inside getLotteryInfoClosingTime()');
+    console.log(lottery_addr, json_interface.abi, bySigner);
+    const contract = await SalesContractService.getContract( lottery_addr, json_interface.abi, bySigner );
+  
+    return await contract['lotteryClosingTime']();
+  }
 
   public async launchLottery(bet_price:number, payment_token:string, ipfs_url:string, recipient_addr:string, bySigner:boolean): Promise<number> {
     console.log('########################## inside launchLottery()');

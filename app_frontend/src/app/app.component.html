@@ -20,16 +20,15 @@
   </button>
 </div>
 <div *ngIf="signer">
-  <div *ngIf="(signer && true) || this.salesFactoryContract">
-    <!-- remove the 'true ||'' later once get Contracts Instances setup -->
-    <button
-      type="button"
-      class="btn btn-success btn-lg px-4 gap-3"
-      routerLink="/sale/create"
-    >
-      Create Sale (Lottery or Auction)
-    </button>
-  </div>
+  <!-- <div *ngIf="salesFactoryContract"> -->
+  <button
+    type="button"
+    class="btn btn-success btn-lg px-4 gap-3"
+    routerLink="/sale/create"
+  >
+    Create Sale (Lottery or Auction)
+  </button>
+  <!-- </div> -->
   <div>
     Your Wallet Address is: {{ walletAddress }} <br />
     Last block on network is: {{ lastNetworkBlock }}.

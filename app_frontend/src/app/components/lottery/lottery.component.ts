@@ -16,6 +16,7 @@ export class LotteryComponent implements OnInit {
 
   contract_addr: string | undefined | null = "";
   betPrice: number | undefined ; //getting from blockchain to test
+  closingTime: number | undefined; 
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -34,6 +35,11 @@ export class LotteryComponent implements OnInit {
           console.log('On Lottery component page, bet price is:'+ x );
           this.betPrice = x;
         });
+        this.salesContractService.getLotteryInfoClosingTime(this.contract_addr, saleLotteryInterface, true).then((x:number)=>{
+          console.log('On Lottery component page, closingTime is:'+ x );
+          this.closingTime = x;
+        });
+        
 
         
       }
