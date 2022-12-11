@@ -18,13 +18,15 @@ interface IERC20 {
 interface IERC721 {
     function safeMint(address to, string memory uri) external;
     function renounceRole(bytes32 role, address account) external;
+    event Transfer(address indexed from, address indexed to, uint256 indexed tokenId);
+
 }
 
 contract Auction {
     event Start(uint auctionClosingTime);
     event Bid(address indexed sender, uint amount);
     event Withdraw(address indexed bidder, uint amount);
-    event End(address winner, uint amount);
+    event End(address winner);
     event EndWithNoBids(string message);
 
     string private nftData;
@@ -39,13 +41,22 @@ contract Auction {
     uint256 public highestBid;
     mapping(address => uint) public bids;
 
+
+    ///@notice this will simultanteously deploy the contract and begin the sale
+    ///@param _startingBid the initial bidding price of the auction
+    ///@param _paymentToken the ERC20 compatible token that users will use to place bids - funds are transferred and held in this contract
+    ///@param _nft the address of the base nft contract that will mint the nft to be sold in this auction
+    ///@param _uri the IPFS CID containing the complete metadata for the nft to be minted
+    ///@param _saleOwner the address of the user who initiated the sale
+    ///@param _closingTime the UNIX timestamp of when the sale will end 
     constructor(
         uint _startingBid,
         address _paymentToken,
         address _nft,
         string memory _uri,
         address _recipient,
-        address _saleOwner
+        address _saleOwner,
+        uint256 _closingTime
     ) {
         nft = IERC721(_nft);
         nftData = _uri;
@@ -54,6 +65,15 @@ contract Auction {
         beneficiary = _recipient;
         startingBid = _startingBid;
         saleOwner = _saleOwner;
+        require(!auctionOpen, "started");
+        require(
+            _closingTime > block.timestamp,
+            "Closing time must be in the future"
+        );
+        auctionOpen = true;
+        auctionClosingTime = _closingTime;
+
+        emit Start(auctionClosingTime);
     }
     ///@notice start the auction, auctionOpen must be false 
     /// this can only be started by the saleOwner
@@ -110,7 +130,7 @@ contract Auction {
             nft.safeMint(highestBidder, nftData);
             nft.renounceRole( keccak256('MINTER_ROLE'), address(this));
             paymentToken.transfer(beneficiary, highestBid);
-            emit End(highestBidder, highestBid);
+            emit End(highestBidder);
         }
         else {
             emit EndWithNoBids("no bids, restart the auction!");
