@@ -38,7 +38,24 @@ export class SalesMongoService {
           bet_price: '100',
           ipfs_url: 'https://gateway.pinata.cloud/ipfs/QmZZxTm4JBtkNp9cVGbYL9LgYARARvRWEekrpQLAgAanPN'
   
-      }
+        },
+        {
+            sale_contract_addr: '0xf15f0c842fD76A1a18B065E3ad70BA768Cac2920',
+            name_of_sale: 'Sale #3',
+            type_of_sale: 'lottery',
+            description: 'This is Sale#3 ...',
+            recipient: {
+                recipient_name: 'Foundation#3',
+                recipient_desc: 'This is a great foundation we are donated proceeds to.',
+                recipient_addr: '0xA2dd619dB59A3BDa94A39Ea3006396C7584294Ee'
+            },
+            lottery_closing_time: new Date('2022-12-12 12:19:41'),
+            bet_price: '100',
+            ipfs_url: 'https://gateway.pinata.cloud/ipfs/Qmbj22vUHfMZ7aWEmzdkzHsywY9cbJJQQanmKuez86WwVC'
+    
+        }
+
+      
       /*,
       {
           sale_contract_addr: '0x89cADf11cb79f5eAf0E37D0Ad2f82023CE63F67e',
