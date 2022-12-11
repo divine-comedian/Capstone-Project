@@ -96,8 +96,8 @@ contract Auction {
     /// @param amount the amount to bid on the auction - this amount must be higher than the highestBid
     function bid(uint256 amount) public {
         require(auctionOpen, "not started");
-        require(block.timestamp < auctionClosingTime, "it is still too early to end");
-        require(amount > highestBid, "value < highest");
+        require(block.timestamp < auctionClosingTime, "auction has ended!");
+        require(amount > highestBid, "bid amount must be higher than highest bid");
         paymentToken.transferFrom(msg.sender, address(this), amount);
         if (highestBidder != address(0)) {
             bids[highestBidder] += highestBid;
