@@ -13,7 +13,7 @@ on:
 
 env:
   ## Sets environment variable
-  BACKEND_DIRECTORY: backend
+  BACKEND_DIRECTORY: app_backend
   PUBLISH_PROFILE: ${{ secrets.PIXELFORPEACE_PUBLISH_PROFILE }}
   APP_NAME: pixelforpeace-api
   SLOT_NAME: Production
