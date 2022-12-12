@@ -30,7 +30,7 @@ declare global {
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
-  title = 'Test Routing';
+  title = '';
   //someRootVar = 'SharedRootVar';
   provider: ethers.providers.BaseProvider | undefined;
   signer: ethers.Signer | undefined;
@@ -44,6 +44,7 @@ export class AppComponent {
   constructor(
     private salesContractService: SalesContractService
   ) {
+    this.title = 'Pixels for Peace NFT Project';
     const provider = ethers.getDefaultProvider("goerli", {alchemy: ALCHEMY_API_KEY, etherscan: ETHERSCAN_API_KEY});
     this.provider = provider; //maybe get a default provider so can get some meta-data initially without user connecting... like read-only info about Contracts
     this.getLastBlock(); //prove it works without MetaMask Connecting

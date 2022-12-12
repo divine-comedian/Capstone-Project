@@ -1,37 +1,38 @@
-<h1>Main Page - {{ title }}</h1>
-<p>Test: the last block on the network was: {{ lastNetworkBlock }}</p>
-<nav>
-  <ul>
-    <li><a routerLink="/" routerLinkActive="active">Home</a></li>
-    <li><a routerLink="/profile" routerLinkActive="active">Profile</a></li>
-    <li>
-      <a routerLink="/my-winnings" routerLinkActive="active">My Winnings</a>
-    </li>
-  </ul>
-</nav>
+<div class="container">
+  <h1>{{ title }}</h1>
+  <img src="/assets/images/p4p.png" width="100px" height="100px" />
+  <p>Test: the last block on the network was: {{ lastNetworkBlock }}</p>
+  <nav>
+    <ul>
+      <li><a routerLink="/" routerLinkActive="active">Home</a></li>
+      <li><a routerLink="/profile" routerLinkActive="active">Profile</a></li>
+      <!--
+        <li>
+        <a routerLink="/my-winnings" routerLinkActive="active">My Winnings</a>
+      </li>
+    --></ul>
+  </nav>
 
-<div *ngIf="!signer">
-  <button
-    type="button"
-    class="btn btn-success btn-lg px-4 gap-3"
-    (click)="connectWallet()"
-  >
-    Connect your Wallet
-  </button>
-</div>
-<div *ngIf="signer">
-  <!-- <div *ngIf="salesFactoryContract"> -->
-  <button
-    type="button"
-    class="btn btn-success btn-lg px-4 gap-3"
-    routerLink="/sale/create"
-  >
-    Create Sale (Lottery or Auction)
-  </button>
-  <!-- </div> -->
   <div>
-    Your Wallet Address is: {{ walletAddress }} <br />
-    Last block on network is: {{ lastNetworkBlock }}.
+    <button
+      type="button"
+      class="btn btn-primary"
+      (click)="connectWallet()"
+      *ngIf="!signer"
+    >
+      Connect your Wallet
+    </button>
+    <button type="button" disabled class="btn btn-success" *ngIf="signer">
+      Wallet Connected: {{ walletAddress }}
+    </button>
+  </div>
+  <div *ngIf="signer">
+    <!-- <div *ngIf="salesFactoryContract"> -->
+    <button type="button" class="btn btn-primary" routerLink="/sale/create">
+      Create Sale (Lottery or Auction)
+    </button>
+    <!-- </div> -->
+    <div>Last block on network is: {{ lastNetworkBlock }}.</div>
   </div>
 </div>
 
