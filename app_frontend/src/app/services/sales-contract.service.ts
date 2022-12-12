@@ -130,6 +130,20 @@ export class SalesContractService {
     console.log(`Bets placed (${receipt.transactionHash})\n`);
     return receipt.transactionHash;
   }
+  public async postLotteryBetMany(lottery_addr:string, lottery_json_interface:any, payment_token_addr:string, payment_token_interface:any, bet_price:number, number_of_bets:number,  bySigner:boolean): Promise<string> {
+    console.log('########################## inside postLotteryBetMany()');
+    const lottery_contract = await SalesContractService.getContract( lottery_addr, lottery_json_interface.abi, bySigner );
+    const lottery_token_contract = await SalesContractService.getContract( payment_token_addr, payment_token_interface.abi, bySigner );
+
+    const spending_limit = (bet_price * number_of_bets);
+    const allowTx = await lottery_token_contract["approve"]( lottery_contract.address, spending_limit ); //ethers.constants.MaxUint256
+    await allowTx.wait();
+    const tx = await lottery_contract["betMany"](number_of_bets);
+    const receipt = await tx.wait();
+    console.log(`Bets placed (${receipt.transactionHash})\n`);
+    return receipt.transactionHash;
+  }
+  
 
 
 

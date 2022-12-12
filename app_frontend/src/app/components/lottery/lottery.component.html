@@ -5,7 +5,10 @@
     (Lottery Contract has {{ tokenBalanceOfContract }} of this token aka
     {{ tokenBalanceOfContractSmallerUnits }} units/cents)
   </p>
-  <p>Lottery state is: {{ betsOpen ? "Open" : "Closed" }}</p>
+  <p>
+    Lottery state is: {{ betsOpen ? "Open" : "Closed" }} (TODO: but can be
+    Closed since date is passed)
+  </p>
   <p>betPrice is: {{ betPrice }}</p>
   <p>ownerPool (total amount to win) is at: {{ ownerPool }}</p>
   <p>
@@ -26,6 +29,18 @@
       <button type="button" class="btn btn-primary" (click)="bet()">
         Click here to Bet
       </button>
+      <div>
+        or Bet many times:
+        <br />
+        <input #numberOfBets type="number" min="0" placeholder="1" />
+        <button
+          type="button"
+          class="btn btn-primary"
+          (click)="betMany(numberOfBets.value)"
+        >
+          Bet Many Times
+        </button>
+      </div>
     </div>
   </div>
 </div>
