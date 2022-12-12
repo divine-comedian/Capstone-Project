@@ -109,5 +109,14 @@ export class AuctionComponent implements OnInit {
       });
     }
   }
+  withdraw(){
+    console.log('auction.bid()');
+    if(this.contract_addr) {
+      this.salesContractService.postWithdrawBid(this.contract_addr, saleAuctionInterface, true).then((x:string)=>{
+        console.log('bid transaction done:'+ x);
+        alert('You have withdraw your bid successfully!');
+      });
+    }
+  }
 
 }
