@@ -1,2 +1,46 @@
-<p>Lottery works! contract addr is: {{ contract_addr }}</p>
-<p>betPrice (getting from BlockChain is: {{ betPrice }} )</p>
+<div class="container">
+  <h3>Lottery Info</h3>
+  <p>
+    Lottery contract addr is: {{ contract_addr }} <br />
+    (Lottery Contract has {{ tokenBalanceOfContract }} of this token aka
+    {{ tokenBalanceOfContractSmallerUnits }} units/cents)
+  </p>
+  <p>
+    Lottery state is: {{ betsOpen ? "Open" : "Closed" }} (TODO: but can be
+    Closed since date is passed)
+  </p>
+  <p>betPrice is: {{ betPrice }}</p>
+  <p>ownerPool (total amount to win) is at: {{ ownerPool }}</p>
+  <p>
+    closing time is
+    {{ closingTime }} ({{ closingTimeDateLocalized?.toLocaleString() }})
+  </p>
+  <p>
+    Maybe get preview image from MongoDB, since the JSON MetaData is private
+    <img src="temp" />
+  </p>
+  <div class="actions">
+    <div class="betTokens">
+      <!--*ngIf="signer and has > 0 tokens and date isn't closed yet and lottery still Open"-->
+      <div>
+        Bet {{ betPrice }} of {{ paymentToken }} (you have {{ tokenBalance }} of
+        this token aka {{ tokenBalanceSmallerUnits }} units/cents)
+      </div>
+      <button type="button" class="btn btn-primary" (click)="bet()">
+        Click here to Bet
+      </button>
+      <div>
+        or Bet many times:
+        <br />
+        <input #numberOfBets type="number" min="0" placeholder="1" />
+        <button
+          type="button"
+          class="btn btn-primary"
+          (click)="betMany(numberOfBets.value)"
+        >
+          Bet Many Times
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

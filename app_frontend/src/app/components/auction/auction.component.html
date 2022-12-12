@@ -1,1 +1,42 @@
-<p>Auction works! contract addr is: {{ contract_addr }}</p>
+<div class="container">
+  <h3>Auction Info</h3>
+  <p>
+    Auction contract addr is: {{ contract_addr }} <br />
+    (Auction Contract has {{ tokenBalanceOfContract }} of this token aka
+    {{ tokenBalanceOfContractSmallerUnits }} units/cents)
+  </p>
+  <p>
+    Auction state is: {{ auctionOpen ? "Open" : "Closed" }} (TODO: but can be
+    Closed since date is passed)
+  </p>
+  <p>
+    highestBid (getting from BlockChain is: {{ highestBid }}
+    <span *ngIf="highestBid && highestBid > 0">by {{ highestBidder }}</span>
+  </p>
+  <p>
+    closing time is
+    {{ closingTime }} ({{ closingTimeDateLocalized?.toLocaleString() }})
+  </p>
+  <p>
+    Maybe get preview image from MongoDB, since the JSON MetaData is private
+    <img src="temp" />
+  </p>
+  <div class="actions">
+    <div class="bidAuction">
+      <!--*ngIf="signer and has > 0 tokens and date isn't closed yet and lottery still Open"-->
+      <div>
+        Bid on this Auction (you have {{ tokenBalance }} of this token aka
+        {{ tokenBalanceSmallerUnits }} units/cents)
+      </div>
+      <!--<input id="bid_price" type="number" formControlName="bid_price" />-->
+      <input #bid_price type="number" min="0" placeholder="0" />
+      <button
+        type="button"
+        class="btn btn-primary"
+        (click)="bid(bid_price.value)"
+      >
+        Bid
+      </button>
+    </div>
+  </div>
+</div>

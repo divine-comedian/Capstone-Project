@@ -5,16 +5,14 @@ import { SalesContractService } from "./services/sales-contract.service";
 
 import { environment } from 'src/environments/environment'
 
-import salesFactoryContractInterface  from '../assets/SalesFactoryContract.json'; //Factory
-import lotteryTokenContractInterface  from '../assets/LotteryToken.json';
+import salesFactoryContractInterface  from '../assets/SaleFactory.json'; //Factory
+import saleTokenContractInterface  from '../assets/IERC20.json';
 
-import auctionContractInterface  from '../assets/AuctionContract.json'; //Lottery/Auction
-import lotteryContractInterface  from '../assets/LotteryContract.json';
+import auctionContractInterface  from '../assets/Auction.json'; //Lottery/Auction
+import lotteryContractInterface  from '../assets/Lottery.json';
 
 
 const SALES_FACTORY_ADDRESS = environment.salesFactoryContractAddress; //move to a Service maybe?
-const SALES_TOKEN_ADDRESS = environment.salesTokenContractAddress; //move to a Service maybe?
-//const AUCTION_ADDRESS = environment.; //move to a Service maybe?
 
 const ALCHEMY_API_KEY   = environment.ALCHEMY_API_KEY;
 const ETHERSCAN_API_KEY = environment.ETHERSCAN_API_KEY;
@@ -30,7 +28,7 @@ declare global {
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
-  title = 'Test Routing';
+  title = '';
   //someRootVar = 'SharedRootVar';
   provider: ethers.providers.BaseProvider | undefined;
   signer: ethers.Signer | undefined;
@@ -44,6 +42,7 @@ export class AppComponent {
   constructor(
     private salesContractService: SalesContractService
   ) {
+    this.title = 'Pixels for Peace NFT Project';
     const provider = ethers.getDefaultProvider("goerli", {alchemy: ALCHEMY_API_KEY, etherscan: ETHERSCAN_API_KEY});
     this.provider = provider; //maybe get a default provider so can get some meta-data initially without user connecting... like read-only info about Contracts
     this.getLastBlock(); //prove it works without MetaMask Connecting
