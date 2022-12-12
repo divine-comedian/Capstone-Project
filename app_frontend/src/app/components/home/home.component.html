@@ -1,0 +1,30 @@
+<p>home works!</p>
+
+<div class="container">
+  <div *ngFor="let sale of sales">
+    <div>
+      <a
+        href="sale/{{
+          (sale.type_of_sale == 'auction' ? 'auction' : 'lottery') +
+            '/' +
+            sale.sale_contract_addr
+        }}"
+        >{{ sale.name_of_sale }}</a
+      >
+    </div>
+    <div>{{ sale.type_of_sale }}</div>
+    <div>{{ sale.recipient.recipient_name }}</div>
+
+    <div *ngIf="sale.type_of_sale == 'lottery'">
+      <div>{{ sale.lottery_closing_time }}</div>
+      <div>{{ sale.bet_price }}</div>
+    </div>
+
+    <div *ngIf="sale.type_of_sale == 'auction'">
+      <div>{{ sale.auctinClosingTime }}</div>
+      <div>{{ sale.highestBid }}</div>
+    </div>
+
+    <div><img height="100px" width="100px" src="{{ sale.ipfs_url }}" /></div>
+  </div>
+</div>

@@ -1,0 +1,66 @@
+<h1>Main Page - {{ title }}</h1>
+<p>Test: the last block on the network was: {{ lastNetworkBlock }}</p>
+<nav>
+  <ul>
+    <li><a routerLink="/" routerLinkActive="active">Home</a></li>
+    <li><a routerLink="/profile" routerLinkActive="active">Profile</a></li>
+    <li>
+      <a routerLink="/my-winnings" routerLinkActive="active">My Winnings</a>
+    </li>
+  </ul>
+</nav>
+
+<div *ngIf="!signer">
+  <button
+    type="button"
+    class="btn btn-success btn-lg px-4 gap-3"
+    (click)="connectWallet()"
+  >
+    Connect your Wallet
+  </button>
+</div>
+<div *ngIf="signer">
+  <div *ngIf="(signer && true) || this.salesFactoryContract">
+    <!-- remove the 'true ||'' later once get Contracts Instances setup -->
+    <button
+      type="button"
+      class="btn btn-success btn-lg px-4 gap-3"
+      routerLink="/sale/create"
+    >
+      Create Sale (Lottery or Auction)
+    </button>
+  </div>
+  <div>
+    Your Wallet Address is: {{ walletAddress }} <br />
+    Last block on network is: {{ lastNetworkBlock }}.
+  </div>
+</div>
+
+<!--
+    <div *ngIf="!(wallet || signer)">
+
+        <button
+          type="button"
+          class="btn btn-success btn-lg px-4 gap-3"
+          (click)="connectWallet()"
+        >
+          Connect a Wallet
+        </button>
+
+    </div>
+
+    <div *ngIf="wallet || signer">
+      <p class="lead mg-4">This is your address: {{ walletAddress }}</p>
+      <p class="lead mg-4">
+        This is the lottery token address:
+        {{ lotteryTokenContractAddress }}
+        <br />
+        This is the lottery address:
+        {{ lotteryContractAddress }}
+
+        SaleFactory.launchLottery
+        SaleFactory.launchAuction
+      -->
+
+<router-outlet></router-outlet>
+<!--<app-messages></app-messages>-->
