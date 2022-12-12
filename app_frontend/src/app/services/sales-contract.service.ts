@@ -97,24 +97,12 @@ export class SalesContractService {
   
     return await contract['paymentToken']();
   }
-  public async postLotteryBet(lottery_addr:string, lottery_json_interface:any, payment_token_addr:string, payment_token_interface:any, bySigner:boolean): Promise<string> {
-    console.log('########################## inside getLotteryInfoPaymentToken()');
-    const lottery_contract = await SalesContractService.getContract( lottery_addr, lottery_json_interface.abi, bySigner );
-    const lottery_token_contract = await SalesContractService.getContract( payment_token_addr, payment_token_interface.abi, bySigner );
-
-    const allowTx = await lottery_token_contract["approve"]( lottery_contract.address, ethers.constants.MaxUint256 );
-    await allowTx.wait();
-    const tx = await lottery_contract["bet"]();
-    const receipt = await tx.wait();
-    console.log(`Bets placed (${receipt.transactionHash})\n`);
-    return receipt.transactionHash;
-  }
   public async getLotteryTokenBalance(lottery_token_addr:string, token_json_interface:any, bySigner:boolean): Promise<number> {
     console.log('########################## inside getLotteryInfOwnerPool()');
     console.log(lottery_token_addr, token_json_interface.abi, bySigner);
     const contract = await SalesContractService.getContract( lottery_token_addr, token_json_interface.abi, bySigner );
   
-    const wallet_addr = contract.signer.getAddress();//popup will prob come up, until we can re-use signer
+    const wallet_addr = await contract.signer.getAddress();//popup will prob come up, until we can re-use signer
 
     const bal = await contract["balanceOf"](wallet_addr); //this.walletAddress
     console.log(`The Lottery Token balance for wallet XYZ is ${bal}`);
@@ -130,13 +118,25 @@ export class SalesContractService {
     console.log(`The Lottery Token balance for wallet XYZ is ${bal}`);
     return bal;
   }
+  public async postLotteryBet(lottery_addr:string, lottery_json_interface:any, payment_token_addr:string, payment_token_interface:any, bySigner:boolean): Promise<string> {
+    console.log('########################## inside postLotteryBet()');
+    const lottery_contract = await SalesContractService.getContract( lottery_addr, lottery_json_interface.abi, bySigner );
+    const lottery_token_contract = await SalesContractService.getContract( payment_token_addr, payment_token_interface.abi, bySigner );
+
+    const allowTx = await lottery_token_contract["approve"]( lottery_contract.address, ethers.constants.MaxUint256 );
+    await allowTx.wait();
+    const tx = await lottery_contract["bet"]();
+    const receipt = await tx.wait();
+    console.log(`Bets placed (${receipt.transactionHash})\n`);
+    return receipt.transactionHash;
+  }
 
 
   //Auction specific
-  public async getAuctionInfoAuctionOpen(lottery_addr:string, json_interface:any, bySigner:boolean): Promise<boolean> {
+  public async getAuctionInfoAuctionOpen(auction_addr:string, json_interface:any, bySigner:boolean): Promise<boolean> {
     console.log('########################## inside getAuctionInfoAuctionOpen()');
-    console.log(lottery_addr, json_interface.abi, bySigner);
-    const contract = await SalesContractService.getContract( lottery_addr, json_interface.abi, bySigner );
+    console.log(auction_addr, json_interface.abi, bySigner);
+    const contract = await SalesContractService.getContract( auction_addr, json_interface.abi, bySigner );
   
     return await contract['auctionOpen']();
   }
@@ -161,6 +161,47 @@ export class SalesContractService {
   
     return await contract['auctionClosingTime']();
   }
+  public async getAuctionInfoPaymentToken(auction_addr:string, json_interface:any, bySigner:boolean): Promise<string> {
+    console.log('########################## inside getAuctionInfoPaymentToken()');
+    console.log(auction_addr, json_interface.abi, bySigner);
+    const contract = await SalesContractService.getContract( auction_addr, json_interface.abi, bySigner );
+  
+    return await contract['paymentToken']();
+  }
+  public async getAuctionTokenBalance(auction_token_addr:string, token_json_interface:any, bySigner:boolean): Promise<number> {
+    console.log('########################## inside getAuctionTokenBalance()');
+    console.log(auction_token_addr, token_json_interface.abi, bySigner);
+    const contract = await SalesContractService.getContract( auction_token_addr, token_json_interface.abi, bySigner );
+  
+    const wallet_addr = await contract.signer.getAddress();//popup will prob come up, until we can re-use signer
+    //console.log('wallet_addr:'+wallet_addr);
+    const bal = await contract["balanceOf"](wallet_addr); //this.walletAddress
+    console.log(`The Auction Token balance for wallet XYZ is ${bal}`);
+    return bal;
+  }
+  public async getAuctionTokenBalanceOfContract(auction_token_addr:string, auction_contract_token_addr:string, token_json_interface:any, bySigner:boolean): Promise<number> {
+    console.log('########################## inside getAuctionTokenBalanceOfContract()');
+    console.log(auction_token_addr, token_json_interface.abi, bySigner);
+    const contract = await SalesContractService.getContract( auction_token_addr, token_json_interface.abi, bySigner );
+  
+    //const wallet_addr = contract.signer.getAddress();//popup will prob come up, until we can re-use signer
+    const bal = await contract["balanceOf"](auction_contract_token_addr); //this.walletAddress
+    console.log(`The Auction Token balance for wallet XYZ is ${bal}`);
+    return bal;
+  }
+  public async postAuctionBid(auction_addr:string, auction_json_interface:any, payment_token_addr:string, payment_token_interface:any, bid_price:number, bySigner:boolean): Promise<string> {
+    console.log('########################## inside postLotteryBet()');
+    const lottery_contract = await SalesContractService.getContract( auction_addr, auction_json_interface.abi, bySigner );
+    const lottery_token_contract = await SalesContractService.getContract( payment_token_addr, payment_token_interface.abi, bySigner );
+
+    const allowTx = await lottery_token_contract["approve"]( lottery_contract.address, ethers.constants.MaxUint256 );
+    await allowTx.wait();
+    const tx = await lottery_contract["bid"](bid_price);
+    const receipt = await tx.wait();
+    console.log(`Bets placed (${receipt.transactionHash})\n`);
+    return receipt.transactionHash;
+  }
+  
 
 
 
