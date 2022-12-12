@@ -5,7 +5,10 @@
     (Auction Contract has {{ tokenBalanceOfContract }} of this token aka
     {{ tokenBalanceOfContractSmallerUnits }} units/cents)
   </p>
-  <p>Auction state is: {{ auctionOpen ? "Open" : "Closed" }}</p>
+  <p>
+    Auction state is: {{ auctionOpen ? "Open" : "Closed" }} (TODO: but can be
+    Closed since date is passed)
+  </p>
   <p>
     highestBid (getting from BlockChain is: {{ highestBid }}
     <span *ngIf="highestBid && highestBid > 0">by {{ highestBidder }}</span>

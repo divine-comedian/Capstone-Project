@@ -112,5 +112,16 @@ export class LotteryComponent implements OnInit {
       });
     }
   }
+  betMany(numberOfBets:string) {
+    console.log('lottery.bet()');
+    const numberOfBetsInt = parseInt(numberOfBets);
+    if(this.contract_addr && this.paymentToken && this.betPrice) {
+      this.salesContractService.postLotteryBetMany(this.contract_addr, saleLotteryInterface, this.paymentToken, saleTokenInterface, this.betPrice, numberOfBetsInt, true).then((x:string)=>{
+        console.log('bet transaction done:'+ x);
+        alert('You have betted successfully!');
+      });
+    }
+  }
+
 
 }

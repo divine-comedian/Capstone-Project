@@ -78,6 +78,23 @@ export class SalesMongoService {
   
       },
 
+      {
+        sale_contract_addr: '0x43dE11745093C958e68a1235FF100adF0ADF5aDf',
+        name_of_sale: 'ArianLottery#5',
+        type_of_sale: 'lottery',
+        description: 'This is Sale#5 ...',
+        recipient: {
+            recipient_name: 'Foundation#1',
+            recipient_desc: 'This is a great foundation we are donated proceeds to.',
+            recipient_addr: '0xA2dd619dB59A3BDa94A39Ea3006396C7584294Ee'
+        },
+        closing_time: new Date('2022-12-12 12:00:00'),
+        bet_price: '111',
+        json_ipfs_url: 'https://gateway.pinata.cloud/ipfs/QmQW4ByGLohr3KsKunMK9r94XLEWUaXiWiQcfxBsCFKn2v',
+        image_ipfs_url: 'https://gateway.pinata.cloud/ipfs/QmYLxsmiuvPSdiQ6HsDhCGQY6LUEaHSGAQ5G2uKb9UcdRb'
+
+    },
+      
 
         
 
