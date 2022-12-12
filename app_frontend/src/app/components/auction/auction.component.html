@@ -1,1 +1,9 @@
 <p>Auction works! contract addr is: {{ contract_addr }}</p>
+<p>
+  highestBid (getting from BlockChain is: {{ highestBid }}
+  <span *ngIf="highestBid && highestBid > 0">by {{ highestBidder }}</span>
+</p>
+<p>
+  closing time is
+  {{ closingTime }} ({{ closingTimeDateLocalized?.toLocaleString() }})
+</p>

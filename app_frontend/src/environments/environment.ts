@@ -14,9 +14,9 @@ export const environment = {
 
   //old_lotteryContractAddress: "0x0a56d575cCDD80fC007C872352aa2316F4E39325",  //just testing to see if can access already deployed contract via Service
   //old_lotteryTokenContractAddress: "0xb5c7509A14b3e84C2A2D6B7D38024De23ee77904", //just testing to see if can access already deployed contract via Service
-  salesFactoryContractAddress: "0xab666231094d404d6dafd6a1cb41cf0e1e4013b9",
+  salesFactoryContractAddress: "0x650363a00584dc53c62188f41b25d0cfcd2d943d", // "0xab666231094d404d6dafd6a1cb41cf0e1e4013b9",
   salesTokenContractAddress: "0xdc31Ee1784292379Fbb2964b3B9C4124D8F89C60", //DAI style token
-  nftContractAddress: "0x7d1b825d65effd920c984568a0cbf2b375f14dea", //salesFactory will create this NFT
+  //nftContractAddress: "0x7d1b825d65effd920c984568a0cbf2b375f14dea", //salesFactory will create this NFT
   
   //saleLotteryContractAddress: each individual lottery will have its own addr, created by the salesFactory, so won't be global
   //saleAuctionContractAddress: each individual auction will have its own addr, created by the salesFactory, so won't be global

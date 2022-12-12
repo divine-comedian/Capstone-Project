@@ -1,6 +1,7 @@
 <p>create-sale works!</p>
 
-<form [formGroup]="saleForm" (ngSubmit)="onSubmit(this)">
+<form id="saleForm" [formGroup]="saleForm" (ngSubmit)="onSubmit(this)">
+  <!-- <form id="saleForm" [formGroup]="saleForm" (ngSubmit)="onSubmitTest(this)"> -->
   <div>
     <label for="sale_name">Name of Sale: </label>
     <input id="sale_name" type="text" formControlName="sale_name" />
@@ -70,6 +71,14 @@
       (change)="onFileChange($event)"
     />
     <img id="sale_image_preview" src="" width="200px" />
+  </div>
+  <div>
+    <label for="closing_time">Set a Closing Time for this Sale: </label>
+    <input
+      id="closing_time"
+      type="datetime-local"
+      formControlName="closing_time"
+    />
   </div>
 
   <div>
