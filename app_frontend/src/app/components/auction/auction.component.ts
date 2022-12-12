@@ -5,7 +5,9 @@ import { Location } from '@angular/common';
 import { SalesContractService } from 'src/app/services/sales-contract.service';
 
 import saleAuctionInterface  from '../../../assets/Auction.json';
-import { Contract } from 'ethers';
+import salesTokenInterface  from '../../../assets/LotteryToken.json';
+
+import { Contract, ethers } from 'ethers';
 @Component({
   selector: 'app-auction',
   templateUrl: './auction.component.html',
@@ -19,7 +21,12 @@ export class AuctionComponent implements OnInit {
   highestBidder: string | undefined ; 
   closingTime: number | undefined; 
   closingTimeDateLocalized: Date | undefined;
-  
+  paymentToken: string | undefined;
+  tokenBalance: number | undefined;
+  tokenBalanceSmallerUnits:  number | undefined;
+  tokenBalanceOfContract: number | undefined;
+  tokenBalanceOfContractSmallerUnits:  number | undefined;
+
   constructor(
     private activatedRoute: ActivatedRoute,
     private location: Location,
@@ -51,6 +58,31 @@ export class AuctionComponent implements OnInit {
           this.auctionOpen = x;
         });
         
+        this.salesContractService.getAuctionInfoPaymentToken(this.contract_addr, saleAuctionInterface, true).then((x:string)=>{
+          console.log('On Auction component page, ownerPool is:'+ x );
+          this.paymentToken = x;
+          if(this.paymentToken) {
+            this.salesContractService.getAuctionTokenBalance(this.paymentToken, salesTokenInterface, true).then((x:number)=>{
+              console.log('On Auction component page, get auction token balance:'+ x );
+              //console.log( tokenBalanceBigNumber );
+              //console.log( ethers.utils.formatEther(tokenBalanceBigNumber) );
+              this.tokenBalance = parseFloat( ethers.utils.formatUnits(x, 18) ); //TODO: double-check units for this token are 18
+              this.tokenBalanceSmallerUnits = parseFloat( x.toString() );
+            });
+
+            if(this.contract_addr) {
+              this.salesContractService.getAuctionTokenBalanceOfContract(this.paymentToken, this.contract_addr, salesTokenInterface, true).then((x:number)=>{
+                console.log('On Lottery component page, get auction token balance of Auction Contract:'+ x );
+                //console.log( tokenBalanceBigNumber );
+                //console.log( ethers.utils.formatEther(tokenBalanceBigNumber) );
+                this.tokenBalanceOfContract = parseFloat( ethers.utils.formatUnits(x, 18) ); //TODO: double-check units for this token are 18
+                this.tokenBalanceOfContractSmallerUnits = parseFloat( x.toString() );
+              });
+            }
+
+          }
+        });
+
       }
     });
     /* alternate way
@@ -66,6 +98,16 @@ export class AuctionComponent implements OnInit {
     //if(contract_addr===null) { this.contract_addr = ""};
 
     this.contract_addr = contract_addr;
+  }
+
+  bid (bid_price:string){
+    console.log('auction.bid()');
+    if(this.contract_addr && this.paymentToken) {
+      this.salesContractService.postAuctionBid(this.contract_addr, saleAuctionInterface, this.paymentToken, salesTokenInterface, parseInt( bid_price ), true).then((x:string)=>{
+        console.log('bid transaction done:'+ x);
+        alert('You have bid successfully!');
+      });
+    }
   }
 
 }
