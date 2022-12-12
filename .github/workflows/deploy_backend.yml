@@ -1,16 +1,9 @@
 # Docs for the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
 # More GitHub Actions for Azure: https://github.com/Azure/actions
 
-name: Build and deploy Node.js app to Azure Web App - ethdenver-2022-group1-api
-
-env:
-  PUBLISH_PROFILE: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_99ADAB8203EB459DBE24F2847F8BD9DD }}
-  BACKEND_FOLDER_PATH: '.\backend\'
+name: Deploy backend to Azure - Linux
 
 on:
-  push:
-    branches:
-      - main
   workflow_dispatch:
     inputs:
       logLevel:
@@ -18,29 +11,42 @@ on:
         required: true
         default: "warning"
 
+env:
+  ## Sets environment variable
+  BACKEND_DIRECTORY: backend
+  PUBLISH_PROFILE: ${{ secrets.PIXELFORPEACE_PUBLISH_PROFILE }}
+  APP_NAME: pixelforpeace-api
+  SLOT_NAME: Production
+
 jobs:
   build:
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./${{ env.BACKEND_DIRECTORY }}
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: Set up Node.js version
-        uses: actions/setup-node@v1
+        uses: actions/setup-node@v3
         with:
           node-version: "18.x"
 
       - name: npm install, build, and test
-        run: cd $BACKEND_FOLDER_PATH |
+        run: |
           npm install
           npm run build --if-present
           npm run test --if-present
 
+      - name: Zip all files for upload between jobs
+        run: zip --symlinks -r nest.zip ./*
+
       - name: Upload artifact for deployment job
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: node-app
-          path: $BACKEND_FOLDER_PATH
+          path: ${{ github.workspace }}/${{ env.BACKEND_DIRECTORY }}/nest.zip
 
   deploy:
     runs-on: ubuntu-latest
@@ -59,7 +65,7 @@ jobs:
         uses: azure/webapps-deploy@v2
         id: deploy-to-webapp
         with:
-          app-name: "ethdenver-2022-group1-api"
-          slot-name: "Production"
-          publish-profile: $PUBLISH_PROFILE
-          package: .
+          app-name: ${{ env.APP_NAME }}
+          slot-name: ${{ env.SLOT_NAME }}
+          publish-profile: ${{ env.PUBLISH_PROFILE }}
+          package: nest.zip
