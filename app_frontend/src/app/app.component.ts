@@ -13,8 +13,6 @@ import lotteryContractInterface  from '../assets/Lottery.json';
 
 
 const SALES_FACTORY_ADDRESS = environment.salesFactoryContractAddress; //move to a Service maybe?
-const SALES_TOKEN_ADDRESS = environment.salesTokenContractAddress; //move to a Service maybe?
-//const AUCTION_ADDRESS = environment.; //move to a Service maybe?
 
 const ALCHEMY_API_KEY   = environment.ALCHEMY_API_KEY;
 const ETHERSCAN_API_KEY = environment.ETHERSCAN_API_KEY;
