@@ -6,7 +6,7 @@ import { SalesContractService } from "./services/sales-contract.service";
 import { environment } from 'src/environments/environment'
 
 import salesFactoryContractInterface  from '../assets/SaleFactory.json'; //Factory
-import lotteryTokenContractInterface  from '../assets/LotteryToken.json';
+import saleTokenContractInterface  from '../assets/IERC20.json';
 
 import auctionContractInterface  from '../assets/Auction.json'; //Lottery/Auction
 import lotteryContractInterface  from '../assets/Lottery.json';

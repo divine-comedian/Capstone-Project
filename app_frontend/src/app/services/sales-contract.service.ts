@@ -7,7 +7,7 @@ import { environment } from 'src/environments/environment';
 ///import { SalesFactoryContract } from '../contracts/SalesFactoryContract';
 import salesFactoryContractInterface from '../../assets/SaleFactory.json';
 import lotteryContractInterface from '../../assets/Lottery.json';
-import lotteryTokenContractInterface from '../../assets/LotteryToken.json';
+import saleTokenInterface  from '../../assets/IERC20.json';
 import auctionContractInterface from '../../assets/Auction.json';
 import { Provider } from '@ethersproject/providers';
 import detectEthereumProvider from '@metamask/detect-provider';

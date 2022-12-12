@@ -5,9 +5,9 @@ import { Location } from '@angular/common';
 import { SalesContractService } from 'src/app/services/sales-contract.service';
 
 import saleAuctionInterface  from '../../../assets/Auction.json';
-import salesTokenInterface  from '../../../assets/LotteryToken.json';
+import saleTokenInterface  from '../../../assets/IERC20.json';
 
-import { Contract, ethers } from 'ethers';
+import { BigNumber, Contract, ethers } from 'ethers';
 @Component({
   selector: 'app-auction',
   templateUrl: './auction.component.html',
@@ -62,7 +62,7 @@ export class AuctionComponent implements OnInit {
           console.log('On Auction component page, ownerPool is:'+ x );
           this.paymentToken = x;
           if(this.paymentToken) {
-            this.salesContractService.getAuctionTokenBalance(this.paymentToken, salesTokenInterface, true).then((x:number)=>{
+            this.salesContractService.getAuctionTokenBalance(this.paymentToken, saleTokenInterface, true).then((x:number)=>{
               console.log('On Auction component page, get auction token balance:'+ x );
               //console.log( tokenBalanceBigNumber );
               //console.log( ethers.utils.formatEther(tokenBalanceBigNumber) );
@@ -71,7 +71,7 @@ export class AuctionComponent implements OnInit {
             });
 
             if(this.contract_addr) {
-              this.salesContractService.getAuctionTokenBalanceOfContract(this.paymentToken, this.contract_addr, salesTokenInterface, true).then((x:number)=>{
+              this.salesContractService.getAuctionTokenBalanceOfContract(this.paymentToken, this.contract_addr, saleTokenInterface, true).then((x:number)=>{
                 console.log('On Lottery component page, get auction token balance of Auction Contract:'+ x );
                 //console.log( tokenBalanceBigNumber );
                 //console.log( ethers.utils.formatEther(tokenBalanceBigNumber) );
@@ -103,7 +103,7 @@ export class AuctionComponent implements OnInit {
   bid (bid_price:string){
     console.log('auction.bid()');
     if(this.contract_addr && this.paymentToken) {
-      this.salesContractService.postAuctionBid(this.contract_addr, saleAuctionInterface, this.paymentToken, salesTokenInterface, parseInt( bid_price ), true).then((x:string)=>{
+      this.salesContractService.postAuctionBid(this.contract_addr, saleAuctionInterface, this.paymentToken, saleTokenInterface, parseInt( bid_price ), true).then((x:string)=>{
         console.log('bid transaction done:'+ x);
         alert('You have bid successfully!');
       });
