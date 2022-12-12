@@ -5,7 +5,8 @@ import { Location } from '@angular/common';
 import { SalesContractService } from 'src/app/services/sales-contract.service';
 
 import saleLotteryInterface  from '../../../assets/Lottery.json';
-import salesTokenInterface  from '../../../assets/LotteryToken.json';
+import saleTokenInterface  from '../../../assets/IERC20.json';
+
 import { BigNumber, Contract, ethers } from 'ethers';
 
 @Component({
@@ -62,7 +63,7 @@ export class LotteryComponent implements OnInit {
           console.log('On Lottery component page, ownerPool is:'+ x );
           this.paymentToken = x;
           if(this.paymentToken) {
-            this.salesContractService.getLotteryTokenBalance(this.paymentToken, salesTokenInterface, true).then((x:number)=>{
+            this.salesContractService.getLotteryTokenBalance(this.paymentToken, saleTokenInterface, true).then((x:number)=>{
               console.log('On Lottery component page, get lottery token balance:'+ x );
               //console.log( tokenBalanceBigNumber );
               //console.log( ethers.utils.formatEther(tokenBalanceBigNumber) );
@@ -71,7 +72,7 @@ export class LotteryComponent implements OnInit {
             });
 
             if(this.contract_addr) {
-              this.salesContractService.getLotteryTokenBalanceOfContract(this.paymentToken, this.contract_addr, salesTokenInterface, true).then((x:number)=>{
+              this.salesContractService.getLotteryTokenBalanceOfContract(this.paymentToken, this.contract_addr, saleTokenInterface, true).then((x:number)=>{
                 console.log('On Lottery component page, get lottery token balance of Lottery Contract:'+ x );
                 //console.log( tokenBalanceBigNumber );
                 //console.log( ethers.utils.formatEther(tokenBalanceBigNumber) );
@@ -105,7 +106,7 @@ export class LotteryComponent implements OnInit {
   bet() {
     console.log('lottery.bet()');
     if(this.contract_addr && this.paymentToken && this.betPrice) {
-      this.salesContractService.postLotteryBet(this.contract_addr, saleLotteryInterface, this.paymentToken, salesTokenInterface, this.betPrice, true).then((x:string)=>{
+      this.salesContractService.postLotteryBet(this.contract_addr, saleLotteryInterface, this.paymentToken, saleTokenInterface, this.betPrice, true).then((x:string)=>{
         console.log('bet transaction done:'+ x);
         alert('You have betted successfully!');
       });
