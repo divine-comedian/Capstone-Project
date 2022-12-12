@@ -24,6 +24,9 @@ export class LotteryComponent implements OnInit {
   paymentToken: string | undefined;
   tokenBalance: number | undefined;
   tokenBalanceSmallerUnits:  number | undefined;
+  tokenBalanceOfContract: number | undefined;
+  tokenBalanceOfContractSmallerUnits:  number | undefined;
+  
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -66,6 +69,17 @@ export class LotteryComponent implements OnInit {
               this.tokenBalance = parseFloat( ethers.utils.formatUnits(x, 18) ); //TODO: double-check units for this token are 18
               this.tokenBalanceSmallerUnits = parseFloat( x.toString() );
             });
+
+            if(this.contract_addr) {
+              this.salesContractService.getLotteryTokenBalanceOfContract(this.paymentToken, this.contract_addr, lotteryTokenInterface, true).then((x:number)=>{
+                console.log('On Lottery component page, get lottery token balance of Lottery Contract:'+ x );
+                //console.log( tokenBalanceBigNumber );
+                //console.log( ethers.utils.formatEther(tokenBalanceBigNumber) );
+                this.tokenBalanceOfContract = parseFloat( ethers.utils.formatUnits(x, 18) ); //TODO: double-check units for this token are 18
+                this.tokenBalanceOfContractSmallerUnits = parseFloat( x.toString() );
+              });
+            }
+
           }
         });
         

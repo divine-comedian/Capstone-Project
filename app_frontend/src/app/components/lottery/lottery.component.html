@@ -1,6 +1,10 @@
 <div class="container">
   <h3>Lottery Info</h3>
-  <p>Lottery contract addr is: {{ contract_addr }}</p>
+  <p>
+    Lottery contract addr is: {{ contract_addr }} <br />
+    (you have {{ tokenBalanceOfContract }} of this token aka
+    {{ tokenBalanceOfContractSmallerUnits }} units/cents)
+  </p>
   <p>Lottery state is: {{ betsOpen ? "Open" : "Closed" }}</p>
   <p>betPrice is: {{ betPrice }}</p>
   <p>ownerPool (total amount to win) is at: {{ ownerPool }}</p>

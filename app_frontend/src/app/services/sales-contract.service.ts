@@ -115,11 +115,21 @@ export class SalesContractService {
     const contract = await SalesContractService.getContract( lottery_token_addr, token_json_interface.abi, bySigner );
   
     const wallet_addr = contract.signer.getAddress();//popup will prob come up, until we can re-use signer
+
     const bal = await contract["balanceOf"](wallet_addr); //this.walletAddress
     console.log(`The Lottery Token balance for wallet XYZ is ${bal}`);
     return bal;
   }
+  public async getLotteryTokenBalanceOfContract(lottery_token_addr:string, lottery_contract_token_addr:string, token_json_interface:any, bySigner:boolean): Promise<number> {
+    console.log('########################## inside getLotteryInfOwnerPool()');
+    console.log(lottery_token_addr, token_json_interface.abi, bySigner);
+    const contract = await SalesContractService.getContract( lottery_token_addr, token_json_interface.abi, bySigner );
   
+    //const wallet_addr = contract.signer.getAddress();//popup will prob come up, until we can re-use signer
+    const bal = await contract["balanceOf"](lottery_contract_token_addr); //this.walletAddress
+    console.log(`The Lottery Token balance for wallet XYZ is ${bal}`);
+    return bal;
+  }
 
 
   //Auction specific
