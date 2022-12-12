@@ -4,7 +4,7 @@ import { ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
 import { SalesContractService } from 'src/app/services/sales-contract.service';
 
-import saleLotteryInterface  from '../../../assets/LotteryContract.json';
+import saleLotteryInterface  from '../../../assets/Lottery.json';
 import { Contract } from 'ethers';
 
 @Component({
@@ -17,6 +17,7 @@ export class LotteryComponent implements OnInit {
   contract_addr: string | undefined | null = "";
   betPrice: number | undefined ; //getting from blockchain to test
   closingTime: number | undefined; 
+  closingTimeDateLocalized: Date | undefined;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -38,9 +39,8 @@ export class LotteryComponent implements OnInit {
         this.salesContractService.getLotteryInfoClosingTime(this.contract_addr, saleLotteryInterface, true).then((x:number)=>{
           console.log('On Lottery component page, closingTime is:'+ x );
           this.closingTime = x;
+          this.closingTimeDateLocalized = new Date ( x * 1000 ); //convert seconds to  milliseconds
         });
-        
-
         
       }
     });

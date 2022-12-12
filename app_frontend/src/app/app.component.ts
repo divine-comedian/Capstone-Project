@@ -5,11 +5,11 @@ import { SalesContractService } from "./services/sales-contract.service";
 
 import { environment } from 'src/environments/environment'
 
-import salesFactoryContractInterface  from '../assets/SalesFactoryContract.json'; //Factory
+import salesFactoryContractInterface  from '../assets/SaleFactory.json'; //Factory
 import lotteryTokenContractInterface  from '../assets/LotteryToken.json';
 
-import auctionContractInterface  from '../assets/AuctionContract.json'; //Lottery/Auction
-import lotteryContractInterface  from '../assets/LotteryContract.json';
+import auctionContractInterface  from '../assets/Auction.json'; //Lottery/Auction
+import lotteryContractInterface  from '../assets/Lottery.json';
 
 
 const SALES_FACTORY_ADDRESS = environment.salesFactoryContractAddress; //move to a Service maybe?

@@ -8,7 +8,7 @@ import { SalesContractService } from 'src/app/services/sales-contract.service';
 import { environment } from 'src/environments/environment';
 
 
-import salesFactoryInterface  from '../../../assets/SalesFactoryContract.json';
+import salesFactoryInterface  from '../../../assets/SaleFactory.json';
     
 
 /*
@@ -48,10 +48,12 @@ export class CreateSaleComponent {
     // Reactive Form file upload?, look at how to do    
     sale_image: new FormControl('', [Validators.required]),
     sale_image_source: new FormControl('', [Validators.required]),
+    closing_time: new FormControl(''),
     //Lottery-specific field(s)
     bet_price: new FormControl('', [Validators.required]), //since Lottery is the default, make its fields required
     //Auction-specific field(s)
-    starting_bid: new FormControl('', ), //[Validators.required]
+    starting_bid: new FormControl('', ), //[Validators.required],
+    
   });
 
   onFileChange(event:any) {
@@ -96,7 +98,7 @@ export class CreateSaleComponent {
       this.saleForm.get('bet_price')?.updateValueAndValidity();
     }
   }
-  onSubmitTest() {
+  onSubmitTest(event:any) {
     console.log('form submitted; createSaleTest()');
     //console.log(this.saleForm.get('sale_name').value );//non-group way this.sale_name.value
     console.log('name: '+ this.saleForm.controls['sale_name'].value);
@@ -112,8 +114,17 @@ export class CreateSaleComponent {
     console.log('recipient_addr: '+ this.saleForm.controls['recipient_addr'].value);
     console.log('file path: '+ this.saleForm.controls['sale_image'].value);
     console.log('file data: '+ this.saleForm.controls['sale_image_source'].value); //for uploading to IPFS/Pinata
-    const nft_json_meta_data = {"hardcoded": "for_now"};
+    const nft_json_meta_data = {"hardcoded": "for_now"};    
     console.log('JSON META-DATA which will be uploaded:'+ nft_json_meta_data);
+
+    const date_time = this.saleForm.controls['closing_time'].value;
+    console.log('closing_time: '+ date_time);
+    if(date_time!= null) {
+      const date_time_as_date = new Date( date_time );
+      const converted_to_seconds_after_epoch = date_time_as_date.getTime() / 1000;
+      console.log('closing_time(converted to seconds after epoch): '+ converted_to_seconds_after_epoch); //any timezone conversion to UTC/GMT need to happen here for storage or already that way?
+    }
+    
   }
   onSubmit(e:any) { //real submit
     
@@ -143,7 +154,7 @@ export class CreateSaleComponent {
           if(return_val!=''){
             const ipfs_nft_meta_url = "https://gateway.pinata.cloud/ipfs/"+ return_val;
             console.log('NFT metadata JSON on IPFS (with the IPFS url inside) is here: '+ ipfs_nft_meta_url);
-            
+
             //3#################
             //launchLottery or launchAuction
 
@@ -154,7 +165,7 @@ export class CreateSaleComponent {
               if(bet_price_temp) {
                 bet_price = parseInt( bet_price_temp );
               }
-            } else if(lottery_type=='lottery') {      
+            } else if(lottery_type=='auction') {      
               const starting_bid_temp = this.saleForm.controls['starting_bid'].value;
               if(starting_bid_temp) {
                 starting_bid = parseInt( starting_bid_temp );
@@ -163,16 +174,30 @@ export class CreateSaleComponent {
             const payment_token = this.saleForm.controls['payment_token'].value;
             const recipient_addr = this.saleForm.controls['recipient_addr'].value;
             
-            if(payment_token && recipient_addr && ipfs_nft_meta_url ) {
-              if(lottery_type=='lottery' && bet_price) {
-                const x = this.salesContractService.launchLottery(bet_price, payment_token, ipfs_nft_meta_url, recipient_addr, true);
-                //how do i get the Contract Address here, when 'on' is in salesContractService.launchLottery service
-              } else if(lottery_type=='lottery' && starting_bid) {
-                this.salesContractService.launchAuction(starting_bid, payment_token, ipfs_nft_meta_url, recipient_addr, true);
-                //how do i get the Contract Address here, when 'on' is in salesContractService.launchLottery service
+            const date_time = this.saleForm.controls['closing_time'].value;
+            console.log('closing_time: '+ date_time);
+              if(date_time!= null) {
+                const date_time_as_date = new Date( date_time );
+                const converted_to_seconds_after_epoch = date_time_as_date.getTime() / 1000;
+                console.log('closing_time(converted to seconds after epoch): '+ converted_to_seconds_after_epoch); //any timezone conversion to UTC/GMT need to happen here for storage or already that way?
+              
+
+              if(payment_token && recipient_addr && ipfs_nft_meta_url ) {
+                if(lottery_type=='lottery' && bet_price) {
+                  const x = this.salesContractService.launchLottery(bet_price, payment_token, ipfs_nft_meta_url, recipient_addr, converted_to_seconds_after_epoch, true).then((y)=>{
+                    console.log('LotteryAddr is:' + y);
+                  });
+                  
+                  //how do i get the Contract Address here, when 'on' is in salesContractService.launchLottery service
+                } else if(lottery_type=='auction' && starting_bid) {
+                  const x = this.salesContractService.launchAuction(starting_bid, payment_token, ipfs_nft_meta_url, recipient_addr, converted_to_seconds_after_epoch, true).then((y)=>{
+                    console.log('LotteryAddr is:' + y);
+                  });
+
+                  //how do i get the Contract Address here, when 'on' is in salesContractService.launchLottery servic
+                }
               }
             }
-            
             //4##################
             //write to MongoDB (once get contract info back)... or hardcode into the JSON array in services/sales-mongo-service
 
@@ -245,34 +270,40 @@ export class CreateSaleComponent {
         //or
         //full meta-data
         //data: nft_data
-        let nft_data = new FormData();
-        nft_data.append('file', nft_json_meta_data);
-        const pinataMetadata = JSON.stringify({
-          name: 'testJSONname'
-        });
-        nft_data.append('pinataMetadata', pinataMetadata);
-        nft_data.append('pinataContent', nft_json_meta_data);
-          
-          const resFile = await axios({
-              method: "post",
-              url: "https://api.pinata.cloud/pinning/pinJSONToIPFS",
-              data: nft_data,
-              headers: {
-                  'pinata_api_key': environment.PINATA_API_KEY,
-                  'pinata_secret_api_key': environment.PINATA_API_SECRET,
-                  "Content-Type": "application/json"
-              },
-          });
-          
-          /*const resFile = this.httpClient.post('https://api.pinata.cloud/pinning/pinFileToIPFS', formData).subscribe(
-            (response) => console.log(response),
-            (error) => console.log(error)
-          )*/
+        
+        //let nft_data = new FormData();
+        const pinataMetadata = {
+          name: 'testJSONname'+ new Date().toLocaleString()
+        };
+        nft_json_meta_data = { pinataMetadata: pinataMetadata, pinataContent: nft_json_meta_data };
+        
+        
+        //nft_data.append('pinataMetadata', pinataMetadata); //stringified in FormData
+        //nft_data.append('pinataContent', nft_json_meta_data); //stringified, puts with \ in pinata, without makes just [Object]
+        
 
-          const ImgHash = `${resFile.data.IpfsHash}`; //ipfs://
-          console.log(ImgHash); 
-          //Take a look at your Pinata Pinned section, you will see a new file added to you list.   
-          return ImgHash;
+        const resFile = await axios({
+            method: "post",
+            url: "https://api.pinata.cloud/pinning/pinJSONToIPFS",
+            data: nft_json_meta_data,
+            headers: {
+                'pinata_api_key': environment.PINATA_API_KEY,
+                'pinata_secret_api_key': environment.PINATA_API_SECRET,
+                "Content-Type": "application/json"
+            },
+        });
+
+
+        
+        /*const resFile = this.httpClient.post('https://api.pinata.cloud/pinning/pinFileToIPFS', formData).subscribe(
+          (response) => console.log(response),
+          (error) => console.log(error)
+        )*/
+
+        const ImgHash = `${resFile.data.IpfsHash}`; //ipfs://
+        console.log(ImgHash); 
+        //Take a look at your Pinata Pinned section, you will see a new file added to you list.   
+        return ImgHash;
 
       } catch (error) {
           console.log("Error sending File to IPFS: ")
