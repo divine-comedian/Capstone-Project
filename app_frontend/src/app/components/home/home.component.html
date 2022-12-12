@@ -1,7 +1,6 @@
-<p>home works!</p>
-
 <div class="container">
-  <div *ngFor="let sale of sales">
+  <h2>List of Current Live Sales</h2>
+  <div *ngFor="let sale of sales" class="sale-list-item">
     <div>
       <a
         href="sale/{{
@@ -26,7 +25,13 @@
     </div>
 
     <div>
-      <img height="100px" width="100px" src="{{ sale.image_ipfs_url }}" />
+      <img
+        height="100px"
+        width="100px"
+        class="img-thumbnail"
+        mx-auto
+        src="{{ sale.image_ipfs_url }}"
+      />
     </div>
   </div>
 </div>
