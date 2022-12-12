@@ -1,4 +1,6 @@
-<p>Auction works! contract addr is: {{ contract_addr }}</p>
+<h3>Auction Info</h3>
+<p>Auction contract addr is: {{ contract_addr }}</p>
+<p>Auction state is: {{ auctionOpen ? "Open" : "Closed" }}</p>
 <p>
   highestBid (getting from BlockChain is: {{ highestBid }}
   <span *ngIf="highestBid && highestBid > 0">by {{ highestBidder }}</span>
@@ -6,4 +8,8 @@
 <p>
   closing time is
   {{ closingTime }} ({{ closingTimeDateLocalized?.toLocaleString() }})
+</p>
+<p>
+  Maybe get preview image from MongoDB, since the JSON MetaData is private
+  <img src="temp" />
 </p>

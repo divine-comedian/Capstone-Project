@@ -56,7 +56,14 @@ export class SalesContractService {
     return new ethers.providers.Web3Provider(provider);
   }
 
-
+  //Lottery specific
+  public async getLotteryInfoBetsOpen(lottery_addr:string, json_interface:any, bySigner:boolean): Promise<boolean> {
+    console.log('########################## inside getLotteryInfoBetsOpen()');
+    console.log(lottery_addr, json_interface.abi, bySigner);
+    const contract = await SalesContractService.getContract( lottery_addr, json_interface.abi, bySigner );
+  
+    return await contract['betsOpen']();
+  }
   public async getLotteryInfoBetPrice(lottery_addr:string, json_interface:any, bySigner:boolean): Promise<number> {
     console.log('########################## inside getLotteryInfoBetPrice()');
     console.log(lottery_addr, json_interface.abi, bySigner);
@@ -71,8 +78,24 @@ export class SalesContractService {
   
     return await contract['lotteryClosingTime']();
   }
+  public async getLotteryInfoOwnerPool(lottery_addr:string, json_interface:any, bySigner:boolean): Promise<number> {
+    console.log('########################## inside getLotteryInfOwnerPool()');
+    console.log(lottery_addr, json_interface.abi, bySigner);
+    const contract = await SalesContractService.getContract( lottery_addr, json_interface.abi, bySigner );
+  
+    return await contract['ownerPool']();
+  }
+
+  //Auction specific
+  public async getAuctionInfoAuctionOpen(lottery_addr:string, json_interface:any, bySigner:boolean): Promise<boolean> {
+    console.log('########################## inside getAuctionInfoAuctionOpen()');
+    console.log(lottery_addr, json_interface.abi, bySigner);
+    const contract = await SalesContractService.getContract( lottery_addr, json_interface.abi, bySigner );
+  
+    return await contract['auctionOpen']();
+  }
   public async getAuctionInfoHighestBid(auction_addr:string, json_interface:any, bySigner:boolean): Promise<number> {
-    console.log('########################## inside getAuctionInfoHighestBidder()');
+    console.log('########################## inside getAuctionInfoHighestBid()');
     console.log(auction_addr, json_interface.abi, bySigner);
     const contract = await SalesContractService.getContract( auction_addr, json_interface.abi, bySigner );
   
@@ -93,8 +116,9 @@ export class SalesContractService {
     return await contract['auctionClosingTime']();
   }
 
+  
    
-
+  //#######################
   public async launchLottery(bet_price:number, payment_token:string, ipfs_url:string, recipient_addr:string, converted_to_seconds_after_epoch:number, bySigner:boolean): Promise<number> {
     console.log('########################## inside launchLottery()');
     console.log(environment.salesFactoryContractAddress, salesFactoryContractInterface.abi, bySigner);

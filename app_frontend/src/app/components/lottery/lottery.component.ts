@@ -15,9 +15,11 @@ import { Contract } from 'ethers';
 export class LotteryComponent implements OnInit {
 
   contract_addr: string | undefined | null = "";
+  betsOpen: boolean | undefined;
   betPrice: number | undefined ; //getting from blockchain to test
   closingTime: number | undefined; 
   closingTimeDateLocalized: Date | undefined;
+  ownerPool: number | undefined;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -41,6 +43,16 @@ export class LotteryComponent implements OnInit {
           this.closingTime = x;
           this.closingTimeDateLocalized = new Date ( x * 1000 ); //convert seconds to  milliseconds
         });
+        this.salesContractService.getLotteryInfoBetsOpen(this.contract_addr, saleLotteryInterface, true).then((x:boolean)=>{
+          console.log('On Lottery component page, betsOpen is:'+ x );
+          this.betsOpen = x;
+        });
+        this.salesContractService.getLotteryInfoOwnerPool(this.contract_addr, saleLotteryInterface, true).then((x:number)=>{
+          console.log('On Lottery component page, ownerPool is:'+ x );
+          this.ownerPool = x;
+        });
+        
+
         
       }
     });
