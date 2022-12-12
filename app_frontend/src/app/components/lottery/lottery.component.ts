@@ -104,8 +104,8 @@ export class LotteryComponent implements OnInit {
 
   bet() {
     console.log('lottery.bet()');
-    if(this.contract_addr && this.paymentToken) {
-      this.salesContractService.postLotteryBet(this.contract_addr, saleLotteryInterface, this.paymentToken, salesTokenInterface, true).then((x:string)=>{
+    if(this.contract_addr && this.paymentToken && this.betPrice) {
+      this.salesContractService.postLotteryBet(this.contract_addr, saleLotteryInterface, this.paymentToken, salesTokenInterface, this.betPrice, true).then((x:string)=>{
         console.log('bet transaction done:'+ x);
         alert('You have betted successfully!');
       });

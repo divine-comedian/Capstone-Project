@@ -118,12 +118,12 @@ export class SalesContractService {
     console.log(`The Lottery Token balance for wallet XYZ is ${bal}`);
     return bal;
   }
-  public async postLotteryBet(lottery_addr:string, lottery_json_interface:any, payment_token_addr:string, payment_token_interface:any, bySigner:boolean): Promise<string> {
+  public async postLotteryBet(lottery_addr:string, lottery_json_interface:any, payment_token_addr:string, payment_token_interface:any, bet_price:number,  bySigner:boolean): Promise<string> {
     console.log('########################## inside postLotteryBet()');
     const lottery_contract = await SalesContractService.getContract( lottery_addr, lottery_json_interface.abi, bySigner );
     const lottery_token_contract = await SalesContractService.getContract( payment_token_addr, payment_token_interface.abi, bySigner );
 
-    const allowTx = await lottery_token_contract["approve"]( lottery_contract.address, ethers.constants.MaxUint256 );
+    const allowTx = await lottery_token_contract["approve"]( lottery_contract.address, bet_price ); //ethers.constants.MaxUint256
     await allowTx.wait();
     const tx = await lottery_contract["bet"]();
     const receipt = await tx.wait();
@@ -131,6 +131,9 @@ export class SalesContractService {
     return receipt.transactionHash;
   }
 
+
+
+  
 
   //Auction specific
   public async getAuctionInfoAuctionOpen(auction_addr:string, json_interface:any, bySigner:boolean): Promise<boolean> {
@@ -190,11 +193,11 @@ export class SalesContractService {
     return bal;
   }
   public async postAuctionBid(auction_addr:string, auction_json_interface:any, payment_token_addr:string, payment_token_interface:any, bid_price:number, bySigner:boolean): Promise<string> {
-    console.log('########################## inside postLotteryBet()');
+    console.log('########################## inside postAuctionBid()');
     const lottery_contract = await SalesContractService.getContract( auction_addr, auction_json_interface.abi, bySigner );
     const lottery_token_contract = await SalesContractService.getContract( payment_token_addr, payment_token_interface.abi, bySigner );
 
-    const allowTx = await lottery_token_contract["approve"]( lottery_contract.address, ethers.constants.MaxUint256 );
+    const allowTx = await lottery_token_contract["approve"]( lottery_contract.address, bid_price ); //approve contrct to spend your bid ammount (prob should change )
     await allowTx.wait();
     const tx = await lottery_contract["bid"](bid_price);
     const receipt = await tx.wait();
