@@ -58,6 +58,17 @@ $ npm run test:e2e
 $ npm run test:cov
 ```
 
+## Azure CI/CD Deployment with GitHub Action
+**Ensure Azure App Service platform are created as Linux*
+1. Inspect the `.\github\workflows\deploy_backend.yml`
+2. Download publish profile for your App Service from Azure potal.
+3. Add your publich profile to GitHub project secret variable (matching the reference in GitHub workflow file)
+4. On GitHub action, run the workflow. This should deploy your site to Azure. 
+5. Add the following your App Service `Settings -> Configuration -> General Settings -> Startup Command`
+   ```
+   pm2 start dist/main.js --no-daemon
+   ```
+
 ## Support
 
 Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
