@@ -1,6 +1,13 @@
-<p>Lottery works! contract addr is: {{ contract_addr }}</p>
-<p>betPrice (getting from BlockChain is: {{ betPrice }} )</p>
+<h3>Lottery Info</h3>
+<p>Lottery contract addr is: {{ contract_addr }}</p>
+<p>Lottery state is: {{ betsOpen ? "Open" : "Closed" }}</p>
+<p>betPrice is: {{ betPrice }}</p>
+<p>ownerPool (total amount to win) is at: {{ ownerPool }}</p>
 <p>
   closing time is
   {{ closingTime }} ({{ closingTimeDateLocalized?.toLocaleString() }})
+</p>
+<p>
+  Maybe get preview image from MongoDB, since the JSON MetaData is private
+  <img src="temp" />
 </p>

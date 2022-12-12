@@ -14,8 +14,9 @@ import { Contract } from 'ethers';
 export class AuctionComponent implements OnInit {
 
   contract_addr: string | undefined | null = "";
+  auctionOpen: boolean | undefined;  
   highestBid: number | undefined ; //getting from blockchain to test
-  highestBidder: string | undefined ; //getting from blockchain to test
+  highestBidder: string | undefined ; 
   closingTime: number | undefined; 
   closingTimeDateLocalized: Date | undefined;
   
@@ -37,13 +38,17 @@ export class AuctionComponent implements OnInit {
           this.highestBid = x;
         });
         this.salesContractService.getAuctionInfoHighestBidder(this.contract_addr, saleAuctionInterface, true).then((x:string)=>{
-          console.log('On Auction component page, highest bid is:'+ x );
+          console.log('On Auction component page, highest bidder is:'+ x );
           this.highestBidder = x;
         });
         this.salesContractService.getAuctionInfoClosingTime(this.contract_addr, saleAuctionInterface, true).then((x:number)=>{
           console.log('On Auction component page, closingTime is:'+ x );
           this.closingTime = x;
           this.closingTimeDateLocalized = new Date ( x * 1000 ); //convert seconds to  milliseconds
+        });
+        this.salesContractService.getAuctionInfoAuctionOpen(this.contract_addr, saleAuctionInterface, true).then((x:boolean)=>{
+          console.log('On Auction component page, auctionOpen is:'+ x );
+          this.auctionOpen = x;
         });
         
       }
