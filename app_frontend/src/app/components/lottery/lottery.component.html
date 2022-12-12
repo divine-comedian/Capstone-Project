@@ -12,4 +12,16 @@
     Maybe get preview image from MongoDB, since the JSON MetaData is private
     <img src="temp" />
   </p>
+  <div class="actions">
+    <div class="betTokens">
+      <!--*ngIf="signer and has > 0 tokens and date isn't closed yet and lottery still Open"-->
+      <div>
+        Bet {{ betPrice }} of {{ paymentToken }} (you have {{ tokenBalance }} of
+        this token aka {{ tokenBalanceSmallerUnits }} units/cents)
+      </div>
+      <button type="button" class="btn btn-primary" (click)="bet()">
+        Click here to Bet
+      </button>
+    </div>
+  </div>
 </div>

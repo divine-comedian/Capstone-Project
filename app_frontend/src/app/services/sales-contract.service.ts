@@ -7,6 +7,7 @@ import { environment } from 'src/environments/environment';
 ///import { SalesFactoryContract } from '../contracts/SalesFactoryContract';
 import salesFactoryContractInterface from '../../assets/SaleFactory.json';
 import lotteryContractInterface from '../../assets/Lottery.json';
+import lotteryTokenContractInterface from '../../assets/LotteryToken.json';
 import auctionContractInterface from '../../assets/Auction.json';
 import { Provider } from '@ethersproject/providers';
 import detectEthereumProvider from '@metamask/detect-provider';
@@ -56,6 +57,10 @@ export class SalesContractService {
     return new ethers.providers.Web3Provider(provider);
   }
 
+
+
+
+  
   //Lottery specific
   public async getLotteryInfoBetsOpen(lottery_addr:string, json_interface:any, bySigner:boolean): Promise<boolean> {
     console.log('########################## inside getLotteryInfoBetsOpen()');
@@ -85,6 +90,37 @@ export class SalesContractService {
   
     return await contract['ownerPool']();
   }
+  public async getLotteryInfoPaymentToken(lottery_addr:string, json_interface:any, bySigner:boolean): Promise<string> {
+    console.log('########################## inside getLotteryInfoPaymentToken()');
+    console.log(lottery_addr, json_interface.abi, bySigner);
+    const contract = await SalesContractService.getContract( lottery_addr, json_interface.abi, bySigner );
+  
+    return await contract['paymentToken']();
+  }
+  public async postLotteryBet(lottery_addr:string, lottery_json_interface:any, payment_token_addr:string, payment_token_interface:any, bySigner:boolean): Promise<string> {
+    console.log('########################## inside getLotteryInfoPaymentToken()');
+    const lottery_contract = await SalesContractService.getContract( lottery_addr, lottery_json_interface.abi, bySigner );
+    const lottery_token_contract = await SalesContractService.getContract( payment_token_addr, payment_token_interface.abi, bySigner );
+
+    const allowTx = await lottery_token_contract["approve"]( lottery_contract.address, ethers.constants.MaxUint256 );
+    await allowTx.wait();
+    const tx = await lottery_contract["bet"]();
+    const receipt = await tx.wait();
+    console.log(`Bets placed (${receipt.transactionHash})\n`);
+    return receipt.transactionHash;
+  }
+  public async getLotteryTokenBalance(lottery_token_addr:string, token_json_interface:any, bySigner:boolean): Promise<number> {
+    console.log('########################## inside getLotteryInfOwnerPool()');
+    console.log(lottery_token_addr, token_json_interface.abi, bySigner);
+    const contract = await SalesContractService.getContract( lottery_token_addr, token_json_interface.abi, bySigner );
+  
+    const wallet_addr = contract.signer.getAddress();//popup will prob come up, until we can re-use signer
+    const bal = await contract["balanceOf"](wallet_addr); //this.walletAddress
+    console.log(`The Lottery Token balance for wallet XYZ is ${bal}`);
+    return bal;
+  }
+  
+
 
   //Auction specific
   public async getAuctionInfoAuctionOpen(lottery_addr:string, json_interface:any, bySigner:boolean): Promise<boolean> {
@@ -115,6 +151,10 @@ export class SalesContractService {
   
     return await contract['auctionClosingTime']();
   }
+
+
+
+
 
   
    
