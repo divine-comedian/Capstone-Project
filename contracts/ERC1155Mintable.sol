@@ -1,10 +1,10 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.9;
 import "@openzeppelin/contracts/utils/Counters.sol";
-import "@openzeppelin/contracts@4.8.0/token/ERC1155/ERC1155.sol";
-import "@openzeppelin/contracts@4.8.0/token/ERC1155/extensions/ERC1155Supply.sol";
-import "@openzeppelin/contracts@4.8.0/access/AccessControl.sol";
-import "@openzeppelin/contracts@4.8.0/token/ERC20/ERC20.sol";
+import "@openzeppelin/contracts/token/ERC1155/ERC1155.sol";
+import "@openzeppelin/contracts/token/ERC1155/extensions/ERC1155Supply.sol";
+import "@openzeppelin/contracts/access/AccessControl.sol";
+import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 
 contract ERC1155Mintable is ERC1155, AccessControl {
 
@@ -14,8 +14,9 @@ contract ERC1155Mintable is ERC1155, AccessControl {
     
     bytes32 public constant MINTER_ROLE = keccak256("MINTER_ROLE");
 
-    constructor(address minter) ERC1155("PixelsForPeace") {
-        _grantRole(MINTER_ROLE, minter);
+    constructor() ERC1155("PixelsForPeace") {
+        _grantRole(DEFAULT_ADMIN_ROLE, msg.sender);
+        _grantRole(MINTER_ROLE, msg.sender);
     }
 
     function supportsInterface(bytes4 interfaceId) public view virtual override(ERC1155, AccessControl) returns (bool) {

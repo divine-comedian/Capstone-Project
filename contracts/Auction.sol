@@ -35,6 +35,7 @@ contract Auction {
     address public beneficiary;
     address public saleOwner;
     address public highestBidder;
+    address public saleWinner;
     bool public auctionOpen;
     uint public auctionClosingTime;
     uint256 private startingBid;
@@ -130,6 +131,7 @@ contract Auction {
             nft.safeMint(highestBidder, nftData);
             nft.renounceRole( keccak256('MINTER_ROLE'), address(this));
             paymentToken.transfer(beneficiary, highestBid);
+            saleWinner = highestBidder;
             emit End(highestBidder);
         }
         else {

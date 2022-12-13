@@ -32,6 +32,7 @@
         string private nftData;
         uint256 public betPrice;
         uint256 public ownerPool;
+        address public saleWinner; 
         bool public betsOpen;
         uint256 public lotteryClosingTime;
         address public saleOwner;
@@ -131,6 +132,7 @@
                 nft.safeMint(winner, nftData);
                 nft.renounceRole( keccak256('MINTER_ROLE'), address(this));
                 delete (_slots);
+                saleWinner = winner;
                 emit End(winner);
                 ownerPool = 0;
 
