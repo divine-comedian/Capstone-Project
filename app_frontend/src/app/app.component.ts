@@ -10,6 +10,7 @@ import saleTokenContractInterface  from '../assets/IERC20.json';
 
 import auctionContractInterface  from '../assets/Auction.json'; //Lottery/Auction
 import lotteryContractInterface  from '../assets/Lottery.json';
+import { WalletInjectorService } from './services/wallet-injector.service';
 
 
 const SALES_FACTORY_ADDRESS = environment.salesFactoryContractAddress; //move to a Service maybe?
@@ -40,7 +41,8 @@ export class AppComponent {
   lastNetworkBlock: number | undefined; //remove this later, just testing connecting to Goerli
 
   constructor(
-    private salesContractService: SalesContractService
+    private salesContractService: SalesContractService,
+    private walletInjectorService: WalletInjectorService
   ) {
     this.title = 'Pixels for Peace NFT Project';
     const provider = ethers.getDefaultProvider("goerli", {alchemy: ALCHEMY_API_KEY, etherscan: ETHERSCAN_API_KEY});
@@ -71,6 +73,10 @@ export class AppComponent {
     const lastBlock = await provider.getBlock("latest"); //remove this later, just testing connecting to Goerli
     console.log('last block on network is: '+ lastBlock.number);
     this.lastNetworkBlock = lastBlock.number;
+
+
+    this.walletInjectorService.setProvider( provider );
+    this.walletInjectorService.setSigner( signer );
 
     //this.salesFactoryContractAddress = SALES_FACTORY_ADDRESS;
     //this.salesContractAddress = SALES_ADDRESS;

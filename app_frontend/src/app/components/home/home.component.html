@@ -3,7 +3,8 @@
   <div *ngFor="let sale of sales" class="sale-list-item">
     <div>
       <a
-        href="sale/{{
+        routerLinkActive="active"
+        routerLink="sale/{{
           (sale.type_of_sale == 'auction' ? 'auction' : 'lottery') +
             '/' +
             sale.sale_contract_addr
