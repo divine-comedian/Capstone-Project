@@ -18,12 +18,15 @@
     interface IERC721 {
         function safeMint(address to, string memory uri) external;
         function renounceRole(bytes32 role, address account) external;
+        event Transfer(address indexed from, address indexed to, uint256 indexed tokenId);
     }
     /// @notice You can use this contract for running a very simple lottery
     /// @dev This contract implements a relatively weak randomness source
     contract Lottery {
     IERC20 public paymentToken;
         event Start(uint lotteryClosingTime);
+        event End(address winner);
+        event EndNotEnoughBets(string message);
         address public recipient;
         IERC721 public nft;
         string private nftData;
@@ -31,9 +34,16 @@
         uint256 public ownerPool;
         bool public betsOpen;
         uint256 public lotteryClosingTime;
-        uint256 public window;
         address public saleOwner;
         address[] _slots;
+
+        /// this will simultaenously launch the lottery contract and begin the sale
+        ///@param _betPrice this is the price in WEI each user will pay to place a bet 
+        ///@param _paymentToken the address of the ERC20 token you will accept betPrice in
+        ///@param _uri the CID of the nft metadata
+        ///@param _recipient the address of the recipient/charity that will receive the raised sale funds 
+        ///@param _saleOwner the address of the user who created the sale 
+        ///@param _closingTime the unix timestamp of when the launched sale will end
 
         constructor(
             uint256 _betPrice,
@@ -41,7 +51,8 @@
             address _nft,
             string memory _uri,
             address _recipient,
-            address _saleOwner
+            address _saleOwner,
+            uint256 _closingTime
         ) {
             betPrice = _betPrice;
             paymentToken = IERC20(_paymentToken);
@@ -49,6 +60,13 @@
             nftData = _uri;
             recipient = _recipient;
             saleOwner = _saleOwner;
+            require(
+                _closingTime > block.timestamp,
+                "Closing time must be in the future"
+            );
+            lotteryClosingTime = _closingTime;
+            betsOpen = true;
+            emit Start(lotteryClosingTime);
         }
 
         /// @notice Passes when the lottery is at closed state
@@ -113,8 +131,11 @@
                 nft.safeMint(winner, nftData);
                 nft.renounceRole( keccak256('MINTER_ROLE'), address(this));
                 delete (_slots);
+                emit End(winner);
                 ownerPool = 0;
 
+            } else {
+                emit EndNotEnoughBets("not enough  bets, restart the lottery!");
             }
             betsOpen = false;
         }
@@ -125,10 +146,4 @@
             randomNumber = block.difficulty;
         }
 
-    // Added function to get current blocktime + duration in hours
-
-        function getBettingWindow(uint256 duration) public view returns(uint256) {
-            
-        return (block.timestamp + duration * 1 minutes);
-        }
     }

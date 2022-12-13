@@ -4,8 +4,10 @@ import { ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
 import { SalesContractService } from 'src/app/services/sales-contract.service';
 
-import saleLotteryInterface  from '../../../assets/LotteryContract.json';
-import { Contract } from 'ethers';
+import saleLotteryInterface  from '../../../assets/Lottery.json';
+import saleTokenInterface  from '../../../assets/IERC20.json';
+
+import { BigNumber, Contract, ethers } from 'ethers';
 
 @Component({
   selector: 'app-lottery',
@@ -15,7 +17,17 @@ import { Contract } from 'ethers';
 export class LotteryComponent implements OnInit {
 
   contract_addr: string | undefined | null = "";
+  betsOpen: boolean | undefined;
   betPrice: number | undefined ; //getting from blockchain to test
+  closingTime: number | undefined; 
+  closingTimeDateLocalized: Date | undefined;
+  ownerPool: number | undefined;
+  paymentToken: string | undefined;
+  tokenBalance: number | undefined;
+  tokenBalanceSmallerUnits:  number | undefined;
+  tokenBalanceOfContract: number | undefined;
+  tokenBalanceOfContractSmallerUnits:  number | undefined;
+  
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -34,6 +46,45 @@ export class LotteryComponent implements OnInit {
           console.log('On Lottery component page, bet price is:'+ x );
           this.betPrice = x;
         });
+        this.salesContractService.getLotteryInfoClosingTime(this.contract_addr, saleLotteryInterface, true).then((x:number)=>{
+          console.log('On Lottery component page, closingTime is:'+ x );
+          this.closingTime = x;
+          this.closingTimeDateLocalized = new Date ( x * 1000 ); //convert seconds to  milliseconds
+        });
+        this.salesContractService.getLotteryInfoBetsOpen(this.contract_addr, saleLotteryInterface, true).then((x:boolean)=>{
+          console.log('On Lottery component page, betsOpen is:'+ x );
+          this.betsOpen = x;
+        });
+        this.salesContractService.getLotteryInfoOwnerPool(this.contract_addr, saleLotteryInterface, true).then((x:number)=>{
+          console.log('On Lottery component page, ownerPool is:'+ x );
+          this.ownerPool = x;
+        });
+        this.salesContractService.getLotteryInfoPaymentToken(this.contract_addr, saleLotteryInterface, true).then((x:string)=>{
+          console.log('On Lottery component page, ownerPool is:'+ x );
+          this.paymentToken = x;
+          if(this.paymentToken) {
+            this.salesContractService.getLotteryTokenBalance(this.paymentToken, saleTokenInterface, true).then((x:number)=>{
+              console.log('On Lottery component page, get lottery token balance:'+ x );
+              //console.log( tokenBalanceBigNumber );
+              //console.log( ethers.utils.formatEther(tokenBalanceBigNumber) );
+              this.tokenBalance = parseFloat( ethers.utils.formatUnits(x, 18) ); //TODO: double-check units for this token are 18
+              this.tokenBalanceSmallerUnits = parseFloat( x.toString() );
+            });
+
+            if(this.contract_addr) {
+              this.salesContractService.getLotteryTokenBalanceOfContract(this.paymentToken, this.contract_addr, saleTokenInterface, true).then((x:number)=>{
+                console.log('On Lottery component page, get lottery token balance of Lottery Contract:'+ x );
+                //console.log( tokenBalanceBigNumber );
+                //console.log( ethers.utils.formatEther(tokenBalanceBigNumber) );
+                this.tokenBalanceOfContract = parseFloat( ethers.utils.formatUnits(x, 18) ); //TODO: double-check units for this token are 18
+                this.tokenBalanceOfContractSmallerUnits = parseFloat( x.toString() );
+              });
+            }
+
+          }
+        });
+        
+        
 
         
       }
@@ -51,5 +102,26 @@ export class LotteryComponent implements OnInit {
 
     this.contract_addr = contract_addr;
   }
+
+  bet() {
+    console.log('lottery.bet()');
+    if(this.contract_addr && this.paymentToken && this.betPrice) {
+      this.salesContractService.postLotteryBet(this.contract_addr, saleLotteryInterface, this.paymentToken, saleTokenInterface, this.betPrice, true).then((x:string)=>{
+        console.log('bet transaction done:'+ x);
+        alert('You have betted successfully!');
+      });
+    }
+  }
+  betMany(numberOfBets:string) {
+    console.log('lottery.bet()');
+    const numberOfBetsInt = parseInt(numberOfBets);
+    if(this.contract_addr && this.paymentToken && this.betPrice) {
+      this.salesContractService.postLotteryBetMany(this.contract_addr, saleLotteryInterface, this.paymentToken, saleTokenInterface, this.betPrice, numberOfBetsInt, true).then((x:string)=>{
+        console.log('bet transaction done:'+ x);
+        alert('You have betted successfully!');
+      });
+    }
+  }
+
 
 }
