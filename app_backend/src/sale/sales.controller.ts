@@ -44,12 +44,11 @@ export class SalesController {
     return this.salesService.delete(id)
   }
 
-  @Delete(':confirmation')
+  @Delete()
   @ApiOperation({
-    description:
-      'Delete all documents in the database, requires any text confirmation.',
+    description: 'Delete all documents in the database!',
   })
-  async deleteAll(@Param('confirmation') confirmation: string) {
-    return this.salesService.deleteAll(confirmation)
+  async deleteAll() {
+    return this.salesService.deleteAll()
   }
 }
