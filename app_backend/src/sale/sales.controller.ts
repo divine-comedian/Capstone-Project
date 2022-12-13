@@ -7,9 +7,9 @@ import { Sale } from './sale.interface'
 export class SalesController {
   constructor(private readonly salesService: SalesService) {}
 
-  @Post()
-  async create(@Body() createSaleDto: CreateSaleDto) {
-    await this.salesService.create(createSaleDto)
+  @Get(':id')
+  async findOne(@Param('id') id: string): Promise<Sale> {
+    return this.salesService.findOne(id)
   }
 
   @Get()
@@ -17,13 +17,18 @@ export class SalesController {
     return this.salesService.findAll()
   }
 
-  @Get(':id')
-  async findOne(@Param('id') id: string): Promise<Sale> {
-    return this.salesService.findOne(id)
+  @Post()
+  async create(@Body() createSaleDto: CreateSaleDto) {
+    await this.salesService.create(createSaleDto)
   }
 
   @Delete(':id')
   async delete(@Param('id') id: string) {
     return this.salesService.delete(id)
+  }
+
+  @Delete()
+  async deleteAll() {
+    return this.salesService.deleteAll()
   }
 }

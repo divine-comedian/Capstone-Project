@@ -27,4 +27,8 @@ export class SalesService {
       .exec()
     return deletedSale
   }
+
+  async deleteAll() {
+    return await this.saleModel.deleteMany({}).exec()
+  }
 }
