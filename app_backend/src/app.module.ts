@@ -8,7 +8,10 @@ import { SalesModule } from './sale/sales.module'
 @Module({
   imports: [
     ConfigModule.forRoot(),
-    MongooseModule.forRoot('mongodb://127.0.0.1:27017/test'),
+    MongooseModule.forRoot(
+      process.env.MONGODB_CONNECTION_STRING ||
+        'mongodb://127.0.0.1:27017/local',
+    ),
     SalesModule,
   ],
   controllers: [AppController],

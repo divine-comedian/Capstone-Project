@@ -21,6 +21,14 @@ export class SalesService {
     return this.saleModel.findOne({ _id: id }).exec()
   }
 
+  async update(id: string, updateSaleDto: CreateSaleDto) {
+    return await this.saleModel
+      .findOneAndUpdate({ id }, updateSaleDto, {
+        new: true,
+      })
+      .exec()
+  }
+
   async delete(id: string) {
     const deletedSale = await this.saleModel
       .findByIdAndRemove({ _id: id })
@@ -28,7 +36,8 @@ export class SalesService {
     return deletedSale
   }
 
-  async deleteAll() {
+  async deleteAll(confirmation: string) {
+    if (!confirmation) throw new Error('No confirmation provided')
     return await this.saleModel.deleteMany({}).exec()
   }
 }
