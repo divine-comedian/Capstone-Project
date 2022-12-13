@@ -37,7 +37,7 @@ jobs:
       - name: create env file
         run: |
           touch .env
-          echo MONGO_DB_CONNECTION_STRING=${{ env.MONGO_DB_CONNECTION_STRING }} >> .env
+          echo MONGO_DB_CONNECTION_STRING="${{ env.MONGO_DB_CONNECTION_STRING }}" >> .env
 
       - name: npm install, build, and test
         run: |
