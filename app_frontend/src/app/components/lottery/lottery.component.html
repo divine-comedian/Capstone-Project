@@ -4,15 +4,23 @@
     You are signed in: {{ walletAddress }}
   </div>
   <div *ngIf="!signer" style="color: red">You are NOT signed in</div>
-  <p>
+  <div>
     Lottery contract addr is: {{ contract_addr }} <br />
     (Lottery Contract has {{ tokenBalanceOfContract }} of this token aka
     {{ tokenBalanceOfContractSmallerUnits }} units/cents)
-  </p>
-  <p>
-    Lottery state is: {{ betsOpen ? "Open" : "Closed" }} (TODO: but can be
-    Closed since date is passed)
-  </p>
+  </div>
+  <div>
+    Lottery state is: {{ betsOpen ? "Open" : "Closed" }}
+    <span *ngIf="closeLotteryUI" style="color: red"
+      >(but can be Closed since date is passed)</span
+    >
+    <div *ngIf="closeLotteryUI">
+      <span *ngIf="!signer"
+        >Please Connect your Wallet to Close the Lottery</span
+      >
+      <button *ngIf="signer">Add Close Lottery button here</button>
+    </div>
+  </div>
   <p>betPrice is: {{ betPrice }}</p>
   <p>ownerPool (total amount to win) is at: {{ ownerPool }}</p>
   <p>
@@ -24,19 +32,26 @@
     <img src="temp" />
   </p>
   <div class="actions">
-    <div class="betTokens">
+    <div class="betTokens" *ngIf="signer && showBetUI">
       <!--*ngIf="signer and has > 0 tokens and date isn't closed yet and lottery still Open"-->
       <div>
-        Bet {{ betPrice }} of {{ paymentToken }} (you have {{ tokenBalance }} of
-        this token aka {{ tokenBalanceSmallerUnits }} units/cents)
+        Bet {{ betPrice }} of {{ paymentToken }} (you have
+        {{ tokenBalanceOfUser }} of this token aka
+        {{ tokenBalanceOfUserSmallerUnits }} units/cents)
       </div>
       <button type="button" class="btn btn-primary" (click)="bet()">
         Click here to Bet
       </button>
       <div>
-        or Bet many times:
         <br />
-        <input #numberOfBets type="number" min="0" placeholder="1" />
+        or place multiple bets:
+        <br />
+        <input
+          #numberOfBets
+          type="number"
+          min="0"
+          placeholder="Type an integer to multi-bet"
+        />
         <button
           type="button"
           class="btn btn-primary"

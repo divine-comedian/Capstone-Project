@@ -1,32 +1,45 @@
 <div class="container">
   <h3>Auction Info</h3>
-  <p>
+  <div *ngIf="signer" style="color: green">
+    You are signed in: {{ walletAddress }}
+  </div>
+  <div *ngIf="!signer" style="color: red">You are NOT signed in</div>
+  <div>
     Auction contract addr is: {{ contract_addr }} <br />
     (Auction Contract has {{ tokenBalanceOfContract }} of this token aka
     {{ tokenBalanceOfContractSmallerUnits }} units/cents)
-  </p>
-  <p>
-    Auction state is: {{ auctionOpen ? "Open" : "Closed" }} (TODO: but can be
-    Closed since date is passed)
-  </p>
-  <p>
+  </div>
+  <div>
+    Auction state is: {{ auctionOpen ? "Open" : "Closed" }}
+    <span *ngIf="closeAuctionUI" style="color: red"
+      >(but can be Closed since date is passed)</span
+    >
+    <div *ngIf="closeAuctionUI">
+      <span *ngIf="!signer"
+        >Please Connect your Wallet to Close the Auction</span
+      >
+      <button *ngIf="signer">Add Close Auction button here</button>
+    </div>
+  </div>
+  <div>
     highestBid (getting from BlockChain is: {{ highestBid }}
     <span *ngIf="highestBid && highestBid > 0">by {{ highestBidder }}</span>
-  </p>
-  <p>
+  </div>
+  <div>
     closing time is
     {{ closingTime }} ({{ closingTimeDateLocalized?.toLocaleString() }})
-  </p>
-  <p>
+  </div>
+  <div>
     Maybe get preview image from MongoDB, since the JSON MetaData is private
     <img src="temp" />
-  </p>
+  </div>
   <div class="actions">
-    <div class="bidAuction">
+    <div class="bidAuction" *ngIf="signer && showBidUI">
       <!--*ngIf="signer and has > 0 tokens and date isn't closed yet and lottery still Open"-->
       <div>
-        Bid on this Auction (you have {{ tokenBalance }} of this token aka
-        {{ tokenBalanceSmallerUnits }} units/cents)
+        Bid on this Auction (you have
+        {{ tokenBalanceOfUser }} of this token aka
+        {{ tokenBalanceOfUserSmallerUnits }} units/cents)
       </div>
       <!--<input id="bid_price" type="number" formControlName="bid_price" />-->
       <input #bid_price type="number" min="0" placeholder="0" />
@@ -38,7 +51,7 @@
         Bid
       </button>
     </div>
-    <div class="bidAuction">
+    <div class="withdrawAuction" *ngIf="signer && showBidUI">
       <!--*ngIf="signer and has > 0 tokens and date isn't closed yet and lottery still Open"-->
       <div>Withdraw from this auction if you do not have the highest bid:</div>
       <!--<input id="bid_price" type="number" formControlName="bid_price" />-->

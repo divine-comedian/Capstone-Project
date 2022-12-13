@@ -12,6 +12,7 @@ import { ProfileComponent } from './components/profile/profile.component';
 import { LotteryComponent } from './components/lottery/lottery.component';
 import { AuctionComponent } from './components/auction/auction.component';
 import { CreateSaleComponent } from './components/create-sale/create-sale.component';
+import { WalletInjectorService } from './services/wallet-injector.service';
 
 
 
@@ -32,7 +33,7 @@ import { CreateSaleComponent } from './components/create-sale/create-sale.compon
     ReactiveFormsModule, //for our forms
     HttpClientModule //for http-client for uploading to IPFS (use axios if this doesn't work)
   ],
-  providers: [],
+  providers: [], //WalletInjectorService
   bootstrap: [AppComponent]
 })
 export class AppModule { }

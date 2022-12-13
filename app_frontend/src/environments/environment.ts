@@ -4,7 +4,7 @@
 
 export const environment = {
   production: false,
-
+  network: "goerli",
   ALCHEMY_API_KEY : "MwLDDsXrUc33uY_JtGf7si7uJbd0cyQy",
   ETHERSCAN_API_KEY: "14KQ8F8MHK4JDKYIVAMEJDCWF88MYIHZ8J",
 
