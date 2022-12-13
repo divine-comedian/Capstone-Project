@@ -17,7 +17,7 @@ env:
   PUBLISH_PROFILE: ${{ secrets.PIXELFORPEACE_PUBLISH_PROFILE }}
   APP_NAME: pixelforpeace-api
   SLOT_NAME: Production
-  MONGO_DB_CONNECTION_STRING: $${{ secrets.MONGO_DB_CONNECTION_STRING }}
+  MONGO_DB_CONNECTION_STRING: ${{ secrets.MONGO_DB_CONNECTION_STRING }}
 
 jobs:
   build:
@@ -46,7 +46,7 @@ jobs:
           echo MONGO_DB_CONNECTION_STRING=${{ env.MONGO_DB_CONNECTION_STRING }} >> .env
 
       - name: Zip all files for upload between jobs
-        run: zip --symlinks -r nest.zip ./*
+        run: zip --symlinks -r nest.zip ./.env ./dist
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v3
