@@ -36,8 +36,7 @@ export class SalesService {
     return deletedSale
   }
 
-  async deleteAll(confirmation: string) {
-    if (!confirmation) throw new Error('No confirmation provided')
+  async deleteAll() {
     return await this.saleModel.deleteMany({}).exec()
   }
 }
