@@ -1,3 +1,5 @@
+
+<div class="background">
 <div class="container">
   <h1>{{ title }}</h1>
   <img src="/assets/images/p4p.png" width="100px" height="100px" />
@@ -16,15 +18,15 @@
   <div>
     <button
       type="button"
-      class="btn btn-primary"
+      class="btn btn-primary m-4"
       (click)="connectWallet()"
       *ngIf="!signer"
     >
       Connect your Wallet
     </button>
-    <button type="button" disabled class="btn btn-success" *ngIf="signer">
+    <span  class="bg-secondary" *ngIf="signer">
       Wallet Connected: {{ walletAddress }}
-    </button>
+    </span>
   </div>
   <div *ngIf="signer">
     <!-- <div *ngIf="salesFactoryContract"> -->
@@ -32,7 +34,7 @@
       Create Sale (Lottery or Auction)
     </button>
     <!-- </div> -->
-    <div>Last block on network is: {{ lastNetworkBlock }}.</div>
+    <div class="m-2">Last block on network is: {{ lastNetworkBlock }}.</div>
   </div>
 </div>
 
@@ -64,3 +66,4 @@
 
 <router-outlet></router-outlet>
 <!--<app-messages></app-messages>-->
+</div>
