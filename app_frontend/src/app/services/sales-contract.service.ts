@@ -7,10 +7,12 @@ import { environment } from 'src/environments/environment';
 ///import { SalesFactoryContract } from '../contracts/SalesFactoryContract';
 import salesFactoryContractInterface from '../../assets/SaleFactory.json';
 import lotteryContractInterface from '../../assets/Lottery.json';
-import saleTokenInterface  from '../../assets/IERC20.json';
 import auctionContractInterface from '../../assets/Auction.json';
+import saleTokenInterface  from '../../assets/IERC20.json';
+
 import { Provider } from '@ethersproject/providers';
 import detectEthereumProvider from '@metamask/detect-provider';
+import { WalletInjectorService } from './wallet-injector.service';
 //import { SalesFactoryContract } from '../contracts/SalesFactoryContract';
 
 
@@ -23,8 +25,13 @@ export class SalesContractService {
   public signer: Signer | undefined;
 
   constructor() { }
+  //constructor(private walletInjectorService: WalletInjectorService) {}
 
+  
   private static async getContract(contract_addr:string, jsonInterfaceABI:any, bySigner=false) {
+    
+    //this.walletInjectorService.getSigner();
+
     const provider = await this.getWebProvider(true); //true or false?
     const signer = provider.getSigner();
 
@@ -240,7 +247,6 @@ export class SalesContractService {
     console.log('########################## inside launchLottery()');
     console.log(environment.salesFactoryContractAddress, salesFactoryContractInterface.abi, bySigner);
     const contract = await SalesContractService.getContract( environment.salesFactoryContractAddress, salesFactoryContractInterface.abi, bySigner );
-ipfs_url
 
     contract.on("SaleCreated", (new_contract_addr, sale_type, saleOwner, uri) => {
       console.log('########################## SaleCreated() emitted solidty event')
@@ -275,7 +281,6 @@ ipfs_url
       console.log('error:'+ error);
       return 0;
     }
-    
 
   }
   

@@ -1,107 +1,139 @@
 <div class="container">
   <h3>Create a Sale</h3>
+  <div *ngIf="signer" style="color: green">
+    You are signed in: {{ walletAddress }}
+  </div>
+  <div *ngIf="!signer" style="color: red">You are NOT signed in</div>
 
-  <form id="saleForm" [formGroup]="saleForm" (ngSubmit)="onSubmit(this)">
-    <!-- <form id="saleForm" [formGroup]="saleForm" (ngSubmit)="onSubmitTest(this)"> -->
-    <div>
-      <label for="sale_name">Name of Sale: </label>
-      <input id="sale_name" type="text" formControlName="sale_name" />
-    </div>
-
-    <div>
-      <label for="sale_type">Type of Sale: </label><br />
-      <input
-        type="radio"
-        formControlName="sale_type"
-        value="lottery"
-        (change)="onRadioChange($event)"
-      />
-      Lottery
-      <input
-        type="radio"
-        formControlName="sale_type"
-        value="auction"
-        (change)="onRadioChange($event)"
-      />
-      Auction
-    </div>
-
-    <div
-      style="border: 1px solid black"
-      *ngIf="saleForm.value.sale_type == 'lottery'"
+  <div *ngIf="signer && created_contract_addr">
+    You have created a new contract at
+    <a
+      routerLinkActive="active"
+      routerLink="/sale/{{ saleForm.value.sale_type }}/{{
+        created_contract_addr
+      }}"
+      >{{ created_contract_addr }}</a
     >
-      <h6>Dynamic Lottery Section!!!</h6>
+  </div>
+  <div *ngIf="signer && !created_contract_addr">
+    <form id="saleForm" [formGroup]="saleForm" (ngSubmit)="onSubmit(this)">
+      <!-- <form id="saleForm" [formGroup]="saleForm" (ngSubmit)="onSubmitTest(this)"> -->
       <div>
-        <label for="bet_price">Bet Price: </label>
-        <input id="bet_price" type="number" formControlName="bet_price" />
+        <label for="sale_name">Name of Sale: </label>
+        <input id="sale_name" type="text" formControlName="sale_name" />
       </div>
-    </div>
 
-    <div
-      style="border: 1px solid black"
-      *ngIf="saleForm.value.sale_type == 'auction'"
-    >
-      <h6>Dynamic Auction Section!!!</h6>
       <div>
-        <label for="starting_bid">Starting Bid: </label>
-        <input id="starting_bid" type="number" formControlName="starting_bid" />
+        <label for="sale_type">Type of Sale: </label><br />
+        <input
+          type="radio"
+          formControlName="sale_type"
+          value="lottery"
+          (change)="onRadioChange($event)"
+        />
+        Lottery
+        <input
+          type="radio"
+          formControlName="sale_type"
+          value="auction"
+          (change)="onRadioChange($event)"
+        />
+        Auction
       </div>
-    </div>
 
-    <div>
-      <label for="sale_desc">Desc of NFT: </label>
-      <textarea
-        id="sale_desc"
-        type="text"
-        formControlName="sale_desc"
-      ></textarea>
-    </div>
-
-    <div>
-      <label for="payment_token">Payment Token: </label>
-      <input id="payment_token" type="text" formControlName="payment_token" />
-    </div>
-
-    <div>
-      <label for="recipient_addr">Recipient Address: </label>
-      <input id="recipient_addr" type="text" formControlName="recipient_addr" />
-    </div>
-
-    <div>
-      <label for="sale_image">Upload the file used for the NFT: </label>
-      <input
-        id="sale_image"
-        type="file"
-        formControlName="sale_image"
-        (change)="onFileChange($event)"
-      />
-      <img id="sale_image_preview" src="" width="200px" />
-    </div>
-    <div>
-      <label for="closing_time">Set a Closing Time for this Sale: </label>
-      <input
-        id="closing_time"
-        type="datetime-local"
-        formControlName="closing_time"
-      />
-    </div>
-
-    <div>
-      <em
-        >Note: MetaData for NFT file will be generated automatically and sent to
-        IPFS so no need to upload here.</em
+      <div
+        style="border: 1px solid black"
+        *ngIf="saleForm.value.sale_type == 'lottery'"
       >
-    </div>
+        <h6>Dynamic Lottery Section!!!</h6>
+        <div>
+          <label for="bet_price">Bet Price: </label>
+          <input id="bet_price" type="number" formControlName="bet_price" />
+        </div>
+      </div>
 
-    <div *ngIf="saleForm.invalid">
-      <p>Please fill all values</p>
-    </div>
-    <div *ngIf="saleForm.valid">
-      <p>You can submit now!</p>
-    </div>
+      <div
+        style="border: 1px solid black"
+        *ngIf="saleForm.value.sale_type == 'auction'"
+      >
+        <h6>Dynamic Auction Section!!!</h6>
+        <div>
+          <label for="starting_bid">Starting Bid: </label>
+          <input
+            id="starting_bid"
+            type="number"
+            formControlName="starting_bid"
+          />
+        </div>
+      </div>
 
-    <button type="submit" [disabled]="!saleForm.valid" class="btn btn-primary">
-      Submit to create new Sale
-    </button>
-  </form>
+      <div>
+        <label for="sale_desc">Desc of NFT: </label>
+        <textarea
+          id="sale_desc"
+          type="text"
+          formControlName="sale_desc"
+        ></textarea>
+      </div>
+
+      <div>
+        <label for="payment_token">Payment Token: </label>
+        <input id="payment_token" type="text" formControlName="payment_token" />
+      </div>
+
+      <div>
+        <label for="recipient_addr">Recipient Address: </label>
+        <input
+          id="recipient_addr"
+          type="text"
+          formControlName="recipient_addr"
+        />
+      </div>
+
+      <div>
+        <label for="sale_image">Upload the file used for the NFT: </label>
+        <input
+          id="sale_image"
+          type="file"
+          formControlName="sale_image"
+          (change)="onFileChange($event)"
+        />
+        <img id="sale_image_preview" src="" width="200px" />
+      </div>
+      <div>
+        <label for="closing_time">Set a Closing Time for this Sale: </label>
+        <input
+          id="closing_time"
+          type="datetime-local"
+          formControlName="closing_time"
+        />
+      </div>
+
+      <div>
+        <em
+          >Note: MetaData for NFT file will be generated automatically and sent
+          to IPFS so no need to upload here.</em
+        >
+      </div>
+
+      <div *ngIf="saleForm.invalid">
+        <p>Please fill all values</p>
+      </div>
+      <div *ngIf="saleForm.valid">
+        <p>You can submit now!</p>
+      </div>
+
+      <button
+        type="submit"
+        [disabled]="!saleForm.valid"
+        class="btn btn-primary"
+      >
+        Submit to create new Sale
+      </button>
+    </form>
+  </div>
+  <div *ngIf="!signer" style="color: red">
+    Please connect your crypto wallet to create a sale (by clicking the 'Connect
+    Wallet' button above).
+  </div>
 </div>

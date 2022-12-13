@@ -4,7 +4,10 @@ import { Component, OnInit } from '@angular/core';
 
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import axios from 'axios';
+import { ethers } from 'ethers';
 import { SalesContractService } from 'src/app/services/sales-contract.service';
+import { ContractService } from 'src/app/services/contract-service';
+import { WalletInjectorService } from 'src/app/services/wallet-injector.service';
 import { environment } from 'src/environments/environment';
 
 
@@ -34,12 +37,20 @@ export class CreateSaleComponent implements OnInit {
 })
 export class CreateSaleComponent {
 
+  provider: ethers.providers.BaseProvider | undefined;
+  signer: ethers.Signer | undefined;
+  walletAddress: string | undefined;
+
+  created_contract_addr: string | undefined;
+
   constructor(
     private httpClient: HttpClient,
-    private salesContractService: SalesContractService
+    private salesContractService: SalesContractService,
+    private walletInjectorService: WalletInjectorService,
+    private contractService: ContractService,
   ) {}
 
-  saleForm = new FormGroup({
+   saleForm = new FormGroup({
     sale_name: new FormControl('', [Validators.required]),
     sale_desc: new FormControl(''),
     sale_type: new FormControl('lottery', [Validators.required]), //default value of Lottery for now
@@ -55,6 +66,32 @@ export class CreateSaleComponent {
     starting_bid: new FormControl('', ), //[Validators.required],
     
   });
+  
+  async ngOnInit() {
+    this.provider = this.walletInjectorService.getProvider(); //read provider
+    if( this.walletInjectorService.getSigner() ) {
+      this.provider = this.walletInjectorService.getProvider(); //read+write provider
+      this.signer   = this.walletInjectorService.getSigner();
+      if(this.signer){
+        this.walletAddress = await this.signer.getAddress();
+      }
+    } //else leave as undefined so we can tell user they need to connect
+
+
+    setInterval( ()=>{this.updatePage();} , 1000);
+  }
+
+  async updatePage (){    
+    //console.log('updatePage');
+    if( this.walletInjectorService.getSigner() ) {
+      //console.log(  this.walletInjectorService.getSigner()  );
+      this.provider = this.walletInjectorService.getProvider(); //read+write provider
+      this.signer   = this.walletInjectorService.getSigner();
+      if(this.signer){
+        this.walletAddress = await this.signer.getAddress();
+      }
+    }
+  }
 
   onFileChange(event:any) {
     if (event.target.files.length > 0) {
@@ -184,17 +221,49 @@ export class CreateSaleComponent {
 
               if(payment_token && recipient_addr && ipfs_nft_meta_url ) {
                 if(lottery_type=='lottery' && bet_price) {
+                  /*
                   const x = this.salesContractService.launchLottery(bet_price, payment_token, ipfs_nft_meta_url, recipient_addr, converted_to_seconds_after_epoch, true).then((y)=>{
-                    console.log('LotteryAddr is:' + y);
+                    console.log('Transaction receipt is:' + y);
                   });
+                  //*/
+
+                  //*
+                  if(this.provider && this.signer ) {
+                    const salesContract = ContractService.getContract(this.provider, this.signer, salesFactoryInterface.abi, environment.salesFactoryContractAddress, true);
+                    this.contractService.launchLottery(salesContract, bet_price, payment_token, ipfs_nft_meta_url, recipient_addr, converted_to_seconds_after_epoch);
+                             
+                    salesContract.on("SaleCreated", (new_contract_addr:string, sale_type:string, saleOwner:string, uri:string) => {
+                      console.log('########################## SaleCreated() emitted solidty event')
+                      console.log('new_contract_addr:',new_contract_addr,',sale_type:', sale_type, ',saleOwner:', saleOwner, ',nftJsonURI:', uri);
+                      this.created_contract_addr = new_contract_addr;
+                      salesContract.removeAllListeners("SaleCreated");
+                    });
+
+                  }
+                  //*/
                   
                   //how do i get the Contract Address here, when 'on' is in salesContractService.launchLottery service
                 } else if(lottery_type=='auction' && starting_bid) {
+                  /*
                   const x = this.salesContractService.launchAuction(starting_bid, payment_token, ipfs_nft_meta_url, recipient_addr, converted_to_seconds_after_epoch, true).then((y)=>{
-                    console.log('LotteryAddr is:' + y);
+                    console.log('Transaction receipt is:' + y);
                   });
+                  //*/
 
-                  //how do i get the Contract Address here, when 'on' is in salesContractService.launchLottery servic
+                  if(this.provider && this.signer ) {
+                    const salesContract = ContractService.getContract(this.provider, this.signer, salesFactoryInterface.abi, environment.salesFactoryContractAddress, true);
+                    this.contractService.launchAuction(salesContract, starting_bid, payment_token, ipfs_nft_meta_url, recipient_addr, converted_to_seconds_after_epoch);
+                             
+                    salesContract.on("SaleCreated", (new_contract_addr:string, sale_type:string, saleOwner:string, uri:string) => {
+                      console.log('########################## SaleCreated() emitted solidty event')
+                      console.log('new_contract_addr:',new_contract_addr,',sale_type:', sale_type, ',saleOwner:', saleOwner, ',nftJsonURI:', uri);
+                      this.created_contract_addr = new_contract_addr;
+                      salesContract.removeAllListeners("SaleCreated");
+                    });
+
+                  }
+                  //*/
+                  
                 }
               }
             }
