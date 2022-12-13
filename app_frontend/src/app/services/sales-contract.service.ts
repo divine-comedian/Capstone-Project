@@ -218,8 +218,17 @@ export class SalesContractService {
     console.log(`Bets placed (${receipt.transactionHash})\n`);
     return receipt.transactionHash;
   }
+  public async postWithdrawBid(auction_addr:string, json_interface:any, bySigner:boolean): Promise<string> {
+    console.log('########################## inside postWithdrawBid()');
+    console.log(auction_addr, json_interface.abi, bySigner);
+    const contract = await SalesContractService.getContract( auction_addr, json_interface.abi, bySigner );
   
+    const allowTx = await contract["withdraw"]();
+    const receipt = await allowTx.wait();
 
+    return receipt.transactionHash;
+  }
+  
 
 
 

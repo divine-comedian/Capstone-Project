@@ -38,5 +38,13 @@
         Bid
       </button>
     </div>
+    <div class="bidAuction">
+      <!--*ngIf="signer and has > 0 tokens and date isn't closed yet and lottery still Open"-->
+      <div>Withdraw from this auction if you do not have the highest bid:</div>
+      <!--<input id="bid_price" type="number" formControlName="bid_price" />-->
+      <button type="button" class="btn btn-primary" (click)="withdraw()">
+        Withdraw
+      </button>
+    </div>
   </div>
 </div>
