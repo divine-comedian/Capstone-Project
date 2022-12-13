@@ -1,5 +1,9 @@
 <div class="container">
   <h3>Lottery Info</h3>
+  <div *ngIf="signer" style="color: green">
+    You are signed in: {{ walletAddress }}
+  </div>
+  <div *ngIf="!signer" style="color: red">You are NOT signed in</div>
   <p>
     Lottery contract addr is: {{ contract_addr }} <br />
     (Lottery Contract has {{ tokenBalanceOfContract }} of this token aka

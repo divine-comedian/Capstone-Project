@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
 import { SalesContractService } from 'src/app/services/sales-contract.service';
+import { WalletInjectorService } from 'src/app/services/wallet-injector.service';
 
 import saleAuctionInterface  from '../../../assets/Auction.json';
 import saleTokenInterface  from '../../../assets/IERC20.json';
@@ -16,6 +17,10 @@ import { BigNumber, Contract, ethers } from 'ethers';
 export class AuctionComponent implements OnInit {
 
   contract_addr: string | undefined | null = "";
+  provider: ethers.providers.BaseProvider | undefined;
+  signer: ethers.Signer | undefined;
+  walletAddress: string | undefined;
+
   auctionOpen: boolean | undefined;  
   highestBid: number | undefined ; //getting from blockchain to test
   highestBidder: string | undefined ; 
@@ -30,16 +35,24 @@ export class AuctionComponent implements OnInit {
   constructor(
     private activatedRoute: ActivatedRoute,
     private location: Location,
-    private salesContractService: SalesContractService
+    private salesContractService: SalesContractService,
+    private walletInjectorService: WalletInjectorService
   ) {}
-  ngOnInit(): void {
+  async ngOnInit() { //made async and removed :void
     //this.getContractAddress();
+    this.provider = this.walletInjectorService.getProvider(); //read provider
+    if( this.walletInjectorService.getSigner() ) {
+      this.provider = this.walletInjectorService.getProvider(); //read+write provider
+      this.signer   = this.walletInjectorService.getSigner();
+      if(this.signer){
+        this.walletAddress = await this.signer.getAddress();
+      }
+    } //else leave as undefined so we can tell user they need to connect
+
+
     this.activatedRoute.params.subscribe(({ contract_addr }) =>{
       this.getContractAddress()
       if( this.contract_addr ) {
-        //const contract: Contract = SalesContractService.getContract( this.contract_addr, saleLotteryInterface.abi, false  );
-        //const contract: Promise<Contract> = this.salesContractService.getLotteryInfoBetPrice(this.contract_addr);
-
         this.salesContractService.getAuctionInfoHighestBid(this.contract_addr, saleAuctionInterface, true).then((x:number)=>{
           console.log('On Auction component page, highest bid is:'+ x );
           this.highestBid = x;
@@ -83,6 +96,7 @@ export class AuctionComponent implements OnInit {
           }
         });
 
+        setInterval( ()=>{this.updatePage();} , 1000);
       }
     });
     /* alternate way
@@ -98,6 +112,17 @@ export class AuctionComponent implements OnInit {
     //if(contract_addr===null) { this.contract_addr = ""};
 
     this.contract_addr = contract_addr;
+  }
+  async updatePage (){    
+    console.log('updatePage');
+    if( this.walletInjectorService.getSigner() ) {
+      console.log(  this.walletInjectorService.getSigner()  );
+      this.provider = this.walletInjectorService.getProvider(); //read+write provider
+      this.signer   = this.walletInjectorService.getSigner();
+      if(this.signer){
+        this.walletAddress = await this.signer.getAddress();
+      }
+    }
   }
 
   bid (bid_price:string){
