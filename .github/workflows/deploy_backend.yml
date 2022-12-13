@@ -46,7 +46,7 @@ jobs:
           echo MONGO_DB_CONNECTION_STRING=${{ env.MONGO_DB_CONNECTION_STRING }} >> .env
 
       - name: Zip all files for upload between jobs
-        run: zip --symlinks -r nest.zip ./.env ./dist
+        run: zip --symlinks -r nest.zip ./*
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v3
