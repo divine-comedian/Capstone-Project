@@ -17,6 +17,7 @@ env:
   PUBLISH_PROFILE: ${{ secrets.PIXELFORPEACE_PUBLISH_PROFILE }}
   APP_NAME: pixelforpeace-api
   SLOT_NAME: Production
+  ENV_FILE: ${{ secrets.ENV_FILE }}
 
 jobs:
   build:
@@ -33,14 +34,17 @@ jobs:
         with:
           node-version: "18.x"
 
+      - name: "Create env file"
+        run: |
+          echo "${{ env.ENV_FILE }}" > .env
+
       - name: npm install, build, and test
         run: |
           npm install
           npm run build --if-present
-          npm run test --if-present
 
       - name: Zip all files for upload between jobs
-        run: zip --symlinks -r nest.zip ./*
+        run: zip --symlinks -r nest.zip ./.env ./*
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v3

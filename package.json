@@ -1,5 +1,5 @@
 {
-  "name": "lesson6",
+  "name": "pixels4peace",
   "packageManager": "yarn@3.2.4",
   "devDependencies": {
     "@ethersproject/abi": "^5.4.7",
