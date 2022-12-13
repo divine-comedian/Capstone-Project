@@ -1,6 +1,6 @@
 {
   "_format": "hh-sol-artifact-1",
-  "contractName": "IMemeFunderNFT",
+  "contractName": "IERC721",
   "sourceName": "contracts/SaleFactory.sol",
   "abi": [
     {
