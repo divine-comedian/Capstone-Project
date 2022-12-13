@@ -9,7 +9,7 @@ import { SalesModule } from './sale/sales.module'
   imports: [
     ConfigModule.forRoot(),
     MongooseModule.forRoot(
-      process.env.MONGODB_CONNECTION_STRING ||
+      process.env.MONGO_DB_CONNECTION_STRING ||
         'mongodb://127.0.0.1:27017/local',
     ),
     SalesModule,
