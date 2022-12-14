@@ -1,6 +1,6 @@
 # Pixels For Peace
 
-Pixels For Peace is an opensource Ethereum blockchain NFT project that allows users to create unique NFTs from their image files and choose to either create an auction or a lottery for a charitable cause. 
+Pixels For Peace is an opensource Ethereum blockchain NFT project that allows users to create unique NFTs from their image files and choose to either create an auction or a lottery for a charitable cause. All proceeds are donated to the designated charity.
 
 ## How it works
 
