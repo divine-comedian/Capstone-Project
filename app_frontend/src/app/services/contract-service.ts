@@ -93,7 +93,7 @@ export class ContractService {
   public async getInfoSalesToken(saleTokenContract:ethers.Contract, wallet_addr:string, wallet_desc:string ){
     //wallet_addr = await saleTokenContract.signer.getAddress();//popup will prob come up, until we can re-use signer
     const balance = await saleTokenContract["balanceOf"](wallet_addr); //this.walletAddress
-    console.log(`The Token balance for ${wallet_desc} wallet ${wallet_addr} is ${balance}`);
+    //console.log(`The Token balance for ${wallet_desc} wallet ${wallet_addr} is ${balance}`);
 
     return balance;
   }
@@ -141,7 +141,8 @@ export class ContractService {
   public async postLotteryBet(lotteryContract:ethers.Contract, lotteryTokenContract:ethers.Contract, bet_price:number ){
     console.log('########################## inside postLotteryBet()');
 
-    const allowTx = await lotteryTokenContract["approve"]( lotteryContract.address, bet_price ); //ethers.constants.MaxUint256
+    const betPriceTimes_10_x_18 = ethers.utils.parseUnits( bet_price.toString(), 18 );
+    const allowTx = await lotteryTokenContract["approve"]( lotteryContract.address, betPriceTimes_10_x_18 ); //ethers.constants.MaxUint256
     await allowTx.wait();
     const tx = await lotteryContract["bet"]();
     const receipt = await tx.wait();
@@ -151,7 +152,8 @@ export class ContractService {
   public async postLotteryBetManyTimes(lotteryContract:ethers.Contract, lotteryTokenContract:ethers.Contract, bet_price:number, number_of_bets:number){
     console.log('########################## inside postLotteryBetMany()');
 
-    const spending_limit = (bet_price * number_of_bets);
+    const betPriceTimes_10_x_18 = ethers.utils.parseUnits( bet_price.toString(), 18 );
+    const spending_limit = betPriceTimes_10_x_18.mul(number_of_bets);
     const allowTx = await lotteryTokenContract["approve"]( lotteryContract.address, spending_limit ); //give approval to the contract to spend up to X of your token, ethers.constants.MaxUint256
     await allowTx.wait();
     const tx = await lotteryContract["betMany"](number_of_bets);
@@ -165,6 +167,7 @@ export class ContractService {
   public async postAuctionBid(lotteryContract:ethers.Contract, lotteryTokenContract:ethers.Contract, bid_price:number ){
     console.log('########################## inside postAuctionBid()');
 
+    const bidPriceTimes_10_x_18 = ethers.utils.parseUnits( bid_price.toString(), 18 );
     const allowTx = await lotteryTokenContract["approve"]( lotteryContract.address, bid_price ); //approve contrct to spend your bid ammount (prob should change )
     await allowTx.wait();
     const tx = await lotteryContract["bid"](bid_price);

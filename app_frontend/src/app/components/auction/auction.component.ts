@@ -30,6 +30,7 @@ export class AuctionComponent implements OnInit {
   saleOwner: string | undefined;
   auctionOpen: boolean | undefined;  
   highestBid: number | undefined ; //getting from blockchain to test
+  highestBid4UI: string | undefined;
   highestBidder: string | undefined ; 
   closingTime: number | undefined; 
   closingTimeDateLocalized: Date | undefined;
@@ -38,9 +39,9 @@ export class AuctionComponent implements OnInit {
   tokenBalanceOfUserSmallerUnits:  number | undefined;
   tokenBalanceOfContract: number | undefined;
   tokenBalanceOfContractSmallerUnits:  number | undefined;
-  //saleWinner: string | undefined;
-  //intervalUpdatePage: number | ReturnType<typeof setInterval> | undefined;
-  //previewImage: string | undefined;
+  saleWinner: string | undefined;
+  intervalUpdatePage: number | ReturnType<typeof setInterval> | undefined;
+  previewImage: string | undefined;
   
   showBidUI : boolean = false;
   closeAuctionUI : boolean = false;
@@ -112,9 +113,9 @@ export class AuctionComponent implements OnInit {
           }
         });
         */
-        /*this.getImageFromIPFS().then((image_ipfs_url)=>{
+        this.getImageFromIPFS().then((image_ipfs_url)=>{
           this.previewImage = image_ipfs_url;
-        });*/
+        });
 
 
         if(this.contract_addr && this.provider ) {
@@ -126,6 +127,7 @@ export class AuctionComponent implements OnInit {
               console.log(x);
               this.saleOwner = x.saleOwner;
               this.highestBid = x.highestBid;
+              this.highestBid4UI = ethers.utils.formatUnits( x.highestBid , 18 );
               this.highestBidder = x.highestBidder;
               this.auctionOpen = x.auctionOpen;
               //this.saleWinner = x.saleWinner;
@@ -169,7 +171,7 @@ export class AuctionComponent implements OnInit {
             //{ betsOpen, betPrice, lotteryClosingTime, ownerPool, paymentToken, lotteryTokenBalance, lotteryTokenBalanceOfContract };
         }
 
-        /*this.intervalUpdatePage = window. */ setInterval( ()=>{this.updatePage();} , 1000);
+        this.intervalUpdatePage = window.setInterval( ()=>{this.updatePage();} , 30000);
       }
     });
     /* alternate way
@@ -209,9 +211,10 @@ export class AuctionComponent implements OnInit {
         //console.log(x);
         this.saleOwner = x.saleOwner;
         this.highestBid = x.highestBid;
+        this.highestBid4UI = ethers.utils.formatUnits( x.highestBid , 18 );
         this.highestBidder = x.highestBidder;
         this.auctionOpen = x.auctionOpen;
-        //this.saleWinner = x.saleWinner;
+        this.saleWinner = x.saleWinner;
         this.closingTime = x.auctionClosingTime;
         this.closingTimeDateLocalized = new Date ( x.auctionClosingTime * 1000 ); //convert seconds to  milliseconds
         
@@ -268,6 +271,9 @@ export class AuctionComponent implements OnInit {
         console.log('bet transaction done:'+ x);
         this.hideModal();
         alert('You have bid successfully!');
+      }).catch((error)=>{
+        this.hideModal();
+        alert('An error occured! Please try again or contact our support department.')
       });
     }
   }
@@ -283,6 +289,9 @@ export class AuctionComponent implements OnInit {
         console.log('bet transaction done:'+ x);
         this.hideModal();
         alert('You have closed auction successfully!');
+      }).catch((error)=>{
+        this.hideModal();
+        alert('An error occured! Please try again or contact our support department.')
       });
     }
   }
@@ -293,11 +302,15 @@ export class AuctionComponent implements OnInit {
         console.log('bet transaction done:'+ x);
         this.hideModal();
         alert('You have closed lottery successfully!');
+      }).catch((error)=>{
+        this.hideModal();
+        alert('An error occured! Please try again or contact our support department.')
       });
     }
   }
 
   async getImageFromIPFS(){
+    return '';
     const response = await axios({
       method: "get",
       url: environment.base_api_url + "/sales/"+ this.contract_addr,
@@ -320,10 +333,10 @@ export class AuctionComponent implements OnInit {
     if(spinner) { spinner.style.display = 'none'; }  
     //setTimeout( ()=>{const spinner = document.getElementById('spinner-super-wrapper'); if(spinner) { spinner.style.display = 'none'; } } , 5000)
   }
-  /*
+  
   ngOndestroy() {
     console.log('Auction destroy');
     window.clearInterval(this.intervalUpdatePage);
   }
-  */
+  
 }

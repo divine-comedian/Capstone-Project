@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import axios from 'axios';
+import { env } from 'process';
 import { environment } from 'src/environments/environment';
 
 @Injectable({
@@ -16,6 +17,15 @@ export class SalesMongoService {
       headers: {
           "Content-Type": "application/json"
       },
+    });
+    //https://gateway.pinata.cloud/ipfs/
+    console.log(response.data);
+    //replace public gateway which is rate-limited to temporary private gateway
+    response.data.map((sale:any)=>{
+      const ipfs_image_url = sale.image_ipfs_url;
+      const ipfs_cid_hash = ipfs_image_url.split(environment.PINATA_PUBLIC_GATEWAY)[1];
+      const new_ipfs_image_url = environment.PINATA_PRIVATE_GATEWAY + ipfs_cid_hash;
+      sale.image_ipfs_url = new_ipfs_image_url;
     });
     console.log(response.data);
     //console.log(response[0].name_of_sale);

@@ -56,7 +56,7 @@ export class CreateSaleComponent {
     sale_type: new FormControl('lottery', [Validators.required]), //default value of Lottery for now
     payment_token: new FormControl( environment.salesTokenContractAddress, [Validators.required]), //default value
     recipient_addr: new FormControl('', [Validators.required]), //default value      
-    // Reactive Form file upload?, look at how to do    
+    // Reactive Form file upload
     sale_image: new FormControl('', [Validators.required]),
     sale_image_source: new FormControl('', [Validators.required]),
     closing_time: new FormControl(''),
@@ -238,7 +238,7 @@ export class CreateSaleComponent {
                       this.created_contract_addr = new_contract_addr;
                       
                       this.hideModal();
-                      //this.writeToDB(new_contract_addr, lottery_type, {'sale_name': sale_name, 'sale_desc': sale_desc, 'bet_price':      bet_price,  'payment_token': payment_token, 'ipfs_image_url': ipfs_image_url, 'ipfs_nft_meta_url': ipfs_nft_meta_url, 'recipient_addr': recipient_addr, 'converted_to_seconds_after_epoch': converted_to_seconds_after_epoch, 'date_time_as_date': date_time_as_date});
+                      this.writeToDB(new_contract_addr, lottery_type, {'sale_name': sale_name, 'sale_desc': sale_desc, 'bet_price':      bet_price,  'payment_token': payment_token, 'ipfs_image_url': ipfs_image_url, 'ipfs_nft_meta_url': ipfs_nft_meta_url, 'recipient_addr': recipient_addr, 'converted_to_seconds_after_epoch': converted_to_seconds_after_epoch, 'date_time_as_date': date_time_as_date});
                       salesContract.removeAllListeners("SaleCreated"); //maybe put this in destroy method, not usre
                     });
 
@@ -262,7 +262,8 @@ export class CreateSaleComponent {
                       console.log('new_contract_addr:',new_contract_addr,',sale_type:', sale_type, ',saleOwner:', saleOwner, ',nftJsonURI:', uri);
                       this.created_contract_addr = new_contract_addr;
 
-                      //this.writeToDB(new_contract_addr, lottery_type, {'sale_name': sale_name, 'sale_desc': sale_desc, 'starting_bid': starting_bid, 'payment_token': payment_token, 'ipfs_image_url': ipfs_image_url, 'ipfs_nft_meta_url': ipfs_nft_meta_url, 'recipient_addr': recipient_addr, 'converted_to_seconds_after_epoch': converted_to_seconds_after_epoch, 'date_time_as_date': date_time_as_date});
+                      this.hideModal();
+                      this.writeToDB(new_contract_addr, lottery_type, {'sale_name': sale_name, 'sale_desc': sale_desc, 'starting_bid': starting_bid, 'payment_token': payment_token, 'ipfs_image_url': ipfs_image_url, 'ipfs_nft_meta_url': ipfs_nft_meta_url, 'recipient_addr': recipient_addr, 'converted_to_seconds_after_epoch': converted_to_seconds_after_epoch, 'date_time_as_date': date_time_as_date});
                       salesContract.removeAllListeners("SaleCreated"); //maybe put this in destroy method, not usre
                     });
 
@@ -283,10 +284,14 @@ export class CreateSaleComponent {
 
 
       } else {
+        this.hideModal();
+        alert('error, no ipfs url?');
         console.log('no ipfs url?');
         return;
       }
     }).catch((e)=>{
+      this.hideModal();
+      alert('general error');
       console.log('ERROR:'+ e );
       return;
     });    
@@ -396,8 +401,8 @@ export class CreateSaleComponent {
       //"description": sale_desc,
 
       let new_sale_json:any = {};
-      new_sale_json.sale_contract_addr = obj.new_contract_addr;
-      new_sale_json.type_of_sale = obj.type_of_sale;
+      new_sale_json.sale_contract_addr = new_contract_addr;
+      new_sale_json.type_of_sale = lottery_type;
       new_sale_json.name_of_sale = obj.sale_name;
       new_sale_json.description  = obj.sale_desc;
       const recipient:any = {};
@@ -408,9 +413,9 @@ export class CreateSaleComponent {
       new_sale_json.image_ipfs_url = obj.ipfs_image_url;
       new_sale_json.closing_time = obj.date_time_as_date;
       
-      if(obj.type_of_sale=='lottery'){
+      if(lottery_type=='lottery'){
         new_sale_json.bet_price = obj.bet_price; //should already be number
-      } else if(obj.type_of_sale=='auction'){
+      } else if(lottery_type=='auction'){
         new_sale_json.starting_bid = obj.starting_bid; //should already be number
         new_sale_json.highest_bid  = 0; //maybe have 2 vars for this
       }

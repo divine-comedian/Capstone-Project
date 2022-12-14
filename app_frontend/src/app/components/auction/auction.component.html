@@ -7,7 +7,7 @@
   <div>
     Auction contract addr is: {{ contract_addr }} <br />
     (Auction Contract has {{ tokenBalanceOfContract }} of this token aka
-    {{ tokenBalanceOfContractSmallerUnits }} units/cents)
+    {{ tokenBalanceOfContractSmallerUnits }} 'cents')
   </div>
   <div>
     Auction state is:
@@ -31,9 +31,23 @@
       </button>
     </div>
   </div>
-  <div>Sale created by: {{ saleOwner }}</div>
   <div>
-    highestBid (getting from BlockChain is: {{ highestBid }}
+    Sale created by: {{ saleOwner }}.
+    <span *ngIf="saleOwner == walletAddress"
+      >You are the Owner of this Sale!</span
+    >
+  </div>
+  <div *ngIf="highestBidder == '0x0000000000000000000000000000000000000000'">
+    There are no bids yet. startingBid is {{ highestBid4UI }} tokens ({{
+      highestBid
+    }}
+    'cents').
+  </div>
+  <div *ngIf="highestBidder != '0x0000000000000000000000000000000000000000'">
+    highestBid (getting from BlockChain is: {{ highestBid4UI }} tokens ({{
+      highestBid
+    }}
+    'cents')
     <span *ngIf="highestBid && highestBid > 0">by {{ highestBidder }}</span>
   </div>
   <div>

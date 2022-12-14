@@ -7,7 +7,7 @@
   <div>
     Lottery contract addr is: {{ contract_addr }} <br />
     (Lottery Contract has {{ tokenBalanceOfContract }} of this token aka
-    {{ tokenBalanceOfContractSmallerUnits }} units/cents)
+    {{ tokenBalanceOfContractSmallerUnits }} 'cents')
   </div>
   <div>
     Lottery state is:
@@ -29,8 +29,10 @@
     </div>
   </div>
   <div>Sale created by: {{ saleOwner }}</div>
-  <div>betPrice is: {{ betPrice }}</div>
-  <div>ownerPool (total amount to win) is at: {{ ownerPool }}</div>
+  <div>betPrice is: {{ betPrice4UI }} tokens ({{ betPrice }} 'cents')</div>
+  <div>
+    ownerPool (total amount to win) is at: {{ ownerPool }} ({{ ownerPool4UI }})
+  </div>
   <div>
     closing time is
     {{ closingTime }} ({{ closingTimeDateLocalized?.toLocaleString() }})

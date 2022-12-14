@@ -39,7 +39,7 @@ export class HomeComponent implements OnInit {
   constructor(private salesMongoService: SalesMongoService) { }
 
   async ngOnInit() {    
-    const sales = await this.salesMongoService.getMockSalesFromMongoDB(); //add await here later as it'll prob become a promise
+    const sales = await this.salesMongoService.getRealSalesFromMongoDB(); //add await here later as it'll prob become a promise
     this.sales = sales;
   }
 

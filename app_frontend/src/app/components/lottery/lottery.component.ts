@@ -31,17 +31,19 @@ export class LotteryComponent implements OnInit {
   saleOwner: string | undefined;
   betsOpen: boolean | undefined;
   betPrice: number | undefined ; //getting from blockchain to test
+  betPrice4UI: string| undefined ; //getting from blockchain to test
   closingTime: number | undefined; 
   closingTimeDateLocalized: Date | undefined;
   ownerPool: number | undefined;
+  ownerPool4UI: string| undefined ; //getting from blockchain to test
   paymentToken: string | undefined;
   tokenBalanceOfUser: number | undefined;
   tokenBalanceOfUserSmallerUnits:  number | undefined;
   tokenBalanceOfContract: number | undefined;
   tokenBalanceOfContractSmallerUnits:  number | undefined;
-  //saleWinner: string | undefined;
-  //intervalUpdatePage: number | ReturnType<typeof setInterval> | undefined;
-  //previewImage: string | undefined;
+  saleWinner: string | undefined;
+  intervalUpdatePage: number | ReturnType<typeof setInterval> | undefined;
+  previewImage: string | undefined;
 
   showBetUI : boolean = false;
   closeLotteryUI : boolean = false;
@@ -115,9 +117,9 @@ export class LotteryComponent implements OnInit {
           }
         });
         */
-        /*this.getImageFromIPFS().then((image_ipfs_url)=>{
+        this.getImageFromIPFS().then((image_ipfs_url)=>{
           this.previewImage = image_ipfs_url;
-        });*/
+        });
 
         if(this.contract_addr && this.provider ) {
             const bySigner = this.signer ? true : false;
@@ -128,9 +130,11 @@ export class LotteryComponent implements OnInit {
               console.log(x);
               this.saleOwner = x.saleOwner;
               this.betPrice = x.betPrice;
+              this.betPrice4UI = ethers.utils.formatUnits( x.betPrice , 18 );
               this.betsOpen = x.betsOpen;
               this.ownerPool = x.ownerPool;
-              //this.saleWinner = x.saleWinner;
+              this.ownerPool4UI = ethers.utils.formatUnits( x.ownerPool , 18 );
+              this.saleWinner = x.saleWinner;
               this.closingTime = x.lotteryClosingTime;
               this.closingTimeDateLocalized = new Date ( x.lotteryClosingTime * 1000 );
 
@@ -171,7 +175,7 @@ export class LotteryComponent implements OnInit {
             //{ betsOpen, betPrice, lotteryClosingTime, ownerPool, paymentToken, lotteryTokenBalance, lotteryTokenBalanceOfContract };
         }
 
-        /* this.intervalUpdatePage = window.*/ setInterval( ()=>{this.updatePage();} , 1000);
+        this.intervalUpdatePage = window.setInterval( ()=>{this.updatePage();} , 30000);
       }
     });
     /* alternate way of getting param from url
@@ -209,10 +213,12 @@ export class LotteryComponent implements OnInit {
       const x = this.contractService.getLotteryInfoGeneral( this.lotteryContract ).then((x)=>{
         //console.log(x);
         this.saleOwner = x.saleOwner;
-        this.betPrice = x.betPrice;
+        this.betPrice = x.betPrice; //if 4 DAI then this is 4 x 10^18 DAI
+        this.betPrice4UI = ethers.utils.formatUnits( x.betPrice , 18 );
         this.betsOpen = x.betsOpen;
         this.ownerPool = x.ownerPool;
-        //this.saleWinner = x.saleWinner;
+        this.ownerPool4UI = ethers.utils.formatUnits( x.ownerPool , 18 );
+        this.saleWinner = x.saleWinner;
         this.closingTime = x.lotteryClosingTime;
         this.closingTimeDateLocalized = new Date ( x.lotteryClosingTime * 1000 );
         
@@ -268,6 +274,9 @@ export class LotteryComponent implements OnInit {
         console.log('bet transaction done:'+ x);
         this.hideModal();
         alert('You have betted successfully!');
+      }).catch((error)=>{
+        this.hideModal();
+        alert('An error occured! Please try again or contact our support department.')
       });
     }
   }
@@ -284,6 +293,9 @@ export class LotteryComponent implements OnInit {
         console.log('bet transaction done:'+ x);
         this.hideModal();
         alert('You have betted successfully!');
+      }).catch((error)=>{
+        this.hideModal();
+        alert('An error occured! Please try again or contact our support department.')
       });
     }
   }
@@ -294,11 +306,15 @@ export class LotteryComponent implements OnInit {
         console.log('bet transaction done:'+ x);
         this.hideModal();
         alert('You have closed lottery successfully!');
+      }).catch((error)=>{
+        this.hideModal();
+        alert('An error occured! Please try again or contact our support department.')
       });
     }
   }
 
   async getImageFromIPFS(){
+    return '';
     const response = await axios({
       method: "get",
       url: environment.base_api_url + "/sales/"+ this.contract_addr,
@@ -321,10 +337,10 @@ export class LotteryComponent implements OnInit {
     if(spinner) { spinner.style.display = 'none'; }  
     //setTimeout( ()=>{const spinner = document.getElementById('spinner-super-wrapper'); if(spinner) { spinner.style.display = 'none'; } } , 5000)
   }
-  /*
+  
   ngOndestroy() {
     console.log('Lottery destroy');
     window.clearInterval(this.intervalUpdatePage);
   }
-  */
+  
 }
