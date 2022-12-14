@@ -1,64 +1,74 @@
-
 <div class="background">
   <div class="header">
-  <img class="d-inline" src="/assets/images/p4p.png" width="100px" height="100px" />
-  <h1 class="d-inline align-middle ps-3">PIXELS FOR PEACE NFTs</h1>
+    <img
+      class="d-inline"
+      src="/assets/images/p4p.png"
+      width="100px"
+      height="100px"
+    />
+    <h1 class="d-inline align-middle ps-3">PIXELS FOR PEACE NFTs</h1>
   </div>
-<div class="container">
- 
-  
-  <a class="btn homeButtons m-2" routerLink="/" routerLinkActive="active">Home</a>
-  <a class="btn homeButtons m-2" routerLink="/profile" routerLinkActive="active">Profile</a>
-      <!--
+
+  <div class="container">
+    <a class="btn homeButtons m-2" routerLink="/" routerLinkActive="active"
+      >Home</a
+    >
+    <a
+      class="btn homeButtons m-2"
+      routerLink="/profile"
+      routerLinkActive="active"
+      >Profile</a
+    >
+    <!--
         <li>
         <a routerLink="/my-winnings" routerLinkActive="active">My Winnings</a>
       </li>
     -->
 
-
-  <div>
-    <button
-      type="button"
-      class="btn homeButtons m-4"
-      (click)="connectWallet()"
-      *ngIf="!signer"
-    >
-      Connect your Wallet
-    </button>
-
+    <div>
+      <button
+        type="button"
+        class="btn homeButtons m-4"
+        (click)="connectWallet()"
+        *ngIf="!signer"
+      >
+        Connect your Wallet
+      </button>
+    </div>
+    <div *ngIf="signer">
+      <!-- <div *ngIf="salesFactoryContract"> -->
+      <button
+        type="button"
+        class="btn homeButtons m-4"
+        routerLink="/sale/create"
+      >
+        Create Sale (Lottery or Auction)
+      </button>
+      <div class="information d-block container">
+        <p>The last block on the network was: {{ lastNetworkBlock }}</p>
+        <span *ngIf="signer"> Wallet Connected: {{ walletAddress }} </span>
+        <!-- </div> -->
+      </div>
     </div>
   </div>
-  <div *ngIf="signer">
-    <!-- <div *ngIf="salesFactoryContract"> -->
-    <button type="button" class="btn homeButtons m-4" routerLink="/sale/create">
-      Create Sale (Lottery or Auction)
-    </button>
-    <div class="information d-block container">
-      <p >The last block on the network was: {{ lastNetworkBlock }}</p>
-      <span  *ngIf="signer">
-      Wallet Connected: {{ walletAddress }}
-      </span>
-    <!-- </div> -->
-  </div>
-</div>
 
-<div id="spinner-super-wrapper">
-  <div id="spinner-wrapper" class="align-items-center justify-content-center">
-    <!--
+  <div id="spinner-super-wrapper">
+    <div id="spinner-wrapper" class="align-items-center justify-content-center">
+      <!--
   <div class="spinner-border" role="status">
     <span class="visually-hidden">Loading...</span>
   </div>
   https://stackoverflow.com/questions/42388989/bootstrap-center-vertical-and-horizontal-alignment
   -->
-    <img
-      id="spinner"
-      class="align-items-center justify-content-center"
-      src="/assets/images/money-spinner.gif"
-      width="150px"
-    />
+      <img
+        id="spinner"
+        class="align-items-center justify-content-center"
+        src="/assets/images/money-spinner.gif"
+        width="150px"
+      />
+    </div>
   </div>
-</div>
 
-<router-outlet></router-outlet>
-<!--<app-messages></app-messages>-->
+  <router-outlet></router-outlet>
+  <!--<app-messages></app-messages>-->
 </div>
