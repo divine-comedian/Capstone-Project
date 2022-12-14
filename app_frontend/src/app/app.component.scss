@@ -1,18 +1,59 @@
+@font-face {
+    font-family: 'ZenDots';
+    src: url('../assets/fonts/ZenDots-Regular.ttf');
+}
+
+@font-face {
+    font-family: 'FjallaOne';
+    src: url('../assets/fonts/FjallaOne-Regular.ttf');
+}
+
+div {
+    font-family: 'FjallaOne';
+}
+
 h1 {
+    font-size: 4rem;
+
+}
+
+.header {
     font-weight: bold;
+    padding: 20px;
+    background-color: #59CD90;
+    border-bottom: 3px solid #6d6c6c;
+    font-family: 'FjallaOne';
     color: blue;
 }
 
 img {
-    border: 3px solid blue;
+    border: 3px solid #F56476;
     border-radius: 8px;
 }
 
+.homeButtons {
+    background-color: #F56476;
+    border: 2px solid #6d6c6c;
+}
+.homeButtons:hover {
+    background-color: #ec8c98;
+
+}
 
 .information {
-    background-color: aqua;
+    background-color: #D9F9A5;
+    border:3px solid #6d6c6c;
+    width:fit-content;
+    border-radius: 8px;
 }
 
 .background {
     background-image: url("../assets/images/backgroundPFPresized.png");
 }
+
+
+/// palette references
+/// #D9F9A5 - yellow green
+/// #c17ecc - purple 
+/// #F56476 - fiery rose
+/// #F6B070 -   mellow apricot
