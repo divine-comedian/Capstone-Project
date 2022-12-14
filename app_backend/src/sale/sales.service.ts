@@ -21,9 +21,9 @@ export class SalesService {
     return this.saleModel.findOne({ _id: id }).exec()
   }
 
-  async update(id: string, updateSaleDto: CreateSaleDto) {
+  async update(filter: CreateSaleDto, updateSaleDto: CreateSaleDto) {
     return await this.saleModel
-      .findOneAndUpdate({ id }, updateSaleDto, {
+      .findOneAndUpdate(filter, updateSaleDto, {
         new: true,
       })
       .exec()
