@@ -10,7 +10,7 @@ export class SalesController {
 
   @Get(':id')
   @ApiOperation({
-    description: 'Return a specific sale given a sale contract address.',
+    description: 'Return a specific sale given an _id',
   })
   async findOne(@Param('id') id: string): Promise<Sale> {
     return this.salesService.findOne(id)
@@ -24,18 +24,23 @@ export class SalesController {
 
   @Post()
   @ApiOperation({
-    description:
-      'Add a single sale document to the database with contract address as _id',
+    description: 'Add a single sale document to the database.',
   })
   async create(@Body() createSaleDto: CreateSaleDto) {
-    createSaleDto._id = createSaleDto.sale_contract_addr
     await this.salesService.create(createSaleDto)
   }
 
-  @Put(':id')
-  @ApiOperation({ description: 'Update any sale document given an _id.' })
-  async update(@Param('id') id: string, @Body() updateSaleDto: CreateSaleDto) {
-    return await this.salesService.update(id, updateSaleDto)
+  @Put(':filter')
+  @ApiOperation({
+    description:
+      'Update any sale document given a json to use as a matching filter.',
+  })
+  async update(
+    @Param('filter') filter: string,
+    @Body() updateSaleDto: CreateSaleDto,
+  ) {
+    const filterObj: CreateSaleDto = JSON.parse(filter)
+    return await this.salesService.update(filterObj, updateSaleDto)
   }
 
   @Delete(':id')
