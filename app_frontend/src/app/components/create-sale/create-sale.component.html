@@ -1,5 +1,5 @@
-<div class="container">
-  <h3>Create a Sale</h3>
+<div class="container component-box pb-4">
+  <h3 class="p-3">Create a Sale</h3>
   <div *ngIf="signer" style="color: green">
     You are signed in: {{ walletAddress }}
   </div>
@@ -20,12 +20,14 @@
       <!-- <form id="saleForm" [formGroup]="saleForm" (ngSubmit)="onSubmitTest(this)"> -->
       <div>
         <label for="sale_name">Name of Sale: </label>
-        <input id="sale_name" type="text" formControlName="sale_name" />
+        <input
+          class="form-control" id="sale_name" type="text" formControlName="sale_name" />
       </div>
 
       <div>
         <label for="sale_type">Type of Sale: </label><br />
         <input
+        class="form-check-input"
           type="radio"
           formControlName="sale_type"
           value="lottery"
@@ -33,6 +35,7 @@
         />
         Lottery
         <input
+          class="form-check-input"
           type="radio"
           formControlName="sale_type"
           value="auction"
@@ -48,7 +51,8 @@
         <h6>Dynamic Lottery Section!!!</h6>
         <div>
           <label for="bet_price">Bet Price: </label>
-          <input id="bet_price" type="number" formControlName="bet_price" />
+          <input
+            class="form-control" id="bet_price" type="number" formControlName="bet_price" />
         </div>
       </div>
 
@@ -60,6 +64,7 @@
         <div>
           <label for="starting_bid">Starting Bid: </label>
           <input
+            class="form-control"
             id="starting_bid"
             type="number"
             formControlName="starting_bid"
@@ -78,12 +83,14 @@
 
       <div>
         <label for="payment_token">Payment Token: </label>
-        <input id="payment_token" type="text" formControlName="payment_token" />
+        <input
+          class="form-control" id="payment_token" type="text" formControlName="payment_token" />
       </div>
 
       <div>
         <label for="recipient_addr">Recipient Address: </label>
         <input
+          class="form-control"
           id="recipient_addr"
           type="text"
           formControlName="recipient_addr"
@@ -93,6 +100,7 @@
       <div>
         <label for="sale_image">Upload the file used for the NFT: </label>
         <input
+          class="form-control"
           id="sale_image"
           type="file"
           formControlName="sale_image"
@@ -103,6 +111,7 @@
       <div>
         <label for="closing_time">Set a Closing Time for this Sale: </label>
         <input
+          class="form-control"
           id="closing_time"
           type="datetime-local"
           formControlName="closing_time"

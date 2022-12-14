@@ -47,6 +47,7 @@ The frontend is built with Angular (TypeScript) and provides the customer-facing
 ### Backend
 
 The backend is built with Nest (TypeScript) and is responsible for securely interacting with the Ethereum contracts, as well as managing the database (MongoDB).
+[Backend API](https://pixelsforpeace-api.azurewebsites.net)
 
 ### tx hashes and contract addresses examples
 

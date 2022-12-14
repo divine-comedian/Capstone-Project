@@ -1,48 +1,51 @@
 <div class="container">
   <h2>List of Current Live Sales</h2>
   <div *ngIf="sales">
-    <div *ngFor="let sale of sales" class="sale-list-item">
-      <div>
-        <a
-          routerLinkActive="active"
-          routerLink="sale/{{
-            (sale.type_of_sale == 'auction' ? 'auction' : 'lottery') +
-              '/' +
+    <div class="row row-cols-auto">
+      <div *ngFor="let sale of sales" class="sale-list-item">
+        <h3>{{ sale.name_of_sale }}</h3>
+        <div>
+          <a
+            routerLinkActive="active"
+            routerLink="sale/{{
+              (sale.type_of_sale == 'auction' ? 'auction' : 'lottery') +
+                '/' +
+                sale.sale_contract_addr
+            }}"
+            >{{ sale.sale_contract_addr }}</a
+          >
+          @
+          <a
+            href="https://goerli.etherscan.io/address/{{
               sale.sale_contract_addr
-          }}"
-          >{{ sale.name_of_sale }}</a
-        >
-        @
-        <a
-          href="https://goerli.etherscan.io/address/{{
-            sale.sale_contract_addr
-          }}"
-          >{{ sale.sale_contract_addr }}</a
-        >
-      </div>
-      <div>{{ sale.type_of_sale }}</div>
-      <div>{{ sale.recipient.recipient_name }}</div>
+            }}"
+            >goerli.etherscan.io</a
+          >
+        </div>
+        <div>{{ sale.type_of_sale }}</div>
+        <div>{{ sale.recipient.recipient_name }}</div>
 
-      <div *ngIf="sale.type_of_sale == 'lottery'">
-        <div>{{ sale.closing_time }}</div>
-        <div>{{ sale.bet_price }}</div>
-      </div>
+        <div *ngIf="sale.type_of_sale == 'lottery'">
+          <div>{{ sale.closing_time }}</div>
+          <div>{{ sale.bet_price }}</div>
+        </div>
 
-      <div *ngIf="sale.type_of_sale == 'auction'">
-        <div>{{ sale.closing_time }}</div>
-        <div>{{ sale.highestBid }}</div>
-      </div>
+        <div *ngIf="sale.type_of_sale == 'auction'">
+          <div>{{ sale.closing_time }}</div>
+          <div>{{ sale.highestBid }}</div>
+        </div>
 
-      <div>
-        <img
-          height="100px"
-          width="100px"
-          class="img-thumbnail"
-          mx-auto
-          src="{{ sale.image_ipfs_url }}"
-        />
+        <div>
+          <img
+            height="100px"
+            width="100px"
+            class="img-thumbnail"
+            mx-auto
+            src="{{ sale.image_ipfs_url }}"
+          />
+        </div>
       </div>
     </div>
+    <div *ngIf="!sales || sales.length == 0">No sales yet.</div>
   </div>
-  <div *ngIf="!sales || sales.length == 0">No sales yet.</div>
 </div>

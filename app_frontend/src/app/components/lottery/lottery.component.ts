@@ -175,7 +175,7 @@ export class LotteryComponent implements OnInit {
             //{ betsOpen, betPrice, lotteryClosingTime, ownerPool, paymentToken, lotteryTokenBalance, lotteryTokenBalanceOfContract };
         }
 
-        this.intervalUpdatePage = window.setInterval( ()=>{this.updatePage();} , 30000);
+        this.intervalUpdatePage = window.setInterval( ()=>{this.updatePage();} , 1000);
       }
     });
     /* alternate way of getting param from url
