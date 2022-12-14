@@ -1,24 +1,34 @@
 <div class="container">
   <h3>Auction Info</h3>
-  <div *ngIf="signer" style="color: green">
+  <div *ngIf="signer" class="color-success">
     You are signed in: {{ walletAddress }}
   </div>
-  <div *ngIf="!signer" style="color: red">You are NOT signed in</div>
+  <div *ngIf="!signer" class="color-error">You are NOT signed in</div>
   <div>
     Auction contract addr is: {{ contract_addr }} <br />
     (Auction Contract has {{ tokenBalanceOfContract }} of this token aka
     {{ tokenBalanceOfContractSmallerUnits }} units/cents)
   </div>
   <div>
-    Auction state is: {{ auctionOpen ? "Open" : "Closed" }}
-    <span *ngIf="closeAuctionUI" style="color: red"
+    Auction state is:
+    <span [ngClass]="auctionOpen ? 'color-success' : 'color-error'">{{
+      auctionOpen ? "Open" : "Closed"
+    }}</span>
+    <span *ngIf="closeAuctionUI" class="color-error"
       >(but can be Closed since date is passed)</span
     >
     <div *ngIf="closeAuctionUI">
       <span *ngIf="!signer"
         >Please Connect your Wallet to Close the Auction</span
       >
-      <button *ngIf="signer">Add Close Auction button here</button>
+      <button
+        *ngIf="signer"
+        type="button"
+        class="btn btn-primary"
+        (click)="closeAuction()"
+      >
+        Close Auction
+      </button>
     </div>
   </div>
   <div>
@@ -31,7 +41,16 @@
   </div>
   <div>
     Maybe get preview image from MongoDB, since the JSON MetaData is private
-    <img src="temp" />
+    <!--<img src="{{ previewImage }}" width="500" height="500" />
+    <h3
+      *ngIf="
+        saleWinner &&
+        saleWinner != '0x0000000000000000000000000000000000000000' &&
+        saleWinner != ''
+      "
+    >
+      Winner is: <span class="color-success">{{ saleWinner }}</span>
+    </h3>-->
   </div>
   <div class="actions">
     <div class="bidAuction" *ngIf="signer && showBidUI">

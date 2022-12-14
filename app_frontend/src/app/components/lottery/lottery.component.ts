@@ -10,6 +10,8 @@ import saleLotteryInterface  from '../../../assets/Lottery.json';
 import saleTokenInterface  from '../../../assets/IERC20.json';
 
 import { BigNumber, Contract, ethers } from 'ethers';
+import { environment } from 'src/environments/environment';
+import axios from 'axios';
 
 @Component({
   selector: 'app-lottery',
@@ -36,10 +38,12 @@ export class LotteryComponent implements OnInit {
   tokenBalanceOfUserSmallerUnits:  number | undefined;
   tokenBalanceOfContract: number | undefined;
   tokenBalanceOfContractSmallerUnits:  number | undefined;
+  //saleWinner: string | undefined;
+  //intervalUpdatePage: number | ReturnType<typeof setInterval> | undefined;
+  //previewImage: string | undefined;
 
   showBetUI : boolean = false;
   closeLotteryUI : boolean = false;
-  
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -110,6 +114,10 @@ export class LotteryComponent implements OnInit {
           }
         });
         */
+        /*this.getImageFromIPFS().then((image_ipfs_url)=>{
+          this.previewImage = image_ipfs_url;
+        });*/
+
         if(this.contract_addr && this.provider ) {
             const bySigner = this.signer ? true : false;
             const lotteryContract = ContractService.getContract(this.provider, this.signer, saleLotteryInterface.abi, contract_addr, bySigner);
@@ -120,6 +128,7 @@ export class LotteryComponent implements OnInit {
               this.betPrice = x.betPrice;
               this.betsOpen = x.betsOpen;
               this.ownerPool = x.ownerPool;
+              //this.saleWinner = x.saleWinner;
               this.closingTime = x.lotteryClosingTime;
               this.closingTimeDateLocalized = new Date ( x.lotteryClosingTime * 1000 );
 
@@ -160,7 +169,7 @@ export class LotteryComponent implements OnInit {
             //{ betsOpen, betPrice, lotteryClosingTime, ownerPool, paymentToken, lotteryTokenBalance, lotteryTokenBalanceOfContract };
         }
 
-        setInterval( ()=>{this.updatePage();} , 1000);
+        /* this.intervalUpdatePage = window.*/ setInterval( ()=>{this.updatePage();} , 1000);
       }
     });
     /* alternate way of getting param from url
@@ -198,10 +207,11 @@ export class LotteryComponent implements OnInit {
       const x = this.contractService.getLotteryInfoGeneral( this.lotteryContract ).then((x)=>{
         //console.log(x);
         this.betPrice = x.betPrice;
-        this.closingTime = x.lotteryClosingTime;
-        this.closingTimeDateLocalized = new Date ( x.lotteryClosingTime * 1000 );
         this.betsOpen = x.betsOpen;
         this.ownerPool = x.ownerPool;
+        //this.saleWinner = x.saleWinner;
+        this.closingTime = x.lotteryClosingTime;
+        this.closingTimeDateLocalized = new Date ( x.lotteryClosingTime * 1000 );
         
         const nowDate = new Date();
         const now_converted_to_seconds_after_epoch = nowDate.getTime() / 1000;
@@ -244,6 +254,7 @@ export class LotteryComponent implements OnInit {
   }
 
   bet() {
+    this.showModal();
     console.log('lottery.bet()');
     if(this.contract_addr && this.lotteryContract && this.saleTokenContract && this.paymentToken && this.betPrice) {
       /*this.salesContractService.postLotteryBet(this.contract_addr, saleLotteryInterface, this.paymentToken, saleTokenInterface, this.betPrice, true).then((x:string)=>{
@@ -252,11 +263,13 @@ export class LotteryComponent implements OnInit {
       });*/
       this.contractService.postLotteryBet( this.lotteryContract, this.saleTokenContract, this.betPrice ).then((x)=>{
         console.log('bet transaction done:'+ x);
+        this.hideModal();
         alert('You have betted successfully!');
       });
     }
   }
   betMany(numberOfBets:string) {
+    this.showModal();
     console.log('lottery.bet()');
     const numberOfBetsInt = parseInt(numberOfBets);    
     if(this.contract_addr && this.lotteryContract && this.saleTokenContract && this.paymentToken && this.betPrice) {
@@ -266,10 +279,49 @@ export class LotteryComponent implements OnInit {
       });*/
       this.contractService.postLotteryBetManyTimes( this.lotteryContract,  this.saleTokenContract, this.betPrice, numberOfBetsInt).then((x)=>{
         console.log('bet transaction done:'+ x);
+        this.hideModal();
         alert('You have betted successfully!');
       });
     }
   }
+  closeLottery() {
+    this.showModal();
+    if(this.contract_addr && this.lotteryContract) {
+      this.contractService.postLotteryClose(this.lotteryContract).then((x)=>{
+        console.log('bet transaction done:'+ x);
+        this.hideModal();
+        alert('You have closed lottery successfully!');
+      });
+    }
+  }
 
+  async getImageFromIPFS(){
+    const response = await axios({
+      method: "get",
+      url: environment.base_api_url + "/sales/"+ this.contract_addr,
+      headers: {
+          "Content-Type": "application/json"
+      },
+    });
+    console.log(response.data.image_ipfs_url);
+    //console.log(response[0].name_of_sale);
+    return response.data.image_ipfs_url;
+  }
 
+  showModal(){
+    const spinner = document.getElementById('spinner-super-wrapper');
+    if(spinner) { spinner.style.display = 'block'; }  
+    //setTimeout( ()=>{const spinner = document.getElementById('spinner-super-wrapper'); if(spinner) { spinner.style.display = 'none'; } } , 5000)
+  }
+  hideModal(){
+    const spinner = document.getElementById('spinner-super-wrapper');
+    if(spinner) { spinner.style.display = 'none'; }  
+    //setTimeout( ()=>{const spinner = document.getElementById('spinner-super-wrapper'); if(spinner) { spinner.style.display = 'none'; } } , 5000)
+  }
+  /*
+  ngOndestroy() {
+    console.log('Lottery destroy');
+    window.clearInterval(this.intervalUpdatePage);
+  }
+  */
 }

@@ -71,6 +71,24 @@ export class ContractService {
       return 0;
     }
   }
+  public async postLotteryClose(lotteryContract:ethers.Contract){
+    console.log('########################## inside postLotteryClose()');
+  
+    const allowTx = await lotteryContract["closeLottery"]();
+    const receipt = await allowTx.wait();
+
+    return receipt.transactionHash;
+  }
+  public async postAuctionClose(auctionContract:ethers.Contract){
+    console.log('########################## inside postAuctionClose()');
+  
+    const allowTx = await auctionContract["end"]();
+    const receipt = await allowTx.wait();
+
+    return receipt.transactionHash;
+  }
+  
+
   //###############################################################################################################################
   public async getInfoSalesToken(saleTokenContract:ethers.Contract, wallet_addr:string, wallet_desc:string ){
     //wallet_addr = await saleTokenContract.signer.getAddress();//popup will prob come up, until we can re-use signer
@@ -88,17 +106,35 @@ export class ContractService {
     const lotteryClosingTime = await lotteryContract['lotteryClosingTime'](); //number
     const ownerPool = await lotteryContract['ownerPool'](); //number
     const paymentToken = await lotteryContract['paymentToken'](); //string
+    let saleWinner = '';
+    if(!betsOpen) {
+      try {
+        saleWinner = await lotteryContract['saleWinner'](); //string
+      } catch (error) {
+        console.log(error)
+      }
+    }
 
-    return { betsOpen, betPrice, lotteryClosingTime, ownerPool, paymentToken };
+    return { betsOpen, betPrice, lotteryClosingTime, ownerPool, paymentToken, saleWinner };
+    //return { betsOpen, betPrice, lotteryClosingTime, ownerPool, paymentToken };
   }
-  public async getAuctionInfoGeneral(lotteryContract:ethers.Contract ){
-    const highestBid = await lotteryContract['highestBid'](); //boolean
-    const highestBidder = await lotteryContract['highestBidder'](); //number
-    const auctionClosingTime = await lotteryContract['auctionClosingTime'](); //number
-    const auctionOpen = await lotteryContract['auctionOpen'](); //number
-    const paymentToken = await lotteryContract['paymentToken'](); //string
+  public async getAuctionInfoGeneral(auctionContract:ethers.Contract ){
+    const highestBid = await auctionContract['highestBid'](); //boolean
+    const highestBidder = await auctionContract['highestBidder'](); //number
+    const auctionClosingTime = await auctionContract['auctionClosingTime'](); //number
+    const auctionOpen = await auctionContract['auctionOpen'](); //number
+    const paymentToken = await auctionContract['paymentToken'](); //string
+    let saleWinner = '';
+    if(!auctionOpen) {
+      try {
+        saleWinner = await auctionContract['saleWinner'](); //string
+      } catch (error) {
+        console.log(error)
+      }
+    }
 
-    return { highestBid, highestBidder, auctionClosingTime, auctionOpen, paymentToken };
+    return { highestBid, highestBidder, auctionClosingTime, auctionOpen, paymentToken, saleWinner };
+    //return { highestBid, highestBidder, auctionClosingTime, auctionOpen, paymentToken };
   }
   public async postLotteryBet(lotteryContract:ethers.Contract, lotteryTokenContract:ethers.Contract, bet_price:number ){
     console.log('########################## inside postLotteryBet()');

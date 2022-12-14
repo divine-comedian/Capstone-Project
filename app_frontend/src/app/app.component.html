@@ -36,31 +36,22 @@
   </div>
 </div>
 
-<!--
-    <div *ngIf="!(wallet || signer)">
-
-        <button
-          type="button"
-          class="btn btn-success btn-lg px-4 gap-3"
-          (click)="connectWallet()"
-        >
-          Connect a Wallet
-        </button>
-
-    </div>
-
-    <div *ngIf="wallet || signer">
-      <p class="lead mg-4">This is your address: {{ walletAddress }}</p>
-      <p class="lead mg-4">
-        This is the lottery token address:
-        {{ lotteryTokenContractAddress }}
-        <br />
-        This is the lottery address:
-        {{ lotteryContractAddress }}
-
-        SaleFactory.launchLottery
-        SaleFactory.launchAuction
-      -->
+<div id="spinner-super-wrapper">
+  <div id="spinner-wrapper" class="align-items-center justify-content-center">
+    <!--
+  <div class="spinner-border" role="status">
+    <span class="visually-hidden">Loading...</span>
+  </div>
+  https://stackoverflow.com/questions/42388989/bootstrap-center-vertical-and-horizontal-alignment
+  -->
+    <img
+      id="spinner"
+      class="align-items-center justify-content-center"
+      src="/assets/images/money-spinner.gif"
+      width="150px"
+    />
+  </div>
+</div>
 
 <router-outlet></router-outlet>
 <!--<app-messages></app-messages>-->

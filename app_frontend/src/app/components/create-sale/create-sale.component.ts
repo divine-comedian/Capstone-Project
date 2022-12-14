@@ -164,7 +164,7 @@ export class CreateSaleComponent {
     
   }
   onSubmit(e:any) { //real submit
-    
+    this.showModal();
     //1##################
     //IPFS upload of image
     //get hash of image
@@ -195,8 +195,8 @@ export class CreateSaleComponent {
             //3#################
             //launchLottery or launchAuction
 
-            let bet_price;
-            let starting_bid;
+            let bet_price:number = 0;
+            let starting_bid:number = 0;
             if(lottery_type=='lottery') {
               const bet_price_temp = this.saleForm.controls['bet_price'].value;
               if(bet_price_temp) {
@@ -236,7 +236,10 @@ export class CreateSaleComponent {
                       console.log('########################## SaleCreated() emitted solidty event')
                       console.log('new_contract_addr:',new_contract_addr,',sale_type:', sale_type, ',saleOwner:', saleOwner, ',nftJsonURI:', uri);
                       this.created_contract_addr = new_contract_addr;
-                      salesContract.removeAllListeners("SaleCreated");
+                      
+                      this.hideModal();
+                      //this.writeToDB(new_contract_addr, lottery_type, {'sale_name': sale_name, 'sale_desc': sale_desc, 'bet_price':      bet_price,  'payment_token': payment_token, 'ipfs_image_url': ipfs_image_url, 'ipfs_nft_meta_url': ipfs_nft_meta_url, 'recipient_addr': recipient_addr, 'converted_to_seconds_after_epoch': converted_to_seconds_after_epoch, 'date_time_as_date': date_time_as_date});
+                      salesContract.removeAllListeners("SaleCreated"); //maybe put this in destroy method, not usre
                     });
 
                   }
@@ -258,7 +261,9 @@ export class CreateSaleComponent {
                       console.log('########################## SaleCreated() emitted solidty event')
                       console.log('new_contract_addr:',new_contract_addr,',sale_type:', sale_type, ',saleOwner:', saleOwner, ',nftJsonURI:', uri);
                       this.created_contract_addr = new_contract_addr;
-                      salesContract.removeAllListeners("SaleCreated");
+
+                      //this.writeToDB(new_contract_addr, lottery_type, {'sale_name': sale_name, 'sale_desc': sale_desc, 'starting_bid': starting_bid, 'payment_token': payment_token, 'ipfs_image_url': ipfs_image_url, 'ipfs_nft_meta_url': ipfs_nft_meta_url, 'recipient_addr': recipient_addr, 'converted_to_seconds_after_epoch': converted_to_seconds_after_epoch, 'date_time_as_date': date_time_as_date});
+                      salesContract.removeAllListeners("SaleCreated"); //maybe put this in destroy method, not usre
                     });
 
                   }
@@ -381,8 +386,57 @@ export class CreateSaleComponent {
       }
     }
     
- 
+    async writeToDB(new_contract_addr:string, lottery_type:string, obj:any) {
+      console.log('writeToDB');
 
+
+      //this.writeToDB(new_contract_addr, lottery_type, {'sale_name': sale_name, 'sale_desc': sale_desc, 'bet_price':    bet_price,    'payment_token': payment_token, 'ipfs_nft_meta_url': ipfs_nft_meta_url, 'recipient_addr': recipient_addr, 'converted_to_seconds_after_epoch': converted_to_seconds_after_epoch, 'date_time_as_date': date_time_as_date} );
+      //this.writeToDB(new_contract_addr, lottery_type, {'sale_name': sale_name, 'sale_desc': sale_desc, 'starting_bid': starting_bid, 'payment_token': payment_token, 'ipfs_nft_meta_url': ipfs_nft_meta_url, 'recipient_addr': recipient_addr, 'converted_to_seconds_after_epoch': converted_to_seconds_after_epoch, 'date_time_as_date': date_time_as_date} );
+      //"name": sale_name,
+      //"description": sale_desc,
+
+      let new_sale_json:any = {};
+      new_sale_json.sale_contract_addr = obj.new_contract_addr;
+      new_sale_json.type_of_sale = obj.type_of_sale;
+      new_sale_json.name_of_sale = obj.sale_name;
+      new_sale_json.description  = obj.sale_desc;
+      const recipient:any = {};
+      recipient.recipient_name = '';
+      recipient.recipient_desc = '';
+      recipient.recipient_addr = obj.recipient_addr;      
+      new_sale_json.recipient = recipient;
+      new_sale_json.image_ipfs_url = obj.ipfs_image_url;
+      new_sale_json.closing_time = obj.date_time_as_date;
+      
+      if(obj.type_of_sale=='lottery'){
+        new_sale_json.bet_price = obj.bet_price;
+      } else if(obj.type_of_sale=='auction'){
+        new_sale_json.starting_bid = obj.starting_bid;
+        new_sale_json.highest_bid  = "0"; //maybe have 2 vars for this
+      }
+  
+      const resFile = await axios({
+        method: "post",
+        url: environment.base_api_url +'/sales',
+        data: new_sale_json,
+        headers: {
+            "Content-Type": "application/json"
+        },
+      });
+
+    }
+    
+        
+    showModal(){
+      const spinner = document.getElementById('spinner-super-wrapper');
+      if(spinner) { spinner.style.display = 'block'; }  
+      //setTimeout( ()=>{const spinner = document.getElementById('spinner-super-wrapper'); if(spinner) { spinner.style.display = 'none'; } } , 5000)
+    }
+    hideModal(){
+      const spinner = document.getElementById('spinner-super-wrapper');
+      if(spinner) { spinner.style.display = 'none'; }  
+      //setTimeout( ()=>{const spinner = document.getElementById('spinner-super-wrapper'); if(spinner) { spinner.style.display = 'none'; } } , 5000)
+    }
   
 
 }

@@ -1,4 +1,6 @@
 import { Injectable } from '@angular/core';
+import axios from 'axios';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -7,7 +9,26 @@ export class SalesMongoService {
 
   constructor() { }
   
-  getSalesFromMongoDB() { //change to get from MongoDB (directly or via NestJS BE service)
+  async getRealSalesFromMongoDB() { 
+    const response = await axios({
+      method: "get",
+      url: environment.base_api_url + "/sales",
+      headers: {
+          "Content-Type": "application/json"
+      },
+    });
+    console.log(response.data);
+    //console.log(response[0].name_of_sale);
+    return response.data;
+    /*
+    const response = await axios.get<AxiosPromise>(environment.base_api_url + '/sales')
+    console.log(response.data);
+    this.sales = response.data;
+    */
+
+  }
+
+  getMockSalesFromMongoDB() { //change to get from MongoDB (directly or via NestJS BE service)
     return [
       
       {
@@ -62,7 +83,7 @@ export class SalesMongoService {
       },
 
 
-      
+
 
       {
         sale_contract_addr: '0xd165025Ca6a9Bb27782Fc2b8Fa3d918E6aCeBA0d',

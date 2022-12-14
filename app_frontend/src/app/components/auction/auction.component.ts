@@ -10,6 +10,8 @@ import saleAuctionInterface  from '../../../assets/Auction.json';
 import saleTokenInterface  from '../../../assets/IERC20.json';
 
 import { BigNumber, Contract, ethers } from 'ethers';
+import { environment } from 'src/environments/environment';
+import axios from 'axios';
 @Component({
   selector: 'app-auction',
   templateUrl: './auction.component.html',
@@ -35,7 +37,10 @@ export class AuctionComponent implements OnInit {
   tokenBalanceOfUserSmallerUnits:  number | undefined;
   tokenBalanceOfContract: number | undefined;
   tokenBalanceOfContractSmallerUnits:  number | undefined;
-
+  //saleWinner: string | undefined;
+  //intervalUpdatePage: number | ReturnType<typeof setInterval> | undefined;
+  //previewImage: string | undefined;
+  
   showBidUI : boolean = false;
   closeAuctionUI : boolean = false;
   
@@ -106,6 +111,11 @@ export class AuctionComponent implements OnInit {
           }
         });
         */
+        /*this.getImageFromIPFS().then((image_ipfs_url)=>{
+          this.previewImage = image_ipfs_url;
+        });*/
+
+
         if(this.contract_addr && this.provider ) {
             const bySigner = this.signer ? true : false;
             const auctionContract = ContractService.getContract(this.provider, this.signer, saleAuctionInterface.abi, contract_addr, bySigner);
@@ -116,6 +126,7 @@ export class AuctionComponent implements OnInit {
               this.highestBid = x.highestBid;
               this.highestBidder = x.highestBidder;
               this.auctionOpen = x.auctionOpen;
+              //this.saleWinner = x.saleWinner;
               this.closingTime = x.auctionClosingTime;
               this.closingTimeDateLocalized = new Date ( x.auctionClosingTime * 1000 ); //convert seconds to  milliseconds              
 
@@ -156,7 +167,7 @@ export class AuctionComponent implements OnInit {
             //{ betsOpen, betPrice, lotteryClosingTime, ownerPool, paymentToken, lotteryTokenBalance, lotteryTokenBalanceOfContract };
         }
 
-        setInterval( ()=>{this.updatePage();} , 1000);
+        /*this.intervalUpdatePage = window. */ setInterval( ()=>{this.updatePage();} , 1000);
       }
     });
     /* alternate way
@@ -197,6 +208,7 @@ export class AuctionComponent implements OnInit {
         this.highestBid = x.highestBid;
         this.highestBidder = x.highestBidder;
         this.auctionOpen = x.auctionOpen;
+        //this.saleWinner = x.saleWinner;
         this.closingTime = x.auctionClosingTime;
         this.closingTimeDateLocalized = new Date ( x.auctionClosingTime * 1000 ); //convert seconds to  milliseconds
         
@@ -241,6 +253,7 @@ export class AuctionComponent implements OnInit {
   }
 
   bid (bid_price:string){
+    this.showModal();
     console.log('auction.bid()');
     if(this.auctionContract && this.saleTokenContract && this.paymentToken) {
       const bidPriceInt = parseInt(bid_price);   
@@ -250,22 +263,64 @@ export class AuctionComponent implements OnInit {
       });*/
       this.contractService.postAuctionBid( this.auctionContract, this.saleTokenContract, bidPriceInt ).then((x)=>{
         console.log('bet transaction done:'+ x);
+        this.hideModal();
         alert('You have bid successfully!');
       });
     }
   }
   withdraw(){
+    this.showModal();
     console.log('auction.bid()');
     if(this.auctionContract && this.contract_addr) {
       /*this.salesContractService.postWithdrawBid(this.contract_addr, saleAuctionInterface, true).then((x:string)=>{
         console.log('bid transaction done:'+ x);
         alert('You have withdraw your bid successfully!');
       });*/
-      this.contractService.postWithdrawAuctionBid( this.auctionContract).then((x)=>{
+      this.contractService.postAuctionClose( this.auctionContract).then((x)=>{
         console.log('bet transaction done:'+ x);
-        alert('You have withdrawn successfully!');
+        this.hideModal();
+        alert('You have closed auction successfully!');
+      });
+    }
+  }
+  closeAuction() {
+    this.showModal();
+    if(this.contract_addr && this.auctionContract) {
+      this.contractService.postAuctionClose(this.auctionContract).then((x)=>{
+        console.log('bet transaction done:'+ x);
+        this.hideModal();
+        alert('You have closed lottery successfully!');
       });
     }
   }
 
+  async getImageFromIPFS(){
+    const response = await axios({
+      method: "get",
+      url: environment.base_api_url + "/sales/"+ this.contract_addr,
+      headers: {
+          "Content-Type": "application/json"
+      },
+    });
+    console.log(response.data.image_ipfs_url);
+    //console.log(response[0].name_of_sale);
+    return response.data.image_ipfs_url;
+  }
+
+  showModal(){
+    const spinner = document.getElementById('spinner-super-wrapper');
+    if(spinner) { spinner.style.display = 'block'; }  
+    //setTimeout( ()=>{const spinner = document.getElementById('spinner-super-wrapper'); if(spinner) { spinner.style.display = 'none'; } } , 5000)
+  }
+  hideModal(){
+    const spinner = document.getElementById('spinner-super-wrapper');
+    if(spinner) { spinner.style.display = 'none'; }  
+    //setTimeout( ()=>{const spinner = document.getElementById('spinner-super-wrapper'); if(spinner) { spinner.style.display = 'none'; } } , 5000)
+  }
+  /*
+  ngOndestroy() {
+    console.log('Auction destroy');
+    window.clearInterval(this.intervalUpdatePage);
+  }
+  */
 }

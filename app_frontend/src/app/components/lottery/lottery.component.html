@@ -1,36 +1,52 @@
 <div class="container">
   <h3>Lottery Info</h3>
-  <div *ngIf="signer" style="color: green">
+  <div *ngIf="signer" class="color-success">
     You are signed in: {{ walletAddress }}
   </div>
-  <div *ngIf="!signer" style="color: red">You are NOT signed in</div>
+  <div *ngIf="!signer" class="color-error">You are NOT signed in</div>
   <div>
     Lottery contract addr is: {{ contract_addr }} <br />
     (Lottery Contract has {{ tokenBalanceOfContract }} of this token aka
     {{ tokenBalanceOfContractSmallerUnits }} units/cents)
   </div>
   <div>
-    Lottery state is: {{ betsOpen ? "Open" : "Closed" }}
-    <span *ngIf="closeLotteryUI" style="color: red"
-      >(but can be Closed since date is passed)</span
-    >
+    Lottery state is:
+    <span [ngClass]="betsOpen ? 'color-success' : 'color-error'">{{
+      betsOpen ? "Open" : "Closed"
+    }}</span>
     <div *ngIf="closeLotteryUI">
       <span *ngIf="!signer"
         >Please Connect your Wallet to Close the Lottery</span
       >
-      <button *ngIf="signer">Add Close Lottery button here</button>
+      <button
+        *ngIf="signer"
+        type="button"
+        class="btn btn-primary"
+        (click)="closeLottery()"
+      >
+        Close Lottery
+      </button>
     </div>
   </div>
   <p>betPrice is: {{ betPrice }}</p>
   <p>ownerPool (total amount to win) is at: {{ ownerPool }}</p>
-  <p>
+  <div>
     closing time is
     {{ closingTime }} ({{ closingTimeDateLocalized?.toLocaleString() }})
-  </p>
-  <p>
+  </div>
+  <div>
     Maybe get preview image from MongoDB, since the JSON MetaData is private
-    <img src="temp" />
-  </p>
+    <!--<img src="{{ previewImage }}" width="500" height="500" />
+    <h3
+      *ngIf="
+        saleWinner &&
+        saleWinner != '0x0000000000000000000000000000000000000000' &&
+        saleWinner != ''
+      "
+    >
+      Winner is: <span class="color-success">{{ saleWinner }}</span>
+    </h3>-->
+  </div>
   <div class="actions">
     <div class="betTokens" *ngIf="signer && showBetUI">
       <!--*ngIf="signer and has > 0 tokens and date isn't closed yet and lottery still Open"-->
