@@ -44,7 +44,7 @@ export class AppComponent {
     private salesContractService: SalesContractService,
     private walletInjectorService: WalletInjectorService
   ) {
-    this.title = 'Pixels for Peace NFT Project';
+    this.title = 'PIXELS FOR PEACE NFTs';
     const provider = ethers.getDefaultProvider("goerli", {alchemy: ALCHEMY_API_KEY, etherscan: ETHERSCAN_API_KEY});
     this.provider = provider; //maybe get a default provider so can get some meta-data initially without user connecting... like read-only info about Contracts
     this.getLastBlock(); //prove it works without MetaMask Connecting
