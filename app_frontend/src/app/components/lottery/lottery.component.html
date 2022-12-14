@@ -4,12 +4,12 @@
     You are signed in: {{ walletAddress }}
   </div>
   <div *ngIf="!signer" class="color-error">You are NOT signed in</div>
-  <div>
+  <div class="mb-3">
     Lottery contract addr is: {{ contract_addr }} <br />
     (Lottery Contract has {{ tokenBalanceOfContract }} of this token aka
     {{ tokenBalanceOfContractSmallerUnits }} 'cents')
   </div>
-  <div>
+  <div class="mb-3">
     Lottery state is:
     <span [ngClass]="betsOpen ? 'color-success' : 'color-error'">{{
       betsOpen ? "Open" : "Closed"
@@ -28,16 +28,18 @@
       </button>
     </div>
   </div>
-  <div>Sale created by: {{ saleOwner }}</div>
-  <div>betPrice is: {{ betPrice4UI }} tokens ({{ betPrice }} 'cents')</div>
-  <div>
+  <div class="mb-3">Sale created by: {{ saleOwner }}</div>
+  <div class="mb-3">
+    betPrice is: {{ betPrice4UI }} tokens ({{ betPrice }} 'cents')
+  </div>
+  <div class="mb-3">
     ownerPool (total amount to win) is at: {{ ownerPool }} ({{ ownerPool4UI }})
   </div>
-  <div>
+  <div class="mb-3">
     closing time is
     {{ closingTime }} ({{ closingTimeDateLocalized?.toLocaleString() }})
   </div>
-  <div>
+  <div class="mb-3">
     Maybe get preview image from MongoDB, since the JSON MetaData is private
     <!--<img src="{{ previewImage }}" width="500" height="500" />
     <h3
@@ -50,18 +52,18 @@
       Winner is: <span class="color-success">{{ saleWinner }}</span>
     </h3>-->
   </div>
-  <div class="actions">
-    <div class="betTokens" *ngIf="signer && showBetUI">
+  <div class="mb-3" class="actions">
+    <div class="betTokens mb-3" *ngIf="signer && showBetUI">
       <!--*ngIf="signer and has > 0 tokens and date isn't closed yet and lottery still Open"-->
       <div>
-        Bet {{ betPrice }} of {{ paymentToken }} (you have
+        Bet {{ betPrice }} of {{ paymentToken }} token(s) <br />Note: (you have
         {{ tokenBalanceOfUser }} of this token aka
         {{ tokenBalanceOfUserSmallerUnits }} units/cents)
       </div>
       <button type="button" class="btn btn-primary" (click)="bet()">
         Click here to Bet
       </button>
-      <div>
+      <div class="betManyTokens mb-3">
         <br />
         or place multiple bets:
         <br />
