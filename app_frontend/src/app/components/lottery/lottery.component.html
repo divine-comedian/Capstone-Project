@@ -19,7 +19,7 @@
         >Please Connect your Wallet to Close the Lottery</span
       >
       <button
-        *ngIf="signer"
+        *ngIf="signer && betsOpen"
         type="button"
         class="btn btn-primary"
         (click)="closeLottery()"
@@ -38,9 +38,7 @@
     betPrice is: {{ betPrice4UI }} tokens ({{ betPrice }} 'cents')
   </div>
   <div class="mb-3">
-    ownerPool (total amount to win) is at: {{ ownerPool4UI }} ({{
-      ownerPool
-    }}
+    ownerPool (total amount to win) is at: {{ ownerPool4UI }} ({{ ownerPool }}
     'cents')
   </div>
   <div class="mb-3">
@@ -49,7 +47,7 @@
   </div>
   <div class="mb-3">
     Maybe get preview image from MongoDB, since the JSON MetaData is private
-    <!--<img src="{{ previewImage }}" width="500" height="500" />
+    <!--<img src="{{ previewImage }}" width="500" height="500" />-->
     <h3
       *ngIf="
         saleWinner &&
@@ -58,7 +56,7 @@
       "
     >
       Winner is: <span class="color-success">{{ saleWinner }}</span>
-    </h3>-->
+    </h3>
   </div>
   <div class="mb-3" class="actions">
     <div class="betTokens mb-3" *ngIf="signer && showBetUI">
