@@ -31,6 +31,7 @@
       </button>
     </div>
   </div>
+  <div>Sale created by: {{ saleOwner }}</div>
   <div>
     highestBid (getting from BlockChain is: {{ highestBid }}
     <span *ngIf="highestBid && highestBid > 0">by {{ highestBidder }}</span>

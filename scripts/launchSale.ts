@@ -1,79 +1,68 @@
-import { ethers } from "hardhat";
-import * as readline from "readline";
-import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers"; 
-import * as dotenv from 'dotenv' 
-import { MyToken__factory, PixelsForPeaceNFT__factory, SaleFactory__factory } from "../typechain-types";
-import { arrayify, Bytes, isBytes, keccak256, parseBytes32String } from "ethers/lib/utils";
-import { saleFactorySol } from "../typechain-types/contracts";
+import { ethers } from "ethers";
+//import { ethers } from "hardhat";
+import * as dotenv from 'dotenv';
 dotenv.config()
-import { BigNumberish } from "ethers";
-import saleFactoryJson from '../artifacts/contracts/SaleFactory.sol/SaleFactory.json'
 
-const saleFactoryIface = new ethers.utils.Interface(saleFactoryJson.abi)
+import { SaleFactory__factory } from "../typechain-types";
+//import { saleFactorySol } from "../typechain-types/contracts";
+//import saleFactoryJson from '../artifacts/contracts/SaleFactory.sol/SaleFactory.json';
+
+const ALCHEMY_API_KEY = "MwLDDsXrUc33uY_JtGf7si7uJbd0cyQy";
+
+const saleDAIToken = "0xdc31Ee1784292379Fbb2964b3B9C4124D8F89C60"; //DAI payment token
+const OLD_SALE_CONTRACT = "0x650363a00584dc53c62188f41b25d0cfcd2d943d"; //works
+const NEW_SALE_CONTRACT = "0x4d99e1f5742126c5af5ac29f89d6e0630c24315f"; //doesn't work
 
 
-const STARTING_BID = 30;
-const URI = 'QmPrXKWKzNofkgZ236iufwxk3wt9L7hh6DUhihsfMZvpcC'
-const CLOSING_TIME = 1670902234
-const DEFAULT_ADMIN_ROLE = '0x0000000000000000000000000000000000000000000000000000000000000000'
-const altAddress = "0x06263e1A856B36e073ba7a50D240123411501611"
-const ERC20 = "0xc9269d42d7450d7c62038B301e2F9b4ed6DF2155"
-const ERC721 = "0x2d2b1310E029334eeaD85D1a33796c1b367e712C"
-const SALE_CONTRACT = "0x765b6b2477cDd8cE419d9fF939BecbE3AC5FF04b"
+const JUNK_PRIVATE_KEY="PUT_YOUR_PRIVATE_HERE_TO_TEST";
 
 async function main() {
- const provider = new ethers.providers.AlchemyProvider('goerli', process.env.ALCHEMY_API_KEY )
-const wallet = new ethers.Wallet(process.env.PRIVATE_KEY ?? "");
- const signer = wallet.connect(provider)
-//// for testing in VM
-////const provider = ethers.getDefaultProvider();
-////const accounts = await ethers.getSigners();
-////  const signer = accounts[0]; 
-//// // deploy example ERC20
-//const TokenContractFactory = new MyToken__factory(signer);
-//const TokenContract = await TokenContractFactory.deploy()
-//await TokenContract.deployed();
-//const TokenAddress = TokenContract.address;
-//const signerBalance = await TokenContract.balanceOf(signer.address);
-//console.log(`example ERC20 was deployed at ${TokenAddress} and the signer has ${signerBalance} tokens`)
-//
-//// deploy example NFT
-// const NFTContractFactory = new PixelsForPeaceNFT__factory(signer);
-// const NFTContract = await NFTContractFactory.deploy()
-// await NFTContract.deployed();
-// const NFTaddress = NFTContract.address
-// console.log(`NFT deployed at ${NFTContract.address} by ${signer.address} \n`)
-//
-// //deploy example sale contract
-// const saleContractFactory = new SaleFactory__factory(signer);
-// const saleContract = await saleContractFactory.deploy(NFTaddress)
-// await saleContract.deployed();
-// const saleContractAddress = saleContract.address;
-// console.log(`the sale contract was deployed to ${saleContractAddress} with the nft ${NFTaddress} \n`)
-// // grant admin role to sale contract for nft - to assign other minters 
-// await NFTContract.grantRole(ethers.utils.arrayify(DEFAULT_ADMIN_ROLE), saleContractAddress);
- // laucnch auction
-// const saleContract = SaleFactory__factory.connect("0x765b6b2477cDd8cE419d9fF939BecbE3AC5FF04b", signer)
-// const launchAuctionTx = await saleContract.launchAuction(30, ERC20, URI, altAddress, CLOSING_TIME);
-// await launchAuctionTx.wait()
-// console.log(launchAuctionTx.hash);
-const launchAuctionReceipt = await provider.getTransactionReceipt("0x3c19d105641105027a8ad5eac6246bd7e267e1069236c18054c8eaaad8583700")
-console.log(launchAuctionReceipt)
-const launchAuctionLog = launchAuctionReceipt.logs[1].data;
-console.log(`${launchAuctionLog} \n`)
-let decodedAuctionData = saleFactoryIface.parseLog(launchAuctionReceipt.logs[1]);
+    const provider = ethers.getDefaultProvider("goerli", { alchemy: ALCHEMY_API_KEY});
+    const wallet = new ethers.Wallet(JUNK_PRIVATE_KEY);
+    const signer = wallet.connect(provider)
 
-console.log(decodedAuctionData.args[1])
+    //const salesContractFactory = await ethers.getContractFactory("Lottery");
+    const salesFactory = new SaleFactory__factory(signer);
+    const saleFactoryContract = salesFactory.attach(NEW_SALE_CONTRACT);
+    try {
+        const bet_price = 11;
+        const payment_token = '0xdc31Ee1784292379Fbb2964b3B9C4124D8F89C60';
+        const ipfs_url = 'https://gateway.pinata.cloud/ipfs/QmToWzBwMzws9NNyoPmskiR4ihPNaWkT31recGPRT8iw5c';
+        const recipient_addr = '0xA2dd619dB59A3BDa94A39Ea3006396C7584294Ee';
+        const converted_to_seconds_after_epoch = 1671026400;
+        
+        try {
+            //const lottery_instance = await salesFactory['launchLottery']( bet_price, payment_token, ipfs_url, recipient_addr, converted_to_seconds_after_epoch );
+            await saleFactoryContract['launchLottery']( bet_price, payment_token, ipfs_url, recipient_addr, converted_to_seconds_after_epoch );
+        } catch (err) {
+            console.log(err)
+        }
+        
+
+    } catch(error) {
+        console.log('error:'+ error);
+        return 0;
+    }    
     
- //    const mintTxReceipt = await provider.getTransactionReceipt(mintTx.hash)
- //    const mintTxLog =   mintTxReceipt.logs[0].topics[3]
- //    console.log(parseInt(mintTxLog));
-// 
- // console.log(`my 1st NFT was minted to ${recipientAddress} with ID of ${parseInt(mintTxLog)} \n`)
 
  
 }
 
-main();
+main().catch((error) => {
+    console.error(error);
+    process.exitCode = 1;
+});
+/* 
+for some reason my box likes yarn more than npm for running typescript ts-node commands:
 
+//install dependencies
+yarn install
 
+//make the /typechain files so can use in launchSale
+yarn hardhat clean && yarn hardhat compile //creates /typechain/ files so can use Factory
+
+if on windows:
+yarn ts-node .\scripts\launchSale.ts 
+if on unix?
+yarn ts-node ./scripts/launchSale.ts 
+*/

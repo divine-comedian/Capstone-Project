@@ -27,6 +27,7 @@ export class AuctionComponent implements OnInit {
   signer: ethers.Signer | undefined;
   walletAddress: string | undefined;
 
+  saleOwner: string | undefined;
   auctionOpen: boolean | undefined;  
   highestBid: number | undefined ; //getting from blockchain to test
   highestBidder: string | undefined ; 
@@ -123,6 +124,7 @@ export class AuctionComponent implements OnInit {
 
             this.contractService.getAuctionInfoGeneral( auctionContract ).then((x)=>{
               console.log(x);
+              this.saleOwner = x.saleOwner;
               this.highestBid = x.highestBid;
               this.highestBidder = x.highestBidder;
               this.auctionOpen = x.auctionOpen;
@@ -205,6 +207,7 @@ export class AuctionComponent implements OnInit {
       const bySigner = this.signer ? true : false;
       const x = this.contractService.getAuctionInfoGeneral( this.auctionContract ).then((x)=>{
         //console.log(x);
+        this.saleOwner = x.saleOwner;
         this.highestBid = x.highestBid;
         this.highestBidder = x.highestBidder;
         this.auctionOpen = x.auctionOpen;

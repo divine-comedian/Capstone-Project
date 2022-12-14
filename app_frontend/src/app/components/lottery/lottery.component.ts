@@ -28,6 +28,7 @@ export class LotteryComponent implements OnInit {
   signer: ethers.Signer | undefined;
   walletAddress: string | undefined;
 
+  saleOwner: string | undefined;
   betsOpen: boolean | undefined;
   betPrice: number | undefined ; //getting from blockchain to test
   closingTime: number | undefined; 
@@ -125,6 +126,7 @@ export class LotteryComponent implements OnInit {
 
             this.contractService.getLotteryInfoGeneral( lotteryContract ).then((x)=>{
               console.log(x);
+              this.saleOwner = x.saleOwner;
               this.betPrice = x.betPrice;
               this.betsOpen = x.betsOpen;
               this.ownerPool = x.ownerPool;
@@ -206,6 +208,7 @@ export class LotteryComponent implements OnInit {
       const bySigner = this.signer ? true : false;
       const x = this.contractService.getLotteryInfoGeneral( this.lotteryContract ).then((x)=>{
         //console.log(x);
+        this.saleOwner = x.saleOwner;
         this.betPrice = x.betPrice;
         this.betsOpen = x.betsOpen;
         this.ownerPool = x.ownerPool;

@@ -101,6 +101,7 @@ export class ContractService {
   //Lottery specific
 
   public async getLotteryInfoGeneral(lotteryContract:ethers.Contract ){
+    const saleOwner = await lotteryContract['saleOwner'](); //boolean
     const betsOpen = await lotteryContract['betsOpen'](); //boolean
     const betPrice = await lotteryContract['betPrice'](); //number
     const lotteryClosingTime = await lotteryContract['lotteryClosingTime'](); //number
@@ -115,10 +116,11 @@ export class ContractService {
       }
     }
 
-    return { betsOpen, betPrice, lotteryClosingTime, ownerPool, paymentToken, saleWinner };
+    return { saleOwner, betsOpen, betPrice, lotteryClosingTime, ownerPool, paymentToken, saleWinner };
     //return { betsOpen, betPrice, lotteryClosingTime, ownerPool, paymentToken };
   }
   public async getAuctionInfoGeneral(auctionContract:ethers.Contract ){
+    const saleOwner = await auctionContract['saleOwner'](); //boolean
     const highestBid = await auctionContract['highestBid'](); //boolean
     const highestBidder = await auctionContract['highestBidder'](); //number
     const auctionClosingTime = await auctionContract['auctionClosingTime'](); //number
@@ -133,7 +135,7 @@ export class ContractService {
       }
     }
 
-    return { highestBid, highestBidder, auctionClosingTime, auctionOpen, paymentToken, saleWinner };
+    return { saleOwner, highestBid, highestBidder, auctionClosingTime, auctionOpen, paymentToken, saleWinner };
     //return { highestBid, highestBidder, auctionClosingTime, auctionOpen, paymentToken };
   }
   public async postLotteryBet(lotteryContract:ethers.Contract, lotteryTokenContract:ethers.Contract, bet_price:number ){

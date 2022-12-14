@@ -409,10 +409,10 @@ export class CreateSaleComponent {
       new_sale_json.closing_time = obj.date_time_as_date;
       
       if(obj.type_of_sale=='lottery'){
-        new_sale_json.bet_price = obj.bet_price;
+        new_sale_json.bet_price = obj.bet_price; //should already be number
       } else if(obj.type_of_sale=='auction'){
-        new_sale_json.starting_bid = obj.starting_bid;
-        new_sale_json.highest_bid  = "0"; //maybe have 2 vars for this
+        new_sale_json.starting_bid = obj.starting_bid; //should already be number
+        new_sale_json.highest_bid  = 0; //maybe have 2 vars for this
       }
   
       const resFile = await axios({
