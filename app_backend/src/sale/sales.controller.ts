@@ -4,7 +4,7 @@ import { CreateSaleDto } from './create-sale.dto'
 import { Sale } from './sale.interface'
 import { ApiOperation } from '@nestjs/swagger'
 
-@Controller('sales')
+@Controller('api/sales')
 export class SalesController {
   constructor(private readonly salesService: SalesService) {}
 
