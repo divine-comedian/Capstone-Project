@@ -1,6 +1,7 @@
-<div class="container component-box pb-4">
+
+<div class="container component-box">
   <h3 class="p-3">Create a Sale</h3>
-  <div *ngIf="signer" style="color: green">
+  <div class="mb-2" *ngIf="signer" style="color: green">
     You are signed in: {{ walletAddress }}
   </div>
   <div *ngIf="!signer" style="color: red">You are NOT signed in</div>
@@ -45,10 +46,8 @@
       </div>
 
       <div
-        style="border: 1px solid black"
         *ngIf="saleForm.value.sale_type == 'lottery'"
       >
-        <h6>Dynamic Lottery Section!!!</h6>
         <div>
           <label for="bet_price">Bet Price: </label>
           <input
@@ -57,10 +56,8 @@
       </div>
 
       <div
-        style="border: 1px solid black"
         *ngIf="saleForm.value.sale_type == 'auction'"
       >
-        <h6>Dynamic Auction Section!!!</h6>
         <div>
           <label for="starting_bid">Starting Bid: </label>
           <input
@@ -75,6 +72,7 @@
       <div>
         <label for="sale_desc">Desc of NFT: </label>
         <textarea
+          class="d-block"
           id="sale_desc"
           type="text"
           formControlName="sale_desc"
@@ -88,7 +86,7 @@
       </div>
 
       <div>
-        <label for="recipient_addr">Recipient Address: </label>
+        <label for="recipient_addr">Charity Address: </label>
         <input
           class="form-control"
           id="recipient_addr"
@@ -96,7 +94,15 @@
           formControlName="recipient_addr"
         />
       </div>
-
+      <div>
+        <label for="recipient_link">Link to the Charity Project:</label>
+        <input
+          class="form-control"
+          id="recipient_link"
+          type="text"
+          formControlName="recipient_link"
+        />
+      </div>
       <div>
         <label for="sale_image">Upload the file used for the NFT: </label>
         <input

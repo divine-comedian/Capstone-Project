@@ -3,43 +3,39 @@
   <div class="header">
   <img class="d-inline" src="/assets/images/p4p.png" width="100px" height="100px" />
   <h1 class="d-inline align-middle ps-3">PIXELS FOR PEACE NFTs</h1>
+  <button
+  type="button"
+  class="btn d-inline homeButtons p-2 m-4"
+  (click)="connectWallet()"
+  *ngIf="!signer"
+>
+  Connect your Wallet
+</button>
+<div *ngIf="signer" class="information float-end d-inline  container">
+  <p class="m-1">The last block on the network was: <span style="color: #aa44ee; font-weight: bold;">{{ lastNetworkBlock }}</span></p>
+  <p >
+  Wallet Connected: <span style="color: #aa44ee; font-weight: bold;">{{ walletAddress }}</span>
+  </p>
+</div>
   </div>
 <div class="container">
- 
-  
   <a class="btn homeButtons m-2" routerLink="/" routerLinkActive="active">Home</a>
   <a class="btn homeButtons m-2" routerLink="/profile" routerLinkActive="active">Profile</a>
+  
+
+<!-- </div> -->
       <!--
         <li>
         <a routerLink="/my-winnings" routerLinkActive="active">My Winnings</a>
       </li>
     -->
-
-
-  <div>
-    <button
-      type="button"
-      class="btn homeButtons m-4"
-      (click)="connectWallet()"
-      *ngIf="!signer"
-    >
-      Connect your Wallet
-    </button>
-
-    </div>
   </div>
   <div *ngIf="signer">
     <!-- <div *ngIf="salesFactoryContract"> -->
     <button type="button" class="btn homeButtons m-4" routerLink="/sale/create">
       Create Sale (Lottery or Auction)
     </button>
-    <div class="information d-block container">
-      <p >The last block on the network was: {{ lastNetworkBlock }}</p>
-      <span  *ngIf="signer">
-      Wallet Connected: {{ walletAddress }}
-      </span>
-    <!-- </div> -->
-  </div>
+    
 </div>
 
 <!--
