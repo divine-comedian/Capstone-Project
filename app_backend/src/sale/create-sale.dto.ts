@@ -12,7 +12,8 @@ export class CreateSaleDto {
   readonly description: string
   readonly recipient: Recipient
   readonly closing_time: Date
-  readonly bet_price: string
-  readonly highestBid: string
+  readonly bet_price: number
+  readonly starting_bid: number
+  readonly highest_bid: number
   readonly image_ipfs_url: string
 }

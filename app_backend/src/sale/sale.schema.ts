@@ -14,7 +14,8 @@ export const SaleSchema = new mongoose.Schema({
   description: String,
   recipient: RecipientSchema,
   closing_time: Date,
-  bet_price: String,
-  highestBid: String,
+  bet_price: Number,
+  starting_bid: Number,
+  highest_bid: Number,
   image_ipfs_url: String,
 })
