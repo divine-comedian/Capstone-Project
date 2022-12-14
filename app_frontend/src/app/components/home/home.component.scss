@@ -4,3 +4,23 @@
     background-color: #C17ECC;
     margin: 10px;
 }
+
+.saleButton {
+    background-color: #F56476;
+    border: 2px solid #6d6c6c;
+}
+.saleButton:hover {
+    background-color: #ec8c98;
+}
+
+div {
+    margin-bottom: 3px;
+}
+
+.sale-image {
+    border: 5px solid #6d6c6c;
+    height: 200px;
+    border-radius: 8px;
+    background-color: #ec8c98;
+    width: auto;
+}

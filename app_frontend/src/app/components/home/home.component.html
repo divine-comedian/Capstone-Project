@@ -2,44 +2,46 @@
   <h2>List of Current Live Sales</h2>
   <div class="row row-cols-auto">
   <div *ngFor="let sale of sales" class="sale-list-item">
+    <h3 class="mt-3">{{sale.name_of_sale}}</h3>
     <div>
+      <img
+                class="sale-image"
+        mx-auto
+        src="{{ sale.image_ipfs_url }}"
+      />
+    </div>
+    <div>
+      
+      <span class="d-block">Sale Contract: 
       <a
+        
+        href="https://goerli.etherscan.io/address/{{ sale.sale_contract_addr }}"
+        >{{ sale.sale_contract_addr }}</a
+      >
+    </span>
+    </div>
+    <div><p> Supporting {{ sale.recipient.recipient_name }}</p></div>
+
+    <div *ngIf="sale.type_of_sale == 'lottery'">
+      <div>{{ sale.closing_time }}</div>
+      <div> Bet Price: {{ sale.bet_price }}</div>
+    </div>
+
+    <div *ngIf="sale.type_of_sale == 'auction'">
+      <div>{{ sale.closing_time }}</div>
+      <div>Current Highest Bid: {{ sale.highestBid }}</div>
+    </div>
+    <div>
+    <button 
+      class="btn saleButton"
         routerLinkActive="active"
         routerLink="sale/{{
           (sale.type_of_sale == 'auction' ? 'auction' : 'lottery') +
             '/' +
             sale.sale_contract_addr
         }}"
-        >{{ sale.name_of_sale }}</a
-      >
-      @
-      <a
-        href="https://goerli.etherscan.io/address/{{ sale.sale_contract_addr }}"
-        >{{ sale.sale_contract_addr }}</a
-      >
-    </div>
-    <div>{{ sale.type_of_sale }}</div>
-    <div>{{ sale.recipient.recipient_name }}</div>
-
-    <div *ngIf="sale.type_of_sale == 'lottery'">
-      <div>{{ sale.closing_time }}</div>
-      <div>{{ sale.bet_price }}</div>
-    </div>
-
-    <div *ngIf="sale.type_of_sale == 'auction'">
-      <div>{{ sale.closing_time }}</div>
-      <div>{{ sale.highestBid }}</div>
-    </div>
-
-    <div>
-      <img
-        height="100px"
-        width="100px"
-        class="img-thumbnail"
-        mx-auto
-        src="{{ sale.image_ipfs_url }}"
-      />
-    </div>
+        >Participate in this {{sale.type_of_sale}}!</button>
+      </div>
   </div>
 </div>
 </div>
