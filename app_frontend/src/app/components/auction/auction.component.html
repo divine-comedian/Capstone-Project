@@ -33,9 +33,9 @@
   </div>
   <div class="mb-3">
     Sale created by: {{ saleOwner }}.
-    <span *ngIf="saleOwner == walletAddress"
-      >You are the Owner of this Sale!</span
-    >
+    <div *ngIf="saleOwner == walletAddress">
+      You are the Owner of this Sale!
+    </div>
   </div>
   <div
     class="mb-3"

@@ -25,7 +25,7 @@
 
         <div class="mb-3" *ngIf="sale.type_of_sale == 'auction'">
           <div>Closing Time:{{ sale.closing_time }}</div>
-          <div>Current Bid Price: {{ sale.highestBid }}</div>
+          <div>Current Bid Price: {{ sale.highest_bid }}</div>
           <!--
             <div *ngIf="highestBidder != '0x0000000000000000000000000000000000000000'">Highest Bid: {{ sale.highestBid }}</div>
             <div *ngIf="highestBidder == '0x0000000000000000000000000000000000000000'">Starting Bid: {{ sale.highestBid }}</div>

@@ -28,12 +28,20 @@
       </button>
     </div>
   </div>
-  <div class="mb-3">Sale created by: {{ saleOwner }}</div>
+  <div class="mb-3">
+    Sale created by: {{ saleOwner }}
+    <div *ngIf="saleOwner == walletAddress">
+      You are the Owner of this Sale!
+    </div>
+  </div>
   <div class="mb-3">
     betPrice is: {{ betPrice4UI }} tokens ({{ betPrice }} 'cents')
   </div>
   <div class="mb-3">
-    ownerPool (total amount to win) is at: {{ ownerPool }} ({{ ownerPool4UI }})
+    ownerPool (total amount to win) is at: {{ ownerPool4UI }} ({{
+      ownerPool
+    }}
+    'cents')
   </div>
   <div class="mb-3">
     closing time is

@@ -52,6 +52,7 @@ export class ContractService {
   public async launchLottery(salesContract:ethers.Contract, bet_price:number, payment_token:string, ipfs_url:string, recipient_addr:string, converted_to_seconds_after_epoch:number): Promise<number> {
     console.log('########################## inside launchLottery()');    
     try {
+      const bet_price_times_10_x_18  = ethers.utils.parseUnits( bet_price.toString(), 18 );
       const lottery_instance = await salesContract['launchLottery']( bet_price, payment_token, ipfs_url, recipient_addr, converted_to_seconds_after_epoch );
       return lottery_instance;
     } catch(error) {
@@ -64,7 +65,8 @@ export class ContractService {
   public async launchAuction(salesContract:ethers.Contract, starting_bid:number, payment_token:string, ipfs_url:string, recipient_addr:string, converted_to_seconds_after_epoch:number): Promise<number> {
     console.log('########################## inside launchAuction()');
     try {
-      const auction_instance = await salesContract['launchAuction']( starting_bid, payment_token, ipfs_url, recipient_addr, converted_to_seconds_after_epoch );
+      const starting_bid_times_10_x_18  = ethers.utils.parseUnits( starting_bid.toString(), 18 );
+      const auction_instance = await salesContract['launchAuction']( starting_bid_times_10_x_18, payment_token, ipfs_url, recipient_addr, converted_to_seconds_after_epoch );
       return auction_instance;
     } catch(error) {
       console.log('error:'+ error);
