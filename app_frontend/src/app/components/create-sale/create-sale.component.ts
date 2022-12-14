@@ -59,7 +59,7 @@ export class CreateSaleComponent {
     // Reactive Form file upload
     sale_image: new FormControl('', [Validators.required]),
     sale_image_source: new FormControl('', [Validators.required]),
-    closing_time: new FormControl(''),
+    closing_time: new FormControl('',  [Validators.required]), //now required on launch
     //Lottery-specific field(s)
     bet_price: new FormControl('', [Validators.required]), //since Lottery is the default, make its fields required
     //Auction-specific field(s)

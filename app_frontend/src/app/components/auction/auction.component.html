@@ -1,5 +1,5 @@
-<div class="container">
-  <h3>Auction Info</h3>
+<div class="container component-box pb-4">
+  <h3 class="p-3">Auction Info</h3>
   <div *ngIf="signer" class="color-success">
     You are signed in: {{ walletAddress }}
   </div>
@@ -76,7 +76,13 @@
         {{ tokenBalanceOfUserSmallerUnits }} units/cents)
       </div>
       <!--<input id="bid_price" type="number" formControlName="bid_price" />-->
-      <input #bid_price type="number" min="0" placeholder="0" />
+      <input
+        #bid_price
+        type="number"
+        min="0"
+        placeholder="Enter your bid here"
+        class="form-control"
+      />
       <button
         type="button"
         class="btn btn-primary"
