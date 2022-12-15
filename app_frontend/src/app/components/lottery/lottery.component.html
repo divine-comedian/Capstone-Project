@@ -1,12 +1,15 @@
 <div class="container component-box pb-4">
   <h3 class="p-3">Lottery Info</h3>
   <div *ngIf="signer" class="color-success">
-
     You are signed in: {{ walletAddress }}
   </div>
   <div *ngIf="!signer" class="color-error">You are NOT signed in</div>
   <div class="mb-3">
-    Lottery contract address:  <a href="https://goerli.etherscan.io/address/{{contract_addr}}" >{{ contract_addr }}</a> <br />
+    Lottery contract address:
+    <a href="https://goerli.etherscan.io/address/{{ contract_addr }}">{{
+      contract_addr
+    }}</a>
+    <br />
   </div>
   <div class="mb-3">
     Lottery state is:
@@ -28,17 +31,16 @@
     </div>
   </div>
   <div class="mb-3">
-    Sale created by: <a href="https://goerli.etherscan.io/address/{{saleOwner}}"> {{ saleOwner }}</a>
+    Sale created by:
+    <a href="https://goerli.etherscan.io/address/{{ saleOwner }}">
+      {{ saleOwner }}</a
+    >
     <div class="mb-3" *ngIf="saleOwner == walletAddress">
       You are the Owner of this Sale!
     </div>
   </div>
-  <div class="mb-3">
-    betPrice is: {{ betPrice4UI }} tokens.
-  </div>
-  <div class="mb-3">
-    Currently sale has accrued {{ ownerPool4UI }} tokens.
-  </div>
+  <div class="mb-3">betPrice is: {{ betPrice4UI }} tokens.</div>
+  <div class="mb-3">Currently sale has accrued {{ ownerPool4UI }} tokens.</div>
   <div class="mb-3">
     closing time is
     {{ closingTime }} ({{ closingTimeDateLocalized?.toLocaleString() }})
@@ -60,8 +62,8 @@
     <div class="betTokens mb-3" *ngIf="signer && showBetUI">
       <!--*ngIf="signer and has > 0 tokens and date isn't closed yet and lottery still Open"-->
       <div>
-        Bet {{ betPrice }} of {{ paymentToken }} token(s) <br />Note: (you have
-        {{ tokenBalanceOfUser }} of this token aka
+        Bet {{ betPrice4UI }} of {{ paymentToken }} token(s) <br />Note: (you
+        have {{ tokenBalanceOfUser }} of this token aka
         {{ tokenBalanceOfUserSmallerUnits }} units/cents)
       </div>
       <button type="button" class="btn saleButton" (click)="bet()">
