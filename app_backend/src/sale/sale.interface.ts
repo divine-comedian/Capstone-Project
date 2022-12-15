@@ -7,6 +7,7 @@ export interface Recipient extends Document {
 }
 
 export interface Sale extends Document {
+  _id: string
   readonly sale_contract_addr: string
   readonly name_of_sale: string
   readonly type_of_sale: string
@@ -16,5 +17,6 @@ export interface Sale extends Document {
   readonly bet_price: number
   readonly starting_bid: number
   readonly highest_bid: number
+  readonly ipfs_hash: string
   readonly image_ipfs_url: string
 }
