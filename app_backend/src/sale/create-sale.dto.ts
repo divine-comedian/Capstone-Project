@@ -2,6 +2,7 @@ class Recipient {
   readonly recipient_name: string
   readonly recipient_desc: string
   readonly recipient_addr: string
+  readonly recipient_link: string
 }
 
 export class CreateSaleDto {

@@ -5,6 +5,7 @@ export const RecipientSchema = new mongoose.Schema(
     recipient_name: String,
     recipient_desc: String,
     recipient_addr: String,
+    recipient_link: String,
   },
   { versionKey: false },
 )
