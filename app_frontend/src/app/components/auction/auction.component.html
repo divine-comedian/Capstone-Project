@@ -13,7 +13,7 @@
   </div>
   <div class="mb-3">
     <div>Charity Address: {{ recipient_addr }}</div>
-    <div *ngIf="recipient_link">Charity Link: {{ recipient_link }}</div>
+    <div *ngIf="recipient_link">Charity Link: <a href="{{recipient_link}}">{{ recipient_link }}</a></div>
     <div *ngIf="recipient_desc">Charity Description: {{ recipient_desc }}</div>
   </div>
   <div class="mb-3">

@@ -19,34 +19,25 @@
 </div>
   </div>
 <div class="container">
-  <a class="btn homeButtons m-2" routerLink="/" routerLinkActive="active">Home</a>
-  <a class="btn homeButtons m-2" routerLink="/profile" routerLinkActive="active">Profile</a>
+  <div class="mt-4 mb-4">
+  <a class="btn homeButtons d-inline" routerLink="/" routerLinkActive="active">View Sales</a>
 <!-- </div> -->
       <!--
         <li>
         <a routerLink="/my-winnings" routerLinkActive="active">My Winnings</a>
       </li>
     -->
-    <div>
-      <button
-        type="button"
-        class="btn homeButtons m-4"
-        (click)="connectWallet()"
-        *ngIf="!signer"
-      >
-        Connect your Wallet
-      </button>
-    </div>
-    <div *ngIf="signer">
+    
       <!-- <div *ngIf="salesFactoryContract"> -->
-      <button
+      <button *ngIf="signer"
         type="button"
-        class="btn homeButtons m-4"
+        class="btn homeButtons ms-2 d-inline"
         routerLink="/sale/create"
       >
         Create Sale (Lottery or Auction)
       </button>
-    </div>
+   
+  </div>
   </div>
 
   <div id="spinner-super-wrapper">
