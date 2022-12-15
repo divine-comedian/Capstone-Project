@@ -10,7 +10,7 @@ export class SalesController {
 
   @Get(':id')
   @ApiOperation({
-    description: 'Return a specific sale given an _id',
+    description: 'Return a specific sale given a sale contract address.',
   })
   async findOne(@Param('id') id: string): Promise<Sale> {
     return this.salesService.findOne(id)
@@ -27,6 +27,7 @@ export class SalesController {
     description: 'Add a single sale document to the database.',
   })
   async create(@Body() createSaleDto: CreateSaleDto) {
+    createSaleDto._id = createSaleDto.sale_contract_addr
     await this.salesService.create(createSaleDto)
   }
 

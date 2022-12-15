@@ -11,6 +11,7 @@ export const RecipientSchema = new mongoose.Schema(
 
 export const SaleSchema = new mongoose.Schema(
   {
+    _id: String,
     sale_contract_addr: String,
     name_of_sale: String,
     type_of_sale: String,
@@ -20,6 +21,7 @@ export const SaleSchema = new mongoose.Schema(
     bet_price: Number,
     starting_bid: Number,
     highest_bid: Number,
+    ipfs_hash: String,
     image_ipfs_url: String,
   },
   { versionKey: false },

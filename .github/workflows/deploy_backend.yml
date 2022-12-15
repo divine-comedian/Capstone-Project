@@ -17,7 +17,7 @@ env:
   PUBLISH_PROFILE: ${{ secrets.BACKEND_PUBLISH_PROFILE }}
   APP_NAME: pixelsforpeace-api
   SLOT_NAME: Production
-  ENV_FILE: ${{ secrets.ENV_FILE }}
+  ENV_FILE: ${{ secrets.BACKEND_ENV_FILE }}
 
 jobs:
   build:
