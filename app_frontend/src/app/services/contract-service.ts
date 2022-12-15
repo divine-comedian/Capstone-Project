@@ -171,9 +171,9 @@ export class ContractService {
     console.log('########################## inside postAuctionBid()');
 
     const bidPriceTimes_10_x_18 = ethers.utils.parseUnits( bid_price.toString(), 18 );
-    const allowTx = await lotteryTokenContract["approve"]( lotteryContract.address, bid_price ); //approve contrct to spend your bid ammount (prob should change )
+    const allowTx = await lotteryTokenContract["approve"]( lotteryContract.address, bidPriceTimes_10_x_18 ); //approve contrct to spend your bid ammount (prob should change )
     await allowTx.wait();
-    const tx = await lotteryContract["bid"](bid_price);
+    const tx = await lotteryContract["bid"](bidPriceTimes_10_x_18);
     const receipt = await tx.wait();
     console.log(`Bets placed (${receipt.transactionHash})\n`);
     return receipt.transactionHash;
