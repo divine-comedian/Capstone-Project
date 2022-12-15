@@ -14,7 +14,7 @@
   <div class="mb-3">
     <div>Charity Address: {{ recipient_addr }}</div>
     <div *ngIf="recipient_link">Charity Link: <a href="{{recipient_link}}">{{ recipient_link }}</a></div>
-    <div *ngIf="recipient_desc">Charity Description: {{ recipient_desc }}</div>
+    <div *ngIf="recipient_desc">Charity Description: <p class="mt-3">{{ recipient_desc }}</p></div>
   </div>
   <div class="mb-3">
     Auction state is:
