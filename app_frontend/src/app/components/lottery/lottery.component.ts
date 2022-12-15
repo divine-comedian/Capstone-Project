@@ -91,16 +91,20 @@ export class LotteryComponent implements OnInit {
               this.ownerPool = x.ownerPool;
               this.ownerPool4UI = ethers.utils.formatUnits( x.ownerPool , 18 );
               this.saleWinner = x.saleWinner;
-              this.closingTime = x.lotteryClosingTime;
+              this.closingTime = x.lotteryClosingTime.toNumber();
               this.closingTimeDateLocalized = new Date ( x.lotteryClosingTime * 1000 );
 
               const nowDate = new Date();
               const now_converted_to_seconds_after_epoch = nowDate.getTime() / 1000;
               if(this.betsOpen && this.closingTime && (this.closingTime > now_converted_to_seconds_after_epoch)) {
                 this.showBetUI = true;
+              } else {
+                this.showBetUI = false;
               }
               if(this.betsOpen && this.closingTime && (this.closingTime < now_converted_to_seconds_after_epoch)) {
                 this.closeLotteryUI = true;
+              } else {
+                this.closeLotteryUI = false;
               }
                             
               this.paymentToken = x.paymentToken;
@@ -175,16 +179,20 @@ export class LotteryComponent implements OnInit {
         this.ownerPool = x.ownerPool;
         this.ownerPool4UI = ethers.utils.formatUnits( x.ownerPool , 18 );
         this.saleWinner = x.saleWinner;
-        this.closingTime = x.lotteryClosingTime;
+        this.closingTime = x.lotteryClosingTime.toNumber();
         this.closingTimeDateLocalized = new Date ( x.lotteryClosingTime * 1000 );
         
         const nowDate = new Date();
         const now_converted_to_seconds_after_epoch = nowDate.getTime() / 1000;
         if(this.betsOpen && this.closingTime && (this.closingTime > now_converted_to_seconds_after_epoch)) {
           this.showBetUI = true;
+        } else {
+          this.showBetUI = false;
         }
         if(this.betsOpen && this.closingTime && (this.closingTime < now_converted_to_seconds_after_epoch)) {
           this.closeLotteryUI = true;
+        } else {
+          this.closeLotteryUI = false;
         }
 
         //*

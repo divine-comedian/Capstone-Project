@@ -89,17 +89,22 @@ export class AuctionComponent implements OnInit {
               this.highestBidder = x.highestBidder;
               this.auctionOpen = x.auctionOpen;
               //this.saleWinner = x.saleWinner;
-              this.closingTime = x.auctionClosingTime;
+              this.closingTime = x.auctionClosingTime.toNumber();;
               this.closingTimeDateLocalized = new Date ( x.auctionClosingTime * 1000 ); //convert seconds to  milliseconds              
 
               const nowDate = new Date();
               const now_converted_to_seconds_after_epoch = nowDate.getTime() / 1000;
               if(this.auctionOpen && this.closingTime && (this.closingTime > now_converted_to_seconds_after_epoch)) {
                 this.showBidUI = true;
+              } else {
+                this.showBidUI = false;
               }
               if(this.auctionOpen && this.closingTime && (this.closingTime < now_converted_to_seconds_after_epoch)) {
                 this.closeAuctionUI = true;
+              } else {
+                this.closeAuctionUI = false;
               }
+              
 
               this.paymentToken = x.paymentToken;
               let saleTokenContract;
@@ -173,7 +178,7 @@ export class AuctionComponent implements OnInit {
         this.highestBidder = x.highestBidder;
         this.auctionOpen = x.auctionOpen;
         this.saleWinner = x.saleWinner;
-        this.closingTime = x.auctionClosingTime;
+        this.closingTime = x.auctionClosingTime.toNumber();;
         this.closingTimeDateLocalized = new Date ( x.auctionClosingTime * 1000 ); //convert seconds to  milliseconds
         
         const nowDate = new Date();
@@ -229,6 +234,9 @@ export class AuctionComponent implements OnInit {
         console.log('bet transaction done:'+ x);
         this.hideModal();
         alert('You have bid successfully!');
+
+        //this.writeHighestBidToDB(bidPriceInt);
+        
       }).catch((error)=>{
         this.hideModal();
         alert('An error occured! Please try again or contact our support department.')
@@ -285,7 +293,20 @@ export class AuctionComponent implements OnInit {
     //console.log(response[0].name_of_sale);
     //return response.data.image_ipfs_url;
   }
+   async writeHighestBidToDB(bidPriceInt:number){
+    console.log('writeToDB');
 
+    const update_bid_json = {"highest_bid":  bidPriceInt };
+    const resFile = await axios({
+      method: "patch",
+      url: environment.base_api_url +'/sales/'+ this.contract_addr,
+      data: update_bid_json,
+      headers: {
+          "Content-Type": "application/json"
+      },
+    });
+
+  }
 
   showModal(){
     const spinner = document.getElementById('spinner-super-wrapper');
