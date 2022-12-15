@@ -78,30 +78,6 @@ export class AppComponent {
     this.walletInjectorService.setProvider( provider );
     this.walletInjectorService.setSigner( signer );
 
-    //this.salesFactoryContractAddress = SALES_FACTORY_ADDRESS;
-    //this.salesContractAddress = SALES_ADDRESS;
-    //this.salesFactoryContract = new ethers.Contract( SALES_FACTORY_ADDRESS, salesFactoryContractInterface.abi, signer);
-    //this.salesContract = new ethers.Contract( SALES_ADDRESS , salesFactoryContractInterface.abi, signer); //could be hardcoded vs returning from API
-
-    /*
-    this.lotteryContract = new ethers.Contract( "0x85bc5257EBCb612bb552B8DF2645F17FE5C80845", lotteryContractInterface.abi, signer);
-    const betPrice1 = await this.lotteryContract['betPrice']();
-    console.log('betPrice1:'+ betPrice1 );  
-    const betsOpen1 = await this.lotteryContract['betsOpen']();
-    console.log('betsOpen:'+ betsOpen1 );
-    const window1 = await this.lotteryContract['window']();
-    console.log('window1:'+ window1 );
-    const lotteryClosingTime1 = await this.lotteryContract['lotteryClosingTime']();
-    console.log('lotteryClosingTime1:'+ lotteryClosingTime1 );
-    */
-
-
-    //this.updateBlockchainInfo();
-    //setInterval( this.updateBlockchainInfo.bind(this), 5000);
-  }
-
-  createSale() {
-    console.log('test');
   }
 
 }

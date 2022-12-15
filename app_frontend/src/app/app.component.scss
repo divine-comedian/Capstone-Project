@@ -1,3 +1,9 @@
+/// palette references
+/// #D9F9A5 - yellow green
+/// #c17ecc - purple 
+/// #F56476 - fiery rose
+/// #F6B070 -   mellow apricot
+
 @font-face {
     font-family: 'ZenDots';
     src: url('../assets/fonts/ZenDots-Regular.ttf');
@@ -15,7 +21,6 @@ div {
 
 h1 {
     font-size: 4rem;
-
 }
 
 .header {
@@ -28,6 +33,7 @@ h1 {
     color: blue;
 }
 
+  
 img {
     border: 3px solid #F56476;
     border-radius: 8px;
@@ -58,8 +64,28 @@ img {
 
 
 
-/// palette references
-/// #D9F9A5 - yellow green
-/// #c17ecc - purple 
-/// #F56476 - fiery rose
-/// #F6B070 -   mellow apricot
+#spinner-super-wrapper {
+    display: none;
+}
+#spinner-wrapper {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    display: grid;
+    place-items: center;
+    background-color: rgba(17, 17, 17, 0.85)
+}
+  
+#spinner {    
+    width: 100px;
+    height: 100px;
+    opacity: 1;
+    border: 0px solid black;
+    border-radius: 0px;
+    /* Safari */
+    /*animation: spin 2s linear infinite;*/
+}
+
+
