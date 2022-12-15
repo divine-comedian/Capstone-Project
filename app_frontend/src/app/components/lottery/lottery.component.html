@@ -6,9 +6,7 @@
   </div>
   <div *ngIf="!signer" class="color-error">You are NOT signed in</div>
   <div class="mb-3">
-    Lottery contract addr is: {{ contract_addr }} <br />
-    (Lottery Contract has {{ tokenBalanceOfContract }} of this token aka
-    {{ tokenBalanceOfContractSmallerUnits }} 'cents')
+    Lottery contract address:  <a href="https://goerli.etherscan.io/address/{{contract_addr}}" >{{ contract_addr }}</a> <br />
   </div>
   <div class="mb-3">
     Lottery state is:
@@ -22,7 +20,7 @@
       <button
         *ngIf="signer && betsOpen"
         type="button"
-        class="btn btn-primary"
+        class="btn saleButton"
         (click)="closeLottery()"
       >
         Close Lottery
@@ -30,17 +28,16 @@
     </div>
   </div>
   <div class="mb-3">
-    Sale created by: {{ saleOwner }}
-    <div *ngIf="saleOwner == walletAddress">
+    Sale created by: <a href="https://goerli.etherscan.io/address/{{saleOwner}}"> {{ saleOwner }}</a>
+    <div class="mb-3" *ngIf="saleOwner == walletAddress">
       You are the Owner of this Sale!
     </div>
   </div>
   <div class="mb-3">
-    betPrice is: {{ betPrice4UI }} tokens ({{ betPrice }} 'cents')
+    betPrice is: {{ betPrice4UI }} tokens.
   </div>
   <div class="mb-3">
-    ownerPool (total amount to win) is at: {{ ownerPool4UI }} ({{ ownerPool }}
-    'cents')
+    Currently sale has accrued {{ ownerPool4UI }} tokens.
   </div>
   <div class="mb-3">
     closing time is
@@ -67,7 +64,7 @@
         {{ tokenBalanceOfUser }} of this token aka
         {{ tokenBalanceOfUserSmallerUnits }} units/cents)
       </div>
-      <button type="button" class="btn btn-primary" (click)="bet()">
+      <button type="button" class="btn saleButton" (click)="bet()">
         Click here to Bet
       </button>
       <div class="betManyTokens mb-3">
@@ -83,7 +80,7 @@
         />
         <button
           type="button"
-          class="btn btn-primary"
+          class="btn saleButton"
           (click)="betMany(numberOfBets.value)"
         >
           Bet Many Times
