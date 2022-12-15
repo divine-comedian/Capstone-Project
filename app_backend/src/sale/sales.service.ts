@@ -33,7 +33,7 @@ export class SalesService {
 
   async delete(saleContractAddress: string) {
     const deletedSale = await this.saleModel
-      .findByIdAndRemove({ sale_contract_addr: saleContractAddress })
+      .findOneAndDelete({ sale_contract_addr: saleContractAddress })
       .exec()
     return deletedSale
   }
