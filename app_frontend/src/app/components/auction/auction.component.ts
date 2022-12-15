@@ -185,9 +185,13 @@ export class AuctionComponent implements OnInit {
         const now_converted_to_seconds_after_epoch = nowDate.getTime() / 1000;
         if(this.auctionOpen && this.closingTime && (this.closingTime > now_converted_to_seconds_after_epoch)) {
           this.showBidUI = true;
+        } else {
+          this.showBidUI = false;
         }
         if(this.auctionOpen && this.closingTime && (this.closingTime < now_converted_to_seconds_after_epoch)) {
           this.closeAuctionUI = true;
+        } else {
+          this.closeAuctionUI = false;
         }
 
         //*
