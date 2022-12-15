@@ -12,6 +12,11 @@
     <br />
   </div>
   <div class="mb-3">
+    <div>Charity Address: {{ recipient_addr }}</div>
+    <div *ngIf="recipient_link">Charity Link: {{ recipient_link }}</div>
+    <div *ngIf="recipient_desc">Charity Description: {{ recipient_desc }}</div>
+  </div>
+  <div class="mb-3">
     Auction state is:
     <span [ngClass]="auctionOpen ? 'color-success' : 'color-error'">{{
       auctionOpen ? "Open" : "Closed"
