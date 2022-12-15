@@ -44,6 +44,9 @@ export class LotteryComponent implements OnInit {
   saleWinner: string | undefined;
   intervalUpdatePage: number | ReturnType<typeof setInterval> | undefined;
   previewImage: string | undefined;
+  recipient_addr: string | undefined;
+  recipient_link: string | undefined;
+  recipient_desc: string | undefined;
 
   showBetUI : boolean = false;
   closeLotteryUI : boolean = false;
@@ -71,55 +74,8 @@ export class LotteryComponent implements OnInit {
     this.activatedRoute.params.subscribe(({ contract_addr }) => {
       this.getContractAddress();
       if( this.contract_addr ) {
-        //const contract: Contract = SalesContractService.getContract( this.contract_addr, saleLotteryInterface.abi, false  );
-        //const contract: Promise<Contract> = this.salesContractService.getLotteryInfoBetPrice(this.contract_addr);
 
-        /*
-        this.salesContractService.getLotteryInfoBetPrice(this.contract_addr, saleLotteryInterface, true).then((x:number)=>{
-          console.log('On Lottery component page, bet price is:'+ x );
-          this.betPrice = x;
-        });
-        this.salesContractService.getLotteryInfoClosingTime(this.contract_addr, saleLotteryInterface, true).then((x:number)=>{
-          console.log('On Lottery component page, closingTime is:'+ x );
-          this.closingTime = x;
-          this.closingTimeDateLocalized = new Date ( x * 1000 ); //convert seconds to  milliseconds
-        });
-        this.salesContractService.getLotteryInfoBetsOpen(this.contract_addr, saleLotteryInterface, true).then((x:boolean)=>{
-          console.log('On Lottery component page, betsOpen is:'+ x );
-          this.betsOpen = x;
-        });
-        this.salesContractService.getLotteryInfoOwnerPool(this.contract_addr, saleLotteryInterface, true).then((x:number)=>{
-          console.log('On Lottery component page, ownerPool is:'+ x );
-          this.ownerPool = x;
-        });
-        this.salesContractService.getLotteryInfoPaymentToken(this.contract_addr, saleLotteryInterface, true).then((x:string)=>{
-          console.log('On Lottery component page, ownerPool is:'+ x );
-          this.paymentToken = x;
-          if(this.paymentToken) {
-            this.salesContractService.getLotteryTokenBalance(this.paymentToken, saleTokenInterface, true).then((x:number)=>{
-              console.log('On Lottery component page, get lottery token balance:'+ x );
-              //console.log( tokenBalanceBigNumber );
-              //console.log( ethers.utils.formatEther(tokenBalanceBigNumber) );
-              this.tokenBalance = parseFloat( ethers.utils.formatUnits(x, 18) ); //TODO: double-check units for this token are 18
-              this.tokenBalanceSmallerUnits = parseFloat( x.toString() );
-            });
-
-            if(this.contract_addr) {
-              this.salesContractService.getLotteryTokenBalanceOfContract(this.paymentToken, this.contract_addr, saleTokenInterface, true).then((x:number)=>{
-                console.log('On Lottery component page, get lottery token balance of Lottery Contract:'+ x );
-                //console.log( tokenBalanceBigNumber );
-                //console.log( ethers.utils.formatEther(tokenBalanceBigNumber) );
-                this.tokenBalanceOfContract = parseFloat( ethers.utils.formatUnits(x, 18) ); //TODO: double-check units for this token are 18
-                this.tokenBalanceOfContractSmallerUnits = parseFloat( x.toString() );
-              });
-            }
-
-          }
-        });
-        */
-        this.getImageFromIPFS().then((image_ipfs_url)=>{
-          this.previewImage = image_ipfs_url;
-        });
+        this.getInfoFromMongoDB();
 
         if(this.contract_addr && this.provider ) {
             const bySigner = this.signer ? true : false;
@@ -313,8 +269,7 @@ export class LotteryComponent implements OnInit {
     }
   }
 
-  async getImageFromIPFS(){
-    return '';
+  async getInfoFromMongoDB(){
     const response = await axios({
       method: "get",
       url: environment.base_api_url + "/sales/"+ this.contract_addr,
@@ -322,9 +277,15 @@ export class LotteryComponent implements OnInit {
           "Content-Type": "application/json"
       },
     });
-    console.log(response.data.image_ipfs_url);
+
+    this.previewImage = response.data.image_ipfs_url; 
+    this.recipient_addr = response.data.recipient.recipient_addr;
+    this.recipient_link = response.data.recipient.recipient_link;
+    this.recipient_desc = response.data.recipient.recipient_desc;
+
+    //console.log(response.data.image_ipfs_url);
     //console.log(response[0].name_of_sale);
-    return response.data.image_ipfs_url;
+    //return response.data.image_ipfs_url;
   }
 
   showModal(){

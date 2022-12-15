@@ -18,14 +18,21 @@ export class SalesMongoService {
           "Content-Type": "application/json"
       },
     });
-    //https://gateway.pinata.cloud/ipfs/
+    
     console.log(response.data);
     //replace public gateway which is rate-limited to temporary private gateway
     response.data.map((sale:any)=>{
-      const ipfs_image_url = sale.image_ipfs_url;
-      const ipfs_cid_hash = ipfs_image_url.split(environment.PINATA_PUBLIC_GATEWAY)[1];
-      const new_ipfs_image_url = environment.PINATA_PRIVATE_GATEWAY + ipfs_cid_hash;
-      sale.image_ipfs_url = new_ipfs_image_url;
+      const ipfs_hash = sale.ipfs_hash;
+      if(ipfs_hash && ipfs_hash!=''){ //if uses new field (if clear db, everything should be using this)
+        const ipfs_image_hash = sale.ipfs_hash;
+        const new_ipfs_image_url = environment.PINATA_PRIVATE_GATEWAY + ipfs_image_hash;
+        sale.image_ipfs_url = new_ipfs_image_url;
+      } else { //if testing an old lottery/auction on the 15th demo, then may need to parse out from other link
+        const ipfs_image_url = sale.image_ipfs_url;
+        const ipfs_cid_hash = ipfs_image_url.split(environment.PINATA_PUBLIC_GATEWAY)[1];
+        const new_ipfs_image_url = environment.PINATA_PRIVATE_GATEWAY + ipfs_cid_hash;
+        sale.image_ipfs_url = new_ipfs_image_url;
+      }      
     });
     console.log(response.data);
     //console.log(response[0].name_of_sale);
