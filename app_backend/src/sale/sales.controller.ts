@@ -8,12 +8,14 @@ import { ApiOperation } from '@nestjs/swagger'
 export class SalesController {
   constructor(private readonly salesService: SalesService) {}
 
-  @Get(':id')
+  @Get(':saleContractAddress')
   @ApiOperation({
     description: 'Return a specific sale given a sale contract address.',
   })
-  async findOne(@Param('id') id: string): Promise<Sale> {
-    return this.salesService.findOne(id)
+  async findOne(
+    @Param('saleContractAddress') saleContractAddress: string,
+  ): Promise<Sale> {
+    return this.salesService.findOne(saleContractAddress)
   }
 
   @Get()
@@ -27,7 +29,6 @@ export class SalesController {
     description: 'Add a single sale document to the database.',
   })
   async create(@Body() createSaleDto: CreateSaleDto) {
-    createSaleDto._id = createSaleDto.sale_contract_addr
     await this.salesService.create(createSaleDto)
   }
 
@@ -44,10 +45,12 @@ export class SalesController {
     return await this.salesService.update(filterObj, updateSaleDto)
   }
 
-  @Delete(':id')
-  @ApiOperation({ description: 'Delete a specific document using an _id.' })
-  async delete(@Param('id') id: string) {
-    return this.salesService.delete(id)
+  @Delete(':saleContractAddress')
+  @ApiOperation({
+    description: 'Delete a specific document using an sale contract address.',
+  })
+  async delete(@Param('saleContractAddress') saleContractAddress: string) {
+    return this.salesService.delete(saleContractAddress)
   }
 
   @Delete()

@@ -5,13 +5,13 @@ export const RecipientSchema = new mongoose.Schema(
     recipient_name: String,
     recipient_desc: String,
     recipient_addr: String,
+    recipient_link: String,
   },
   { versionKey: false },
 )
 
 export const SaleSchema = new mongoose.Schema(
   {
-    _id: String,
     sale_contract_addr: String,
     name_of_sale: String,
     type_of_sale: String,

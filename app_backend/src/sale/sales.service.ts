@@ -17,8 +17,10 @@ export class SalesService {
     return this.saleModel.find().exec()
   }
 
-  async findOne(id: string): Promise<Sale> {
-    return this.saleModel.findOne({ _id: id }).exec()
+  async findOne(saleContractAddress: string): Promise<Sale> {
+    return this.saleModel
+      .findOne({ sale_contract_addr: saleContractAddress })
+      .exec()
   }
 
   async update(filter: CreateSaleDto, updateSaleDto: CreateSaleDto) {
@@ -29,9 +31,9 @@ export class SalesService {
       .exec()
   }
 
-  async delete(id: string) {
+  async delete(saleContractAddress: string) {
     const deletedSale = await this.saleModel
-      .findByIdAndRemove({ _id: id })
+      .findOneAndDelete({ sale_contract_addr: saleContractAddress })
       .exec()
     return deletedSale
   }

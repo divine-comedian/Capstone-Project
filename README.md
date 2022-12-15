@@ -49,6 +49,38 @@ The frontend is built with Angular (TypeScript) and provides the customer-facing
 The backend is built with Nest (TypeScript) and is responsible for securely interacting with the Ethereum contracts, as well as managing the database (MongoDB).
 [Backend API](https://pixelsforpeace-api.azurewebsites.net)
 
+### Mongo Database
+
+Each associated sale data (auction or lottery contract instance), are saved to the database.
+
+The backend utilizes [MongoDB Atlas](https://www.mongodb.com/cloud/atlas) instance. Simply connect to it using a connection string in the following format: 
+
+```ts
+`MONGO_DB_CONNECTION_STRING="mongodb+srv://<username>:<password>@cluster0.ynzm1xh.mongodb.net/pixelForPeaceDB"`
+```
+
+Add this as an key-value pair in `.env` configuration. (See `.env-sample` at root of backend source.)
+
+### DevOps with GitHub Action
+
+Frontend and backend are deployed to Azure web app instances. 
+
+Pipeline definitions for located in `./github/workflows` which deployment can be triggered in GitHub action tab.
+
+Each pipelines requires the following GitHub Action secret variables.
+
+Configure the following (see each respective files `env` section).
+
+**deploy-frontend.yml**
+
+`FRONTEND_PUBLISH_PROFILE`: Export and add Azure web app publish profile here.
+
+**deploy_backend.yml**
+
+`BACKEND_PUBLISH_PROFILE`: Export and add Azure web app publish profile here.
+
+`BACKEND_ENV_FILE`: Add production `.env` file here. (e.g containing database connection string). 
+
 ### tx hashes and contract addresses examples
 
 [create voting token](https://goerli.etherscan.io/tx/0x696ec78e4f4d3d6d83ca53aedff9659a415be254a7bc4abc020e7009e050269f)
