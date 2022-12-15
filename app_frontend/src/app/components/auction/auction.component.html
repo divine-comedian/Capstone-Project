@@ -7,9 +7,7 @@
   </div>
   <div *ngIf="!signer" class="color-error">You are NOT signed in</div>
   <div class="mb-3">
-    Auction contract addr is: {{ contract_addr }} <br />
-    (Auction Contract has {{ tokenBalanceOfContract }} of this token aka
-    {{ tokenBalanceOfContractSmallerUnits }} 'cents')
+    Auction contract address: <a href="https://goerli.etherscan.io/address/{{contract_addr}}" >{{ contract_addr }}</a> <br />
   </div>
   <div class="mb-3">
     Auction state is:
@@ -26,7 +24,7 @@
       <button
         *ngIf="signer"
         type="button"
-        class="btn btn-primary"
+        class="btn saleButton"
         (click)="closeAuction()"
       >
         Close Auction
@@ -34,7 +32,7 @@
     </div>
   </div>
   <div class="mb-3">
-    Sale created by: {{ saleOwner }}.
+    Sale created by: <a href="https://goerli.etherscan.io/address/{{saleOwner}}">{{ saleOwner }}</a>.
     <div *ngIf="saleOwner == walletAddress">
       You are the Owner of this Sale!
     </div>
@@ -43,20 +41,14 @@
     class="mb-3"
     *ngIf="highestBidder == '0x0000000000000000000000000000000000000000'"
   >
-    There are no bids yet. startingBid is {{ highestBid4UI }} tokens ({{
-      highestBid
-    }}
-    'cents').
+    There are no bids yet. The starting bid is {{ highestBid4UI }} tokens.
   </div>
   <div
     class="mb-3"
     *ngIf="highestBidder != '0x0000000000000000000000000000000000000000'"
   >
-    highestBid (getting from BlockChain is: {{ highestBid4UI }} tokens ({{
-      highestBid
-    }}
-    'cents')
-    <span *ngIf="highestBid && highestBid > 0">by {{ highestBidder }}</span>
+    The current highest bid is: {{ highestBid4UI }} tokens
+    <span *ngIf="highestBid && highestBid > 0">from {{ highestBidder }}</span>
   </div>
   <div class="mb-3">
     closing time is
@@ -80,8 +72,7 @@
       <!--*ngIf="signer and has > 0 tokens and date isn't closed yet and lottery still Open"-->
       <div>
         Bid on this Auction
-        <br />Note: (you have {{ tokenBalanceOfUser }} of this token aka
-        {{ tokenBalanceOfUserSmallerUnits }} units/cents)
+        <br />Note: you have {{ tokenBalanceOfUser }} of this token.
       </div>
       <!--<input id="bid_price" type="number" formControlName="bid_price" />-->
       <input
@@ -89,21 +80,26 @@
         type="number"
         min="0"
         placeholder="Enter your bid here"
-        class="form-control"
+        class="form-control m-2 w-25 d-inline"
       />
       <button
         type="button"
-        class="btn btn-primary"
+        class="btn saleButton d-inline"
         (click)="bid(bid_price.value)"
       >
         Bid
       </button>
     </div>
-    <div class="withdrawAuction mb-3" *ngIf="signer && showBidUI">
+    <div class="withdrawAuction mb-3" *ngIf="
+    signer &&
+    showBidUI &&
+    highestBidder != '0x0000000000000000000000000000000000000000'
+    &&
+    highestBidder != walletAddress ">
       <!--*ngIf="signer and has > 0 tokens and date isn't closed yet and lottery still Open"-->
       <div>Withdraw from this auction if you do not have the highest bid:</div>
       <!--<input id="bid_price" type="number" formControlName="bid_price" />-->
-      <button type="button" class="btn btn-primary" (click)="withdraw()">
+      <button type="button" class="btn saleButton" (click)="withdraw()">
         Withdraw
       </button>
     </div>
