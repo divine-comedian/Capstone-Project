@@ -1,6 +1,7 @@
-<div class="container component-box pb-4">
+
+<div class="container component-box">
   <h3 class="p-3">Create a Sale</h3>
-  <div *ngIf="signer" style="color: green">
+  <div class="mb-2" *ngIf="signer" style="color: green">
     You are signed in: {{ walletAddress }}
   </div>
   <div *ngIf="!signer" style="color: red">You are NOT signed in</div>
@@ -50,9 +51,9 @@
 
       <div
         class="mb-3 dynamic-lottery-auction-section"
+
         *ngIf="saleForm.value.sale_type == 'lottery'"
       >
-        <h6>Dynamic Lottery Section!!!</h6>
         <div>
           <label for="bet_price" class="form-label">Bet Price: </label>
           <input
@@ -65,11 +66,12 @@
       </div>
 
       <div
+
         class="mb-3 dynamic-lottery-auction-section"
-        style="border: 1px solid black"
+    
+
         *ngIf="saleForm.value.sale_type == 'auction'"
       >
-        <h6>Dynamic Auction Section!!!</h6>
         <div>
           <label for="starting_bid" class="form-label">Starting Bid: </label>
           <input
@@ -85,6 +87,7 @@
         <label for="sale_desc" class="form-label">Desc of NFT: </label>
         <br />
         <textarea
+          class="d-block"
           id="sale_desc"
           type="text"
           formControlName="sale_desc"
@@ -101,11 +104,8 @@
           formControlName="payment_token"
         />
       </div>
-
-      <div class="mb-3">
-        <label for="recipient_addr" class="form-label"
-          >Recipient Address:
-        </label>
+      <divclass="mb-3">
+        <label for="recipient_addr">Charity Address: </label>
         <input
           class="form-control"
           id="recipient_addr"
@@ -115,10 +115,18 @@
         />
       </div>
 
+      <div>
+        <label for="recipient_link">Link to the Charity Project:</label>
+        <input
+          class="form-control"
+          id="recipient_link"
+          type="text"
+          formControlName="recipient_link"
+        />
+      </div>
       <div class="mb-3">
-        <label for="sale_image" class="form-label"
-          >Upload the file used for the NFT:
-        </label>
+        <label for="sale_image">Upload the file used for the NFT: </label>
+
         <input
           class="form-control"
           id="sale_image"

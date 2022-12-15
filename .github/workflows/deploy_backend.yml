@@ -38,9 +38,9 @@ jobs:
         run: |
           echo "${{ env.ENV_FILE }}" > .env
 
-      - name: npm install, build, and test
+      - name: npm install and build for production
         run: |
-          npm install
+          npm install --production
           npm run build --if-present
 
       - name: Zip all files for upload between jobs

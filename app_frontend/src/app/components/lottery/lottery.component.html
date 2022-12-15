@@ -1,6 +1,7 @@
 <div class="container component-box pb-4">
   <h3 class="p-3">Lottery Info</h3>
   <div *ngIf="signer" class="color-success">
+
     You are signed in: {{ walletAddress }}
   </div>
   <div *ngIf="!signer" class="color-error">You are NOT signed in</div>

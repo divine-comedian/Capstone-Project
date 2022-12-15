@@ -1,58 +1,46 @@
 <div class="container">
   <h2>List of Current Live Sales</h2>
-  <div *ngIf="sales">
-    <div class="row gx-2">
-      <div *ngFor="let sale of sales" class="col-md-4 sale-list-item">
-        <h3>{{ sale.name_of_sale }}</h3>
-        <div class="mb-3">
-          <a
-            routerLinkActive="active"
-            routerLink="sale/{{
-              (sale.type_of_sale == 'auction' ? 'auction' : 'lottery') +
-                '/' +
-                sale.sale_contract_addr
-            }}"
-            >{{ sale.sale_contract_addr }}</a
-          >
-        </div>
-        <div class="mb-3">Sale Type: {{ sale.type_of_sale }}</div>
-        <div class="mb-3">{{ sale.recipient.recipient_name }}</div>
-
-        <div class="mb-3" *ngIf="sale.type_of_sale == 'lottery'">
-          <div>Closing Time: {{ sale.closing_time }}</div>
-          <div>Bet Price: {{ sale.bet_price }}</div>
-        </div>
-
-        <div class="mb-3" *ngIf="sale.type_of_sale == 'auction'">
-          <div>Closing Time:{{ sale.closing_time }}</div>
-          <div>Current Bid Price: {{ sale.highest_bid }}</div>
-          <!--
-            <div *ngIf="highestBidder != '0x0000000000000000000000000000000000000000'">Highest Bid: {{ sale.highestBid }}</div>
-            <div *ngIf="highestBidder == '0x0000000000000000000000000000000000000000'">Starting Bid: {{ sale.highestBid }}</div>
-          -->
-        </div>
-
-        <div class="mb-3">
-          Link to Smart Contract:
-          <a
-            href="https://goerli.etherscan.io/address/{{
-              sale.sale_contract_addr
-            }}"
-            >goerli.etherscan.io</a
-          >
-        </div>
-
-        <div class="mb-3">
-          <img
-            height="100px"
-            width="100px"
-            class="img-thumbnail"
-            mx-auto
-            src="{{ sale.image_ipfs_url }}"
-          />
-        </div>
-      </div>
+  <div class="row row-cols-auto">
+  <div *ngFor="let sale of sales" class="sale-list-item">
+    <h3 class="mt-3">{{sale.name_of_sale}}</h3>
+    <div>
+      <img
+                class="sale-image"
+        mx-auto
+        src="{{ sale.image_ipfs_url }}"
+      />
     </div>
-    <div *ngIf="!sales || sales.length == 0">No sales yet.</div>
+    <div>
+      
+      <span class="d-block">Sale Contract: 
+      <a
+        
+        href="https://goerli.etherscan.io/address/{{ sale.sale_contract_addr }}"
+        >{{ sale.sale_contract_addr }}</a
+      >
+    </span>
+    </div>
+    <div><p> Supporting {{ sale.recipient.recipient_name }}</p></div>
+
+    <div *ngIf="sale.type_of_sale == 'lottery'">
+      <div>{{ sale.closing_time }}</div>
+      <div> Bet Price: {{ sale.bet_price }}</div>
+    </div>
+
+    <div *ngIf="sale.type_of_sale == 'auction'">
+      <div>{{ sale.closing_time }}</div>
+      <div>Current Highest Bid: {{ sale.highestBid }}</div>
+    </div>
+    <div>
+    <button 
+      class="btn saleButton"
+        routerLinkActive="active"
+        routerLink="sale/{{
+          (sale.type_of_sale == 'auction' ? 'auction' : 'lottery') +
+            '/' +
+            sale.sale_contract_addr
+        }}"
+        >Participate in this {{sale.type_of_sale}}!</button>
+      </div>
   </div>
 </div>
