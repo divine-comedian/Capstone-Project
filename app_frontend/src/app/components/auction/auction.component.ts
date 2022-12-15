@@ -42,6 +42,9 @@ export class AuctionComponent implements OnInit {
   saleWinner: string | undefined;
   intervalUpdatePage: number | ReturnType<typeof setInterval> | undefined;
   previewImage: string | undefined;
+  recipient_addr: string | undefined;
+  recipient_link: string | undefined;
+  recipient_desc: string | undefined;
   
   showBidUI : boolean = false;
   closeAuctionUI : boolean = false;
@@ -69,53 +72,8 @@ export class AuctionComponent implements OnInit {
     this.activatedRoute.params.subscribe(({ contract_addr }) =>{
       this.getContractAddress()
       if( this.contract_addr ) {
-        /*
-        this.salesContractService.getAuctionInfoHighestBid(this.contract_addr, saleAuctionInterface, true).then((x:number)=>{
-          console.log('On Auction component page, highest bid is:'+ x );
-          this.highestBid = x;
-        });
-        this.salesContractService.getAuctionInfoHighestBidder(this.contract_addr, saleAuctionInterface, true).then((x:string)=>{
-          console.log('On Auction component page, highest bidder is:'+ x );
-          this.highestBidder = x;
-        });
-        this.salesContractService.getAuctionInfoClosingTime(this.contract_addr, saleAuctionInterface, true).then((x:number)=>{
-          console.log('On Auction component page, closingTime is:'+ x );
-          this.closingTime = x;
-          this.closingTimeDateLocalized = new Date ( x * 1000 ); //convert seconds to  milliseconds
-        });
-        this.salesContractService.getAuctionInfoAuctionOpen(this.contract_addr, saleAuctionInterface, true).then((x:boolean)=>{
-          console.log('On Auction component page, auctionOpen is:'+ x );
-          this.auctionOpen = x;
-        });
-        
-        this.salesContractService.getAuctionInfoPaymentToken(this.contract_addr, saleAuctionInterface, true).then((x:string)=>{
-          console.log('On Auction component page, ownerPool is:'+ x );
-          this.paymentToken = x;
-          if(this.paymentToken) {
-            this.salesContractService.getAuctionTokenBalance(this.paymentToken, saleTokenInterface, true).then((x:number)=>{
-              console.log('On Auction component page, get auction token balance:'+ x );
-              //console.log( tokenBalanceBigNumber );
-              //console.log( ethers.utils.formatEther(tokenBalanceBigNumber) );
-              this.tokenBalance = parseFloat( ethers.utils.formatUnits(x, 18) ); //TODO: double-check units for this token are 18
-              this.tokenBalanceSmallerUnits = parseFloat( x.toString() );
-            });
 
-            if(this.contract_addr) {
-              this.salesContractService.getAuctionTokenBalanceOfContract(this.paymentToken, this.contract_addr, saleTokenInterface, true).then((x:number)=>{
-                console.log('On Lottery component page, get auction token balance of Auction Contract:'+ x );
-                //console.log( tokenBalanceBigNumber );
-                //console.log( ethers.utils.formatEther(tokenBalanceBigNumber) );
-                this.tokenBalanceOfContract = parseFloat( ethers.utils.formatUnits(x, 18) ); //TODO: double-check units for this token are 18
-                this.tokenBalanceOfContractSmallerUnits = parseFloat( x.toString() );
-              });
-            }
-
-          }
-        });
-        */
-        this.getImageFromIPFS().then((image_ipfs_url)=>{
-          this.previewImage = image_ipfs_url;
-        });
+        this.getInfoFromMongoDB();
 
 
         if(this.contract_addr && this.provider ) {
@@ -309,8 +267,7 @@ export class AuctionComponent implements OnInit {
     }
   }
 
-  async getImageFromIPFS(){
-    return '';
+  async getInfoFromMongoDB(){
     const response = await axios({
       method: "get",
       url: environment.base_api_url + "/sales/"+ this.contract_addr,
@@ -318,10 +275,17 @@ export class AuctionComponent implements OnInit {
           "Content-Type": "application/json"
       },
     });
-    console.log(response.data.image_ipfs_url);
+
+    this.previewImage = response.data.image_ipfs_url; 
+    this.recipient_addr = response.data.recipient.recipient_addr;
+    this.recipient_link = response.data.recipient.recipient_link;
+    this.recipient_desc = response.data.recipient.recipient_desc;
+
+    //console.log(response.data.image_ipfs_url);
     //console.log(response[0].name_of_sale);
-    return response.data.image_ipfs_url;
+    //return response.data.image_ipfs_url;
   }
+
 
   showModal(){
     const spinner = document.getElementById('spinner-super-wrapper');

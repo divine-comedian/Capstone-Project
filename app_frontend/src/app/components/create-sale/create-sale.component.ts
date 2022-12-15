@@ -56,6 +56,8 @@ export class CreateSaleComponent {
     sale_type: new FormControl('lottery', [Validators.required]), //default value of Lottery for now
     payment_token: new FormControl( environment.salesTokenContractAddress, [Validators.required]), //default value
     recipient_addr: new FormControl('', [Validators.required]), //default value      
+    recipient_desc: new FormControl('', ),
+    recipient_link: new FormControl('', ),
     // Reactive Form file upload
     sale_image: new FormControl('', [Validators.required]),
     sale_image_source: new FormControl('', [Validators.required]),
@@ -171,8 +173,9 @@ export class CreateSaleComponent {
     const hash_url_w_cid = this.sendImageToIPFS().then((return_val)=>{
       if(return_val!=''){
         console.log(return_val);
+        const ipfs_image_hash  = return_val;
 
-        const ipfs_image_url = "https://gateway.pinata.cloud/ipfs/"+ return_val; //or should it be ipfs url like: https://ipfs.io/ipfs/$HASH (took 10min but its also here now), note can add ?filename=preferred_download_filename.png to this url
+        const ipfs_image_url = environment.PINATA_PRIVATE_GATEWAY + return_val; //or should it be ipfs url like: https://ipfs.io/ipfs/$HASH (took 10min but its also here now), note can add ?filename=preferred_download_filename.png to this url
         // or ipfs://$HASH ???: OpenSea is not clear: https://docs.opensea.io/docs/metadata-standards
 
         const lottery_type = this.saleForm.controls['sale_type'].value;
@@ -189,7 +192,8 @@ export class CreateSaleComponent {
         //const nft_json_met_data_stringified = JSON.stringify(nft_json_meta_data);
         const hash_url_w_cid = this.sendNFTmetaDataJSONToIPFS(nft_json_meta_data).then((return_val)=>{
           if(return_val!=''){
-            const ipfs_nft_meta_url = "https://gateway.pinata.cloud/ipfs/"+ return_val;
+            const ipfs_json_meta_hash  = return_val;
+            const ipfs_nft_meta_url = environment.PINATA_PRIVATE_GATEWAY + return_val;
             console.log('NFT metadata JSON on IPFS (with the IPFS url inside) is here: '+ ipfs_nft_meta_url);
 
             //3#################
@@ -210,6 +214,9 @@ export class CreateSaleComponent {
             }
             const payment_token = this.saleForm.controls['payment_token'].value;
             const recipient_addr = this.saleForm.controls['recipient_addr'].value;
+            const recipient_desc = this.saleForm.controls['recipient_desc'].value;
+            const recipient_link = this.saleForm.controls['recipient_link'].value;
+            
             
             const date_time = this.saleForm.controls['closing_time'].value;
             console.log('closing_time: '+ date_time);
@@ -238,7 +245,7 @@ export class CreateSaleComponent {
                       this.created_contract_addr = new_contract_addr;
                       
                       this.hideModal();
-                      this.writeToDB(new_contract_addr, lottery_type, {'sale_name': sale_name, 'sale_desc': sale_desc, 'bet_price':      bet_price,  'payment_token': payment_token, 'ipfs_image_url': ipfs_image_url, 'ipfs_nft_meta_url': ipfs_nft_meta_url, 'recipient_addr': recipient_addr, 'converted_to_seconds_after_epoch': converted_to_seconds_after_epoch, 'date_time_as_date': date_time_as_date});
+                      this.writeToDB(new_contract_addr, lottery_type, {'sale_name': sale_name, 'sale_desc': sale_desc, 'bet_price':      bet_price,  'payment_token': payment_token, 'ipfs_image_hash': ipfs_image_hash, 'ipfs_image_url': ipfs_image_url, 'ipfs_nft_meta_url': ipfs_nft_meta_url, 'recipient_addr': recipient_addr, 'recipient_desc': recipient_desc, 'recipient_link': recipient_link, 'converted_to_seconds_after_epoch': converted_to_seconds_after_epoch, 'date_time_as_date': date_time_as_date});
                       salesContract.removeAllListeners("SaleCreated"); //maybe put this in destroy method, not usre
                     });
 
@@ -263,7 +270,7 @@ export class CreateSaleComponent {
                       this.created_contract_addr = new_contract_addr;
 
                       this.hideModal();
-                      this.writeToDB(new_contract_addr, lottery_type, {'sale_name': sale_name, 'sale_desc': sale_desc, 'starting_bid': starting_bid, 'payment_token': payment_token, 'ipfs_image_url': ipfs_image_url, 'ipfs_nft_meta_url': ipfs_nft_meta_url, 'recipient_addr': recipient_addr, 'converted_to_seconds_after_epoch': converted_to_seconds_after_epoch, 'date_time_as_date': date_time_as_date});
+                      this.writeToDB(new_contract_addr, lottery_type, {'sale_name': sale_name, 'sale_desc': sale_desc, 'starting_bid': starting_bid, 'payment_token': payment_token, 'ipfs_image_hash': ipfs_image_hash, 'ipfs_image_url': ipfs_image_url, 'ipfs_nft_meta_url': ipfs_nft_meta_url, 'recipient_addr': recipient_addr, 'recipient_desc': recipient_desc, 'recipient_link': recipient_link, 'converted_to_seconds_after_epoch': converted_to_seconds_after_epoch, 'date_time_as_date': date_time_as_date});
                       salesContract.removeAllListeners("SaleCreated"); //maybe put this in destroy method, not usre
                     });
 
@@ -395,10 +402,8 @@ export class CreateSaleComponent {
       console.log('writeToDB');
 
 
-      //this.writeToDB(new_contract_addr, lottery_type, {'sale_name': sale_name, 'sale_desc': sale_desc, 'bet_price':    bet_price,    'payment_token': payment_token, 'ipfs_nft_meta_url': ipfs_nft_meta_url, 'recipient_addr': recipient_addr, 'converted_to_seconds_after_epoch': converted_to_seconds_after_epoch, 'date_time_as_date': date_time_as_date} );
-      //this.writeToDB(new_contract_addr, lottery_type, {'sale_name': sale_name, 'sale_desc': sale_desc, 'starting_bid': starting_bid, 'payment_token': payment_token, 'ipfs_nft_meta_url': ipfs_nft_meta_url, 'recipient_addr': recipient_addr, 'converted_to_seconds_after_epoch': converted_to_seconds_after_epoch, 'date_time_as_date': date_time_as_date} );
-      //"name": sale_name,
-      //"description": sale_desc,
+      //this.writeToDB(new_contract_addr, lottery_type, {'sale_name': sale_name, 'sale_desc': sale_desc, 'bet_price':      bet_price,  'payment_token': payment_token, 'ipfs_image_hash': ipfs_image_hash, 'ipfs_image_url': ipfs_image_url, 'ipfs_nft_meta_url': ipfs_nft_meta_url, 'recipient_addr': recipient_addr, 'recipient_desc': recipient_desc, 'recipient_link': recipient_link, 'converted_to_seconds_after_epoch': converted_to_seconds_after_epoch, 'date_time_as_date': date_time_as_date});
+      //this.writeToDB(new_contract_addr, lottery_type, {'sale_name': sale_name, 'sale_desc': sale_desc, 'starting_bid': starting_bid, 'payment_token': payment_token, 'ipfs_image_hash': ipfs_image_hash, 'ipfs_image_url': ipfs_image_url, 'ipfs_nft_meta_url': ipfs_nft_meta_url, 'recipient_addr': recipient_addr, 'recipient_desc': recipient_desc, 'recipient_link': recipient_link, 'converted_to_seconds_after_epoch': converted_to_seconds_after_epoch, 'date_time_as_date': date_time_as_date});
 
       let new_sale_json:any = {};
       new_sale_json.sale_contract_addr = new_contract_addr;
@@ -407,9 +412,11 @@ export class CreateSaleComponent {
       new_sale_json.description  = obj.sale_desc;
       const recipient:any = {};
       recipient.recipient_name = '';
-      recipient.recipient_desc = '';
       recipient.recipient_addr = obj.recipient_addr;      
+      recipient.recipient_link = obj.recipient_link;
+      recipient.recipient_desc = obj.recipient_desc;
       new_sale_json.recipient = recipient;
+      new_sale_json.ipfs_hash = obj.ipfs_image_hash;
       new_sale_json.image_ipfs_url = obj.ipfs_image_url;
       new_sale_json.closing_time = obj.date_time_as_date;
       

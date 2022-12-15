@@ -12,6 +12,11 @@
     <br />
   </div>
   <div class="mb-3">
+    <div>Charity Address: {{ recipient_addr }}</div>
+    <div *ngIf="recipient_link">Charity Link: {{ recipient_link }}</div>
+    <div *ngIf="recipient_desc">Charity Description: {{ recipient_desc }}</div>
+  </div>
+  <div class="mb-3">
     Lottery state is:
     <span [ngClass]="betsOpen ? 'color-success' : 'color-error'">{{
       betsOpen ? "Open" : "Closed"
@@ -46,8 +51,6 @@
     {{ closingTime }} ({{ closingTimeDateLocalized?.toLocaleString() }})
   </div>
   <div class="mb-3">
-    Maybe get preview image from MongoDB, since the JSON MetaData is private
-    <!--<img src="{{ previewImage }}" width="500" height="500" />-->
     <h3
       *ngIf="
         saleWinner &&
@@ -89,5 +92,10 @@
         </button>
       </div>
     </div>
+  </div>
+  <div class="mb-3">
+    <a href="{{ previewImage }}" target="_blank"
+      ><img src="{{ previewImage }}" width="200"
+    /></a>
   </div>
 </div>

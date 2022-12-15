@@ -1,13 +1,15 @@
-
 <div class="container component-box pb-4">
   <h3 class="p-3">Auction Info</h3>
   <div *ngIf="signer" class="color-success">
-
     You are signed in: {{ walletAddress }}
   </div>
   <div *ngIf="!signer" class="color-error">You are NOT signed in</div>
   <div class="mb-3">
-    Auction contract address: <a href="https://goerli.etherscan.io/address/{{contract_addr}}" >{{ contract_addr }}</a> <br />
+    Auction contract address:
+    <a href="https://goerli.etherscan.io/address/{{ contract_addr }}">{{
+      contract_addr
+    }}</a>
+    <br />
   </div>
   <div class="mb-3">
     Auction state is:
@@ -32,7 +34,11 @@
     </div>
   </div>
   <div class="mb-3">
-    Sale created by: <a href="https://goerli.etherscan.io/address/{{saleOwner}}">{{ saleOwner }}</a>.
+    Sale created by:
+    <a href="https://goerli.etherscan.io/address/{{ saleOwner }}">{{
+      saleOwner
+    }}</a
+    >.
     <div *ngIf="saleOwner == walletAddress">
       You are the Owner of this Sale!
     </div>
@@ -55,8 +61,6 @@
     {{ closingTime }} ({{ closingTimeDateLocalized?.toLocaleString() }})
   </div>
   <div class="mb-3">
-    Maybe get preview image from MongoDB, since the JSON MetaData is private
-    <!--<img src="{{ previewImage }}" width="500" height="500" />-->
     <h3
       *ngIf="
         saleWinner &&
@@ -90,12 +94,15 @@
         Bid
       </button>
     </div>
-    <div class="withdrawAuction mb-3" *ngIf="
-    signer &&
-    showBidUI &&
-    highestBidder != '0x0000000000000000000000000000000000000000'
-    &&
-    highestBidder != walletAddress ">
+    <div
+      class="withdrawAuction mb-3"
+      *ngIf="
+        signer &&
+        showBidUI &&
+        highestBidder != '0x0000000000000000000000000000000000000000' &&
+        highestBidder != walletAddress
+      "
+    >
       <!--*ngIf="signer and has > 0 tokens and date isn't closed yet and lottery still Open"-->
       <div>Withdraw from this auction if you do not have the highest bid:</div>
       <!--<input id="bid_price" type="number" formControlName="bid_price" />-->
@@ -103,5 +110,10 @@
         Withdraw
       </button>
     </div>
+  </div>
+  <div class="mb-3">
+    <a href="{{ previewImage }}" target="_blank"
+      ><img src="{{ previewImage }}" width="200"
+    /></a>
   </div>
 </div>
