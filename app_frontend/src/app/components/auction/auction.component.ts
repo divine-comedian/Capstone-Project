@@ -293,6 +293,8 @@ export class AuctionComponent implements OnInit {
     //console.log(response[0].name_of_sale);
     //return response.data.image_ipfs_url;
   }
+  /*
+  when Paul gets Patch working then this updates the highest bid in db
    async writeHighestBidToDB(bidPriceInt:number){
     console.log('writeToDB');
 
@@ -307,6 +309,7 @@ export class AuctionComponent implements OnInit {
     });
 
   }
+  */
 
   showModal(){
     const spinner = document.getElementById('spinner-super-wrapper');

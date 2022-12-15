@@ -237,7 +237,7 @@ export class CreateSaleComponent {
                   //*
                   if(this.provider && this.signer ) {
                     const salesContract = ContractService.getContract(this.provider, this.signer, salesFactoryInterface.abi, environment.salesFactoryContractAddress, true);
-                    this.contractService.launchLottery(salesContract, bet_price, payment_token, ipfs_nft_meta_url, recipient_addr, converted_to_seconds_after_epoch);
+                    this.contractService.launchLottery(salesContract, bet_price, payment_token, ipfs_json_meta_hash, recipient_addr, converted_to_seconds_after_epoch);
                              
                     salesContract.on("SaleCreated", (new_contract_addr:string, sale_type:string, saleOwner:string, uri:string) => {
                       console.log('########################## SaleCreated() emitted solidty event')
