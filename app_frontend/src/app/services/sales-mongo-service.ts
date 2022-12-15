@@ -1,4 +1,7 @@
 import { Injectable } from '@angular/core';
+import axios from 'axios';
+import { env } from 'process';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -7,7 +10,35 @@ export class SalesMongoService {
 
   constructor() { }
   
-  getSalesFromMongoDB() { //change to get from MongoDB (directly or via NestJS BE service)
+  async getRealSalesFromMongoDB() { 
+    const response = await axios({
+      method: "get",
+      url: environment.base_api_url + "/sales",
+      headers: {
+          "Content-Type": "application/json"
+      },
+    });
+    //https://gateway.pinata.cloud/ipfs/
+    console.log(response.data);
+    //replace public gateway which is rate-limited to temporary private gateway
+    response.data.map((sale:any)=>{
+      const ipfs_image_url = sale.image_ipfs_url;
+      const ipfs_cid_hash = ipfs_image_url.split(environment.PINATA_PUBLIC_GATEWAY)[1];
+      const new_ipfs_image_url = environment.PINATA_PRIVATE_GATEWAY + ipfs_cid_hash;
+      sale.image_ipfs_url = new_ipfs_image_url;
+    });
+    console.log(response.data);
+    //console.log(response[0].name_of_sale);
+    return response.data;
+    /*
+    const response = await axios.get<AxiosPromise>(environment.base_api_url + '/sales')
+    console.log(response.data);
+    this.sales = response.data;
+    */
+
+  }
+
+  getMockSalesFromMongoDB() { //change to get from MongoDB (directly or via NestJS BE service)
     return [
       
       {
@@ -62,7 +93,7 @@ export class SalesMongoService {
       },
 
 
-      
+
 
       {
         sale_contract_addr: '0xd165025Ca6a9Bb27782Fc2b8Fa3d918E6aCeBA0d',

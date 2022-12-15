@@ -10,6 +10,8 @@ import saleLotteryInterface  from '../../../assets/Lottery.json';
 import saleTokenInterface  from '../../../assets/IERC20.json';
 
 import { BigNumber, Contract, ethers } from 'ethers';
+import { environment } from 'src/environments/environment';
+import axios from 'axios';
 
 @Component({
   selector: 'app-lottery',
@@ -26,20 +28,25 @@ export class LotteryComponent implements OnInit {
   signer: ethers.Signer | undefined;
   walletAddress: string | undefined;
 
+  saleOwner: string | undefined;
   betsOpen: boolean | undefined;
   betPrice: number | undefined ; //getting from blockchain to test
+  betPrice4UI: string| undefined ; //getting from blockchain to test
   closingTime: number | undefined; 
   closingTimeDateLocalized: Date | undefined;
   ownerPool: number | undefined;
+  ownerPool4UI: string| undefined ; //getting from blockchain to test
   paymentToken: string | undefined;
   tokenBalanceOfUser: number | undefined;
   tokenBalanceOfUserSmallerUnits:  number | undefined;
   tokenBalanceOfContract: number | undefined;
   tokenBalanceOfContractSmallerUnits:  number | undefined;
+  saleWinner: string | undefined;
+  intervalUpdatePage: number | ReturnType<typeof setInterval> | undefined;
+  previewImage: string | undefined;
 
   showBetUI : boolean = false;
   closeLotteryUI : boolean = false;
-  
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -110,6 +117,10 @@ export class LotteryComponent implements OnInit {
           }
         });
         */
+        this.getImageFromIPFS().then((image_ipfs_url)=>{
+          this.previewImage = image_ipfs_url;
+        });
+
         if(this.contract_addr && this.provider ) {
             const bySigner = this.signer ? true : false;
             const lotteryContract = ContractService.getContract(this.provider, this.signer, saleLotteryInterface.abi, contract_addr, bySigner);
@@ -117,9 +128,13 @@ export class LotteryComponent implements OnInit {
 
             this.contractService.getLotteryInfoGeneral( lotteryContract ).then((x)=>{
               console.log(x);
+              this.saleOwner = x.saleOwner;
               this.betPrice = x.betPrice;
+              this.betPrice4UI = ethers.utils.formatUnits( x.betPrice , 18 );
               this.betsOpen = x.betsOpen;
               this.ownerPool = x.ownerPool;
+              this.ownerPool4UI = ethers.utils.formatUnits( x.ownerPool , 18 );
+              this.saleWinner = x.saleWinner;
               this.closingTime = x.lotteryClosingTime;
               this.closingTimeDateLocalized = new Date ( x.lotteryClosingTime * 1000 );
 
@@ -160,7 +175,7 @@ export class LotteryComponent implements OnInit {
             //{ betsOpen, betPrice, lotteryClosingTime, ownerPool, paymentToken, lotteryTokenBalance, lotteryTokenBalanceOfContract };
         }
 
-        setInterval( ()=>{this.updatePage();} , 1000);
+        this.intervalUpdatePage = window.setInterval( ()=>{this.updatePage();} , 1000);
       }
     });
     /* alternate way of getting param from url
@@ -197,11 +212,15 @@ export class LotteryComponent implements OnInit {
       const bySigner = this.signer ? true : false;
       const x = this.contractService.getLotteryInfoGeneral( this.lotteryContract ).then((x)=>{
         //console.log(x);
-        this.betPrice = x.betPrice;
-        this.closingTime = x.lotteryClosingTime;
-        this.closingTimeDateLocalized = new Date ( x.lotteryClosingTime * 1000 );
+        this.saleOwner = x.saleOwner;
+        this.betPrice = x.betPrice; //if 4 DAI then this is 4 x 10^18 DAI
+        this.betPrice4UI = ethers.utils.formatUnits( x.betPrice , 18 );
         this.betsOpen = x.betsOpen;
         this.ownerPool = x.ownerPool;
+        this.ownerPool4UI = ethers.utils.formatUnits( x.ownerPool , 18 );
+        this.saleWinner = x.saleWinner;
+        this.closingTime = x.lotteryClosingTime;
+        this.closingTimeDateLocalized = new Date ( x.lotteryClosingTime * 1000 );
         
         const nowDate = new Date();
         const now_converted_to_seconds_after_epoch = nowDate.getTime() / 1000;
@@ -244,6 +263,7 @@ export class LotteryComponent implements OnInit {
   }
 
   bet() {
+    this.showModal();
     console.log('lottery.bet()');
     if(this.contract_addr && this.lotteryContract && this.saleTokenContract && this.paymentToken && this.betPrice) {
       /*this.salesContractService.postLotteryBet(this.contract_addr, saleLotteryInterface, this.paymentToken, saleTokenInterface, this.betPrice, true).then((x:string)=>{
@@ -252,11 +272,16 @@ export class LotteryComponent implements OnInit {
       });*/
       this.contractService.postLotteryBet( this.lotteryContract, this.saleTokenContract, this.betPrice ).then((x)=>{
         console.log('bet transaction done:'+ x);
+        this.hideModal();
         alert('You have betted successfully!');
+      }).catch((error)=>{
+        this.hideModal();
+        alert('An error occured! Please try again or contact our support department.')
       });
     }
   }
   betMany(numberOfBets:string) {
+    this.showModal();
     console.log('lottery.bet()');
     const numberOfBetsInt = parseInt(numberOfBets);    
     if(this.contract_addr && this.lotteryContract && this.saleTokenContract && this.paymentToken && this.betPrice) {
@@ -266,10 +291,56 @@ export class LotteryComponent implements OnInit {
       });*/
       this.contractService.postLotteryBetManyTimes( this.lotteryContract,  this.saleTokenContract, this.betPrice, numberOfBetsInt).then((x)=>{
         console.log('bet transaction done:'+ x);
+        this.hideModal();
         alert('You have betted successfully!');
+      }).catch((error)=>{
+        this.hideModal();
+        alert('An error occured! Please try again or contact our support department.')
+      });
+    }
+  }
+  closeLottery() {
+    this.showModal();
+    if(this.contract_addr && this.lotteryContract) {
+      this.contractService.postLotteryClose(this.lotteryContract).then((x)=>{
+        console.log('bet transaction done:'+ x);
+        this.hideModal();
+        alert('You have closed lottery successfully!');
+      }).catch((error)=>{
+        this.hideModal();
+        alert('An error occured! Please try again or contact our support department.')
       });
     }
   }
 
+  async getImageFromIPFS(){
+    return '';
+    const response = await axios({
+      method: "get",
+      url: environment.base_api_url + "/sales/"+ this.contract_addr,
+      headers: {
+          "Content-Type": "application/json"
+      },
+    });
+    console.log(response.data.image_ipfs_url);
+    //console.log(response[0].name_of_sale);
+    return response.data.image_ipfs_url;
+  }
 
+  showModal(){
+    const spinner = document.getElementById('spinner-super-wrapper');
+    if(spinner) { spinner.style.display = 'block'; }  
+    //setTimeout( ()=>{const spinner = document.getElementById('spinner-super-wrapper'); if(spinner) { spinner.style.display = 'none'; } } , 5000)
+  }
+  hideModal(){
+    const spinner = document.getElementById('spinner-super-wrapper');
+    if(spinner) { spinner.style.display = 'none'; }  
+    //setTimeout( ()=>{const spinner = document.getElementById('spinner-super-wrapper'); if(spinner) { spinner.style.display = 'none'; } } , 5000)
+  }
+  
+  ngOndestroy() {
+    console.log('Lottery destroy');
+    window.clearInterval(this.intervalUpdatePage);
+  }
+  
 }

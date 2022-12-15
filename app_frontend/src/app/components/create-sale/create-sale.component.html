@@ -19,16 +19,20 @@
   <div *ngIf="signer && !created_contract_addr">
     <form id="saleForm" [formGroup]="saleForm" (ngSubmit)="onSubmit(this)">
       <!-- <form id="saleForm" [formGroup]="saleForm" (ngSubmit)="onSubmitTest(this)"> -->
-      <div>
-        <label for="sale_name">Name of Sale: </label>
+      <div class="mb-3">
+        <label for="sale_name" class="form-label">Name of Sale: </label>
         <input
-          class="form-control" id="sale_name" type="text" formControlName="sale_name" />
+          class="form-control"
+          id="sale_name"
+          type="text"
+          formControlName="sale_name"
+        />
       </div>
 
-      <div>
-        <label for="sale_type">Type of Sale: </label><br />
+      <div class="mb-3">
+        <label for="sale_type" class="form-label">Type of Sale: </label><br />
         <input
-        class="form-check-input"
+          class="form-check-input"
           type="radio"
           formControlName="sale_type"
           value="lottery"
@@ -46,20 +50,30 @@
       </div>
 
       <div
+        class="mb-3 dynamic-lottery-auction-section"
+
         *ngIf="saleForm.value.sale_type == 'lottery'"
       >
         <div>
-          <label for="bet_price">Bet Price: </label>
+          <label for="bet_price" class="form-label">Bet Price: </label>
           <input
-            class="form-control" id="bet_price" type="number" formControlName="bet_price" />
+            class="form-control"
+            id="bet_price"
+            type="number"
+            formControlName="bet_price"
+          />
         </div>
       </div>
 
       <div
+
+        class="mb-3 dynamic-lottery-auction-section"
+    
+
         *ngIf="saleForm.value.sale_type == 'auction'"
       >
         <div>
-          <label for="starting_bid">Starting Bid: </label>
+          <label for="starting_bid" class="form-label">Starting Bid: </label>
           <input
             class="form-control"
             id="starting_bid"
@@ -69,31 +83,38 @@
         </div>
       </div>
 
-      <div>
-        <label for="sale_desc">Desc of NFT: </label>
+      <div class="mb-3">
+        <label for="sale_desc" class="form-label">Desc of NFT: </label>
+        <br />
         <textarea
           class="d-block"
           id="sale_desc"
           type="text"
           formControlName="sale_desc"
+          class="form-control"
         ></textarea>
       </div>
 
-      <div>
-        <label for="payment_token">Payment Token: </label>
+      <div class="mb-3">
+        <label for="payment_token" class="form-label">Payment Token: </label>
         <input
-          class="form-control" id="payment_token" type="text" formControlName="payment_token" />
+          class="form-control"
+          id="payment_token"
+          type="text"
+          formControlName="payment_token"
+        />
       </div>
-
-      <div>
+      <divclass="mb-3">
         <label for="recipient_addr">Charity Address: </label>
         <input
           class="form-control"
           id="recipient_addr"
           type="text"
           formControlName="recipient_addr"
+          placeholder="Enter your recipient's address, ex: 0x1234000000000000000000000000000000005678"
         />
       </div>
+
       <div>
         <label for="recipient_link">Link to the Charity Project:</label>
         <input
@@ -103,8 +124,9 @@
           formControlName="recipient_link"
         />
       </div>
-      <div>
+      <div class="mb-3">
         <label for="sale_image">Upload the file used for the NFT: </label>
+
         <input
           class="form-control"
           id="sale_image"
@@ -114,8 +136,10 @@
         />
         <img id="sale_image_preview" src="" width="200px" />
       </div>
-      <div>
-        <label for="closing_time">Set a Closing Time for this Sale: </label>
+      <div class="mb-3">
+        <label for="closing_time" class="form-label"
+          >Set a Closing Time for this Sale:
+        </label>
         <input
           class="form-control"
           id="closing_time"
@@ -124,17 +148,17 @@
         />
       </div>
 
-      <div>
+      <div class="mb-3">
         <em
           >Note: MetaData for NFT file will be generated automatically and sent
           to IPFS so no need to upload here.</em
         >
       </div>
 
-      <div *ngIf="saleForm.invalid">
+      <div class="mb-3" *ngIf="saleForm.invalid">
         <p>Please fill all values</p>
       </div>
-      <div *ngIf="saleForm.valid">
+      <div class="mb-3" *ngIf="saleForm.valid">
         <p>You can submit now!</p>
       </div>
 

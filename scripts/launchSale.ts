@@ -83,4 +83,3 @@ console.log(decodedAuctionData.args[1])
 
 main();
 
-
